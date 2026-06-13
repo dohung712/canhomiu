@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Phân Tích Chuyên Sâu – 6 Tầng · Vay 3 Tỷ · Chu Kỳ 5 Năm</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a2540;--ink2:#3a5080;--ink3:#6b7fa3;
+  --bg:#f0f4f9;--surface:#fff;--border:#dde4f0;
+  --navy:#1F3864;--blue:#2E5F9E;--sky:#BDD7EE;
+  --gold:#C9A227;--amber:#d4a017;
+  --green:#00B050;--dkgreen:#1A5E1A;--ltgreen:#E2EFDA;
+  --red:#C0392B;--pink:#FFE5E5;
+  --orange:#D4570A;--ltorange:#FFF0E5;
+  --purple:#7030A0;--ltpurple:#EDE7F6;
+  --teal:#0D7377;--ltteal:#E0F5F5;
+  --warn:#FFF2CC;--warnborder:#C9A227;
+  --r:10px;--sh:0 2px 16px rgba(31,56,100,.09);
+  --sh2:0 4px 28px rgba(31,56,100,.13);
+}
+
+/* TYPE */
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+h1{font-size:1.6rem;font-weight:800;letter-spacing:-.5px}
+h2{font-size:1.05rem;font-weight:700;color:var(--navy)}
+h3{font-size:.88rem;font-weight:700;color:var(--ink2)}
+.mono{font-family:'Cascadia Code','Fira Mono',monospace}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#2d5a96 60%,#1a4a85 100%);padding:24px 32px 0;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(201,162,39,.15) 0%,transparent 70%);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.hero h1{color:var(--gold);line-height:1.15}
+.hero p{color:var(--sky);font-size:.82rem;margin-top:4px;opacity:.85}
+.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.hm-tag{background:rgba(255,255,255,.1);border:1px solid rgba(189,215,238,.2);color:var(--sky);font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:20px}
+.hm-tag.gold{background:rgba(201,162,39,.25);border-color:var(--gold);color:var(--gold)}
+
+/* CYCLE PILLS */
+.cycle-strip{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.cycle-strip::-webkit-scrollbar{display:none}
+.cyc-pill{flex:0 0 auto;padding:10px 22px 14px;cursor:pointer;position:relative;transition:background .15s;border-bottom:3px solid transparent}
+.cyc-pill:hover{background:rgba(255,255,255,.06)}
+.cyc-pill.active{border-bottom-color:var(--gold)}
+.cyc-pill .cy-num{font-size:.65rem;color:rgba(189,215,238,.6);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.cyc-pill .cy-name{font-size:.85rem;font-weight:700;color:#fff;margin:2px 0}
+.cyc-pill .cy-years{font-size:.7rem;color:rgba(189,215,238,.7)}
+.cyc-pill.active .cy-name{color:var(--gold)}
+.cyc-pill .cy-dot{width:7px;height:7px;border-radius:50%;position:absolute;top:10px;right:10px}
+
+/* MAIN TABS */
+.tabs-bar{display:flex;overflow-x:auto;scrollbar-width:none;background:rgba(0,0,0,.2);padding:0 32px;margin:0 -32px}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;color:rgba(255,255,255,.5);padding:10px 16px;font-size:.79rem;font-weight:600;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;cursor:pointer}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* LAYOUT */
+.wrap{max-width:1440px;margin:0 auto;padding:22px 18px 60px}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:var(--surface);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);margin-bottom:16px}
+.card.accent-green{border-left:4px solid var(--green)}
+.card.accent-gold{border-left:4px solid var(--gold)}
+.card.accent-red{border-left:4px solid var(--red)}
+.card.accent-purple{border-left:4px solid var(--purple)}
+.card.accent-teal{border-left:4px solid var(--teal)}
+.ct{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:12px;padding-bottom:9px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{font-size:.67rem;padding:2px 8px;border-radius:6px;font-weight:700;white-space:nowrap}
+.chip.gr{background:var(--ltgreen);color:var(--dkgreen)}
+.chip.gl{background:var(--warn);color:#7E5C00}
+.chip.re{background:var(--pink);color:var(--red)}
+.chip.bl{background:#e8f0f8;color:var(--navy)}
+.chip.pu{background:var(--ltpurple);color:var(--purple)}
+.chip.te{background:var(--ltteal);color:var(--teal)}
+
+/* PARAMS */
+.params-wrap{background:var(--navy);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.params-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;user-select:none}
+.params-hdr span{color:var(--gold);font-size:.85rem;font-weight:700}
+.toggle-arr{color:var(--sky);transition:transform .2s;font-size:1rem}
+.params-hdr.open .toggle-arr{transform:rotate(180deg)}
+.params-body{padding:0 16px 14px;display:none}
+.params-body.open{display:block}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px}
+.pg-group{background:rgba(255,255,255,.05);border-radius:7px;padding:10px 12px}
+.pg-title{font-size:.67rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.pi{margin-bottom:7px}.pi:last-child{margin-bottom:0}
+.pi-lbl{font-size:.72rem;color:var(--sky);display:flex;justify-content:space-between;margin-bottom:3px}
+.pi-lbl .pv{font-size:.78rem;font-weight:800;color:#fff;background:rgba(255,255,255,.1);padding:1px 7px;border-radius:4px;min-width:54px;text-align:right}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--gold) var(--pct,50%),rgba(255,255,255,.15) var(--pct,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.pi-toggle{display:flex;align-items:center;gap:8px;margin-top:5px}
+.pi-toggle label{font-size:.72rem;color:var(--sky);cursor:pointer}
+.sw{position:relative;width:30px;height:16px}
+.sw input{opacity:0;width:0;height:0}
+.sw .sl{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.15);border-radius:8px;transition:.2s;cursor:pointer}
+.sw .sl::before{content:'';position:absolute;height:10px;width:10px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+.sl{background:var(--gold)}
+.sw input:checked+.sl::before{transform:translateX(14px)}
+
+/* CYCLE PARAMS */
+.cyc-params-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px}
+.cyc-param-card{border-radius:8px;padding:12px 14px;border:2px solid}
+.cyc-param-card .cpc-title{font-size:.75rem;font-weight:800;margin-bottom:8px}
+.cpc-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.cpc-label{font-size:.72rem;color:var(--ink2);flex:1}
+.cpc-val{font-size:.8rem;font-weight:700;min-width:60px;text-align:right}
+input.light[type=range]{background:linear-gradient(to right,var(--blue) var(--pct,50%),var(--border) var(--pct,50%))}
+input.light[type=range]::-webkit-slider-thumb{background:var(--navy)}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-bottom:16px}
+.kpi{border-radius:8px;padding:12px 14px}
+.kpi .kl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;opacity:.75}
+.kpi .kv{font-size:1.3rem;font-weight:900;line-height:1;margin:4px 0 2px}
+.kpi .ks{font-size:.7rem;opacity:.7}
+.kpi.def{background:var(--border);color:var(--ink2)}
+.kpi.good{background:var(--ltgreen);color:var(--dkgreen)}
+.kpi.warn{background:var(--warn);color:#7E5C00}
+.kpi.bad{background:var(--pink);color:var(--red)}
+.kpi.save{background:var(--ltpurple);color:var(--purple)}
+.kpi.teal{background:var(--ltteal);color:var(--teal)}
+.kpi.gold{background:linear-gradient(135deg,#FFF8E1,#FFF2CC);color:#7E5C00;border:1px solid var(--gold)}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{background:var(--navy);color:#fff;padding:8px 10px;text-align:center;font-size:.7rem;white-space:nowrap;position:sticky;top:0;z-index:1}
+th:first-child,th:nth-child(2){text-align:left}
+td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;vertical-align:middle}
+td:first-child,td:nth-child(2){text-align:left}
+tr:hover td{background:rgba(46,95,158,.04)!important}
+.pos{color:var(--dkgreen);font-weight:700}
+.neg{color:var(--red);font-weight:700}
+.dim{color:var(--ink3)}
+.bold{font-weight:700}
+
+/* ROW VARIANTS */
+tr.rw-c1 td{background:#EBF3FB}
+tr.rw-c2 td{background:#F0FAF0}
+tr.rw-c3 td{background:#FFF8F0}
+tr.rw-c4 td{background:#F5F0FF}
+tr.rw-paid td{background:#C6EFCE!important}
+tr.rw-save td{background:#EDE7F6!important}
+tr.rw-sep td{background:var(--navy)!important;color:var(--gold)!important;font-weight:700!important;font-size:.72rem!important;text-align:left!important}
+tr.rw-warn td{background:var(--warn)!important}
+tr.rw-bad td{background:var(--pink)!important}
+
+/* CHART */
+.ch{position:relative}.ch-300{height:300px}.ch-360{height:360px}.ch-240{height:240px}.ch-200{height:200px}
+
+/* WATERFALL */
+.wf{padding:6px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);font-size:.82rem}
+.wf:last-child{border:none}
+.wf-lbl{flex:0 0 180px;color:var(--ink2);font-weight:500}
+.wf-bar-wrap{flex:1;background:var(--border);border-radius:3px;height:10px;overflow:hidden}
+.wf-bar{height:100%;border-radius:3px;transition:width .45s}
+.wf-val{flex:0 0 80px;text-align:right;font-weight:700;font-size:.82rem}
+
+/* TIMELINE */
+.timeline{position:relative;padding:8px 0}
+.timeline::before{content:'';position:absolute;left:22px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{display:flex;gap:14px;margin-bottom:14px;position:relative}
+.tl-dot{flex:0 0 46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;z-index:1;border:3px solid #fff;box-shadow:var(--sh)}
+.tl-content{flex:1;padding-top:8px}
+.tl-content h4{font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:3px}
+.tl-content p{font-size:.78rem;color:var(--ink2);line-height:1.55}
+.tl-badge{display:inline-block;font-size:.67rem;font-weight:700;padding:2px 7px;border-radius:5px;margin-left:6px;vertical-align:middle}
+
+/* SCENARIO TOGGLES */
+.scen-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.st-btn{padding:6px 14px;border-radius:16px;border:2px solid var(--border);background:#fff;font-size:.77rem;font-weight:700;color:var(--ink2);cursor:pointer;transition:all .14s}
+.st-btn:hover{border-color:var(--blue)}
+.st-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.st-btn.base.active{background:var(--blue);border-color:var(--blue)}
+.st-btn.opt.active{background:var(--dkgreen);border-color:var(--dkgreen)}
+.st-btn.pess.active{background:var(--red);border-color:var(--red)}
+.st-btn.stress.active{background:var(--purple);border-color:var(--purple)}
+
+/* INSIGHT BOXES */
+.ibox{border-radius:9px;padding:13px 16px;margin-bottom:11px;border-left:4px solid}
+.ibox h3{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.ibox ul{padding-left:14px}
+.ibox li{font-size:.8rem;line-height:1.6;margin-bottom:3px}
+.ibox.best{background:var(--ltgreen);border-color:var(--green)}
+.ibox.info{background:#eef3fb;border-color:var(--blue)}
+.ibox.warn{background:var(--warn);border-color:var(--warnborder)}
+.ibox.danger{background:var(--pink);border-color:var(--red)}
+.ibox.save{background:var(--ltpurple);border-color:var(--purple)}
+.ibox.teal{background:var(--ltteal);border-color:var(--teal)}
+
+/* SECTION TITLE */
+.stl{font-size:.95rem;font-weight:800;color:var(--navy);margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.stl::after{content:'';flex:1;height:2px;background:var(--border)}
+
+/* PENALTY ANALYSIS */
+.pen-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center;font-size:.8rem}
+.pen-row:last-child{border:none}
+.pen-yr{flex:0 0 50px;font-weight:700;color:var(--navy)}
+.pen-bar-wrap{flex:1;height:12px;background:var(--border);border-radius:3px;overflow:hidden}
+.pen-bar{height:100%;border-radius:3px}
+.pen-val{flex:0 0 90px;text-align:right}
+.pen-verdict{flex:0 0 110px;font-size:.72rem;font-weight:700;text-align:right}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="heroSection">
+  <div class="hero-top">
+    <div>
+      <h1>🏢 Phân Tích Chuyên Sâu<br><span style="color:#fff;font-weight:400;font-size:1rem">Phương án 6 Tầng · Vay 3 Tỷ · Bán Điện Ngọc</span></h1>
+      <p>Mô hình theo chu kỳ 5 năm · Giá thuê biến động · Lãi suất thay đổi · Phòng trống thực tế</p>
+      <div class="hero-meta">
+        <span class="hm-tag">90 m²/tầng</span>
+        <span class="hm-tag">10 phòng thuê</span>
+        <span class="hm-tag">XD: 8.52 tỷ</span>
+        <span class="hm-tag gold">Vay 3 tỷ · 20 năm</span>
+        <span class="hm-tag">Trả sớm 70% tiền dư</span>
+        <span class="hm-tag">Tiết kiệm 35% sau tất nợ</span>
+      </div>
+    </div>
+    <div style="text-align:right;color:var(--sky);font-size:.78rem;opacity:.8">
+      <div style="font-size:1.8rem;font-weight:900;color:var(--gold)" id="heroPayoff">⟳</div>
+      <div>Dự kiến tất nợ</div>
+    </div>
+  </div>
+
+  <!-- Cycle pills -->
+  <div class="cycle-strip" id="cyclePills"></div>
+
+  <!-- Main tabs -->
+  <div class="tabs-bar" id="mainTabs">
+    <button class="tab-btn active" data-tab="overview">📊 Tổng quan</button>
+    <button class="tab-btn" data-tab="detail">📋 Bảng chi tiết</button>
+    <button class="tab-btn" data-tab="cashflow">💵 Phân tích CF</button>
+    <button class="tab-btn" data-tab="debt">💳 Trả nợ sớm</button>
+    <button class="tab-btn" data-tab="savings">💰 Tiết kiệm</button>
+    <button class="tab-btn" data-tab="scenarios">🎲 Kịch bản</button>
+    <button class="tab-btn" data-tab="sensitivity">🔬 Nhạy cảm</button>
+    <button class="tab-btn" data-tab="params">⚙️ Tham số</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ OVERVIEW ══════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-pane active">
+  <div class="kpi-grid" id="ovKPIs"></div>
+
+  <!-- Quick summary band -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:16px" id="quickSummaryBand"></div>
+
+  <div class="g2">
+    <div class="card accent-green">
+      <div class="ct">💵 Dòng tiền ròng / tháng <span class="chip gr">20 năm · 4 chu kỳ</span></div>
+      <div class="ch ch-300"><canvas id="ovCFChart"></canvas></div>
+    </div>
+    <div class="card accent-gold">
+      <div class="ct">🏦 Dư nợ & Tiết kiệm <span class="chip gl">Trả sớm 70% tiền dư</span></div>
+      <div class="ch ch-300"><canvas id="ovDebtSaveChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card accent-teal">
+      <div class="ct">🏠 Doanh thu thuê / năm</div>
+      <div class="ch ch-240"><canvas id="ovRentChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📊 Chi phí cơ cấu / năm</div>
+      <div class="ch ch-240"><canvas id="ovCostChart"></canvas></div>
+    </div>
+    <div class="card accent-purple">
+      <div class="ct">💰 Tích lũy tiết kiệm</div>
+      <div class="ch ch-240"><canvas id="ovSaveChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Cycle summary cards -->
+  <p class="stl">📅 Tóm tắt từng chu kỳ 5 năm</p>
+  <div class="g4" id="cycleSummaryCards"></div>
+
+  <!-- Waterfall P&L -->
+  <div class="card">
+    <div class="ct">🌊 Waterfall: Doanh thu → Chi phí → Tiền dư (năm đầu tiên)</div>
+    <div id="waterfallContainer"></div>
+  </div>
+</div>
+
+<!-- ══ DETAIL TABLE ══════════════════════════════════════ -->
+<div id="tab-detail" class="tab-pane">
+  <div class="ibox info">
+    <h3>💡 Hướng dẫn đọc bảng</h3>
+    <ul>
+      <li><span style="background:#EBF3FB;padding:1px 6px;border-radius:3px">Xanh nhạt</span> = Chu kỳ 1 (Năm 1-5) · <span style="background:#F0FAF0;padding:1px 6px;border-radius:3px">Xanh lá</span> = Chu kỳ 2 (6-10) · <span style="background:#FFF8F0;padding:1px 6px;border-radius:3px">Cam nhạt</span> = Chu kỳ 3 khó khăn · <span style="background:#F5F0FF;padding:1px 6px;border-radius:3px">Tím nhạt</span> = Chu kỳ 4 phục hồi</li>
+      <li><span style="background:#C6EFCE;padding:1px 6px;border-radius:3px;font-weight:700">Xanh đậm</span> = Năm tất nợ · <span style="background:#EDE7F6;padding:1px 6px;border-radius:3px">Tím</span> = Đang tích lũy tiết kiệm sau tất nợ</li>
+      <li>"Trả gốc sớm" = 70% tiền dư; phí phạt 2%/năm áp dụng trong 5 năm đầu</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="ct">📋 Bảng phân tích chi tiết 20 năm
+      <span class="chip gl" id="detailPayoffBadge">⟳ Đang tính...</span>
+    </div>
+    <div class="tw"><table id="detailTable"></table></div>
+  </div>
+</div>
+
+<!-- ══ CASHFLOW ════════════════════════════════════════ -->
+<div id="tab-cashflow" class="tab-pane">
+  <div class="kpi-grid" id="cfKPIs"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📊 Phân tích CF theo thành phần</div>
+      <div class="ch ch-360"><canvas id="cfStackedChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📈 CF tích lũy không tái đầu tư vs +7%</div>
+      <div class="ch ch-360"><canvas id="cfCumChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🔍 Phân tích break-even theo chu kỳ</div>
+    <div id="breakEvenContainer"></div>
+  </div>
+</div>
+
+<!-- ══ DEBT ════════════════════════════════════════════ -->
+<div id="tab-debt" class="tab-pane">
+  <div class="ibox save">
+    <h3>💡 Chiến lược trả nợ sớm thông minh</h3>
+    <ul>
+      <li><strong>Nguyên tắc:</strong> Mỗi tháng có tiền dư (CF thuê + lương - sinh hoạt - PMT scheduled) → dùng 70% để trả gốc sớm</li>
+      <li><strong>Phí phạt:</strong> Ngân hàng thường phạt 1-3% số tiền trả trước trong 3-5 năm đầu. Tool tính toán chi tiết xem có lợi không</li>
+      <li><strong>Điểm breakeven:</strong> Nếu lãi tiết kiệm được > phí phạt → nên trả sớm. Ngược lại → giữ tiền, gửi ngân hàng</li>
+      <li><strong>Khuyến nghị:</strong> Trả sớm tối ưu khi lãi vay > lãi tiết kiệm (chênh lệch 3%+ thì rõ ràng có lợi)</li>
+    </ul>
+  </div>
+  <div class="kpi-grid" id="debtKPIs"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">💳 Lịch trả nợ: Scheduled vs Thực tế</div>
+      <div class="ch ch-300"><canvas id="debtCompareChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">⚠️ Phân tích phí phạt: Lợi hay hại?</div>
+      <div id="penaltyAnalysis"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📋 Bảng chi tiết trả nợ sớm</div>
+    <div class="tw"><table id="debtTable"></table></div>
+  </div>
+</div>
+
+<!-- ══ SAVINGS ════════════════════════════════════════ -->
+<div id="tab-savings" class="tab-pane">
+  <div class="kpi-grid" id="saveKPIs"></div>
+  <div class="g2">
+    <div class="card accent-purple">
+      <div class="ct">💰 Tích lũy tiết kiệm compound <span class="chip pu">Sau tất nợ · 35% tiền dư</span></div>
+      <div class="ch ch-360"><canvas id="saveGrowthChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📊 So sánh lãi suất tiết kiệm khác nhau</div>
+      <div class="ch ch-360"><canvas id="saveRateCompareChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📋 Bảng chi tiết tiết kiệm 20 năm</div>
+    <div class="tw"><table id="saveTable"></table></div>
+  </div>
+</div>
+
+<!-- ══ SCENARIOS ══════════════════════════════════════ -->
+<div id="tab-scenarios" class="tab-pane">
+  <div class="scen-toggle">
+    <button class="st-btn base active" onclick="setMainScen('base',this)">📊 Cơ sở (4 chu kỳ)</button>
+    <button class="st-btn opt"  onclick="setMainScen('opt',this)">🟢 Lạc quan</button>
+    <button class="st-btn pess" onclick="setMainScen('pess',this)">🔴 Bi quan</button>
+    <button class="st-btn stress" onclick="setMainScen('stress',this)">💀 Cực xấu</button>
+  </div>
+  <div class="kpi-grid" id="scenKPIs"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📊 Dòng tiền 4 kịch bản</div>
+      <div class="ch ch-300"><canvas id="scenCFChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📈 Tài sản ròng (NAV) 4 kịch bản</div>
+      <div class="ch ch-300"><canvas id="scenNAVChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📋 So sánh tóm tắt 4 kịch bản</div>
+    <div class="tw"><table id="scenTable"></table></div>
+  </div>
+</div>
+
+<!-- ══ SENSITIVITY ════════════════════════════════════ -->
+<div id="tab-sensitivity" class="tab-pane">
+  <div class="ibox info">
+    <h3>🔬 Phân tích độ nhạy cảm: Thay đổi 1 biến → CF thay đổi bao nhiêu?</h3>
+    <ul>
+      <li>Mỗi thanh = kết quả khi thay đổi 1 tham số, giữ nguyên các tham số còn lại</li>
+      <li>Biến nào có thanh dài nhất = quan trọng nhất → cần quản lý chặt nhất</li>
+    </ul>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">🎯 Tornado Chart – CF ròng năm 1 (tr/tháng)</div>
+      <div class="ch ch-300"><canvas id="tornadoChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📊 Ma trận nhạy cảm: Lấp đầy × Lãi suất</div>
+      <div class="tw" id="sensitivityMatrix"></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">📈 CF ròng khi giá thuê thay đổi</div>
+      <div class="ch ch-240"><canvas id="rentSensChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">📉 CF ròng khi lãi suất thay đổi</div>
+      <div class="ch ch-240"><canvas id="rateSensChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PARAMS ════════════════════════════════════════ -->
+<div id="tab-params" class="tab-pane">
+  <div class="card">
+    <div class="ct">⚙️ Tham số chung</div>
+    <div class="pg">
+      <div class="pg-group">
+        <div class="pg-title">🏗️ Khoản vay</div>
+        <div class="pi"><div class="pi-lbl">Khoản vay (tỷ) <span class="pv" id="pv-loan">3.0</span></div><input type="range" min="1" max="8" step=".5" value="3" id="pr-loan" oninput="sp(this,'pv-loan','');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Lãi ưu đãi (%) <span class="pv" id="pv-promo">8</span></div><input type="range" min="5" max="12" step=".5" value="8" id="pr-promo" oninput="sp(this,'pv-promo','%');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Kỳ hạn (năm) <span class="pv" id="pv-term">20</span></div><input type="range" min="10" max="25" value="20" id="pr-term" oninput="sp(this,'pv-term','');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Phí phạt (%/trả sớm) <span class="pv" id="pv-penalty">2</span></div><input type="range" min="0" max="5" step=".5" value="2" id="pr-penalty" oninput="sp(this,'pv-penalty','%');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Phí phạt trong (năm) <span class="pv" id="pv-penyr">5</span></div><input type="range" min="1" max="10" value="5" id="pr-penyr" oninput="sp(this,'pv-penyr','');rebuild()"></div>
+      </div>
+      <div class="pg-group">
+        <div class="pg-title">💰 Chiến lược</div>
+        <div class="pi"><div class="pi-lbl">Trả gốc sớm (% tiền dư) <span class="pv" id="pv-prepay">70</span></div><input type="range" min="0" max="100" step="5" value="70" id="pr-prepay" oninput="sp(this,'pv-prepay','%');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Gửi TK sau tất nợ (% dư) <span class="pv" id="pv-savepct">35</span></div><input type="range" min="0" max="100" step="5" value="35" id="pr-savepct" oninput="sp(this,'pv-savepct','%');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Lãi suất TK (%/năm) <span class="pv" id="pv-saverate">7</span></div><input type="range" min="4" max="12" step=".5" value="7" id="pr-saverate" oninput="sp(this,'pv-saverate','%');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Thu nhập GĐ (tr/tháng) <span class="pv" id="pv-income">60</span></div><input type="range" min="30" max="150" value="60" id="pr-income" oninput="sp(this,'pv-income','');rebuild()"></div>
+      </div>
+      <div class="pg-group">
+        <div class="pg-title">🏠 Bất động sản</div>
+        <div class="pi"><div class="pi-lbl">Số tầng <span class="pv" id="pv-fl">6</span></div><input type="range" min="3" max="7" value="6" id="pr-fl" oninput="sp(this,'pv-fl','');rebuild()"></div>
+        <div class="pi"><div class="pi-lbl">Tăng TQ (%/năm) <span class="pv" id="pv-tqg">8</span></div><input type="range" min="2" max="20" value="8" id="pr-tqg" oninput="sp(this,'pv-tqg','%');rebuild()"></div>
+        <div class="pi-toggle">
+          <label class="sw"><input type="checkbox" id="chk-usePenalty" checked onchange="rebuild()"><span class="sl"></span></label>
+          <label for="chk-usePenalty" style="font-size:.72rem;color:var(--sky)">Áp dụng phí phạt</label>
+        </div>
+        <div class="pi-toggle" style="margin-top:6px">
+          <label class="sw"><input type="checkbox" id="chk-autoSave" checked onchange="rebuild()"><span class="sl"></span></label>
+          <label for="chk-autoSave" style="font-size:.72rem;color:var(--sky)">Tự động gửi TK sau tất nợ</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Per-cycle params -->
+  <div class="card">
+    <div class="ct">📅 Tham số theo từng chu kỳ 5 năm <span class="chip gl">Thay đổi trực tiếp</span></div>
+    <div class="cyc-params-grid" id="cycParamsGrid"></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// CONSTANTS & HELPERS
+// ═══════════════════════════════════════════════════════════
+const FA=90, CM2=13, ROOMS_BASE=6; // floors base
+function f(n,d=1){return isNaN(n)||!isFinite(n)?'–':n>=0?n.toFixed(d):n.toFixed(d);}
+function fM(n){return f(n,1)+' tr';}
+function fB(n){return f(n,2)+' tỷ';}
+function pmt(loan,r,n){
+  if(loan<=0)return 0;
+  const P=loan*1e9,rm=r/12,nn=n*12;
+  return P*rm*(1+rm)**nn/((1+rm)**nn-1)/1e6;
+}
+function us(el){
+  const mn=+el.min,mx=+el.max,v=+el.value;
+  el.style.setProperty('--pct',((v-mn)/(mx-mn)*100)+'%');
+}
+function sp(el,id,sfx){document.getElementById(id).textContent=el.value+sfx;us(el);}
+document.querySelectorAll('input[type=range]').forEach(el=>{us(el);el.addEventListener('input',()=>us(el));});
+
+// ── Colour palette ──────────────────────────────────────
+const C_NAVY='#1F3864',C_BLUE='#2E5F9E',C_GOLD='#C9A227',C_GREEN='#00B050',
+      C_DKGREEN='#1A5E1A',C_RED='#C0392B',C_ORANGE='#D4570A',C_PURPLE='#7030A0',
+      C_TEAL='#0D7377',C_SKY='#BDD7EE';
+
+const CYC_COLORS=['#2E5F9E','#1A5E1A','#D4570A','#7030A0'];
+const CYC_LIGHT=['#EBF3FB','#F0FAF0','#FFF8F0','#F5F0FF'];
+
+// ═══════════════════════════════════════════════════════════
+// CYCLE DEFINITIONS (editable via UI)
+// ═══════════════════════════════════════════════════════════
+let CYCLES = [
+  {id:0, name:'Khởi động', years:[1,5], rent:7.0, occ:0.85, rateFloat:0.10, living:35, opex:0.15, rentGrowth:0.05,
+   icon:'🚀', colorBg:'#EBF3FB', colorAccent:'#2E5F9E',
+   scenario:'Thuận lợi: lãi ưu đãi 2 năm đầu, thị trường cho thuê tốt'},
+  {id:1, name:'Tăng tốc',  years:[6,10], rent:8.5, occ:0.80, rateFloat:0.10, living:40, opex:0.17, rentGrowth:0.03,
+   icon:'📈', colorBg:'#F0FAF0', colorAccent:'#1A5E1A',
+   scenario:'Bình thường: lãi thả nổi, cạnh tranh tăng, lấp đầy giảm nhẹ'},
+  {id:2, name:'Thử thách', years:[11,15], rent:9.0, occ:0.70, rateFloat:0.12, living:48, opex:0.18, rentGrowth:-0.02,
+   icon:'⚡', colorBg:'#FFF8F0', colorAccent:'#D4570A',
+   scenario:'Khó khăn: lãi tăng 12%, lấp đầy thấp 70%, giá thuê giảm −2%/năm'},
+  {id:3, name:'Bứt phá',   years:[16,20], rent:11.0, occ:0.88, rateFloat:0.09, living:55, opex:0.16, rentGrowth:0.06,
+   icon:'🏆', colorBg:'#F5F0FF', colorAccent:'#7030A0',
+   scenario:'Phục hồi: lãi giảm, thị trường bùng nổ, DT tăng 6%/năm'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// MAIN MODEL
+// ═══════════════════════════════════════════════════════════
+function getParams(){
+  return{
+    loan:   +document.getElementById('pr-loan').value,
+    rPromo: +document.getElementById('pr-promo').value/100,
+    term:   +document.getElementById('pr-term').value,
+    penPct: +document.getElementById('pr-penalty').value/100,
+    penYrs: +document.getElementById('pr-penyr').value,
+    prepayPct:+document.getElementById('pr-prepay').value/100,
+    savePct:+document.getElementById('pr-savepct').value/100,
+    saveRate:+document.getElementById('pr-saverate').value/100,
+    income: +document.getElementById('pr-income').value,
+    fl:     +document.getElementById('pr-fl').value,
+    tqg:    +document.getElementById('pr-tqg').value/100,
+    usePenalty: document.getElementById('chk-usePenalty').checked,
+    autoSave:   document.getElementById('chk-autoSave').checked,
+  };
+}
+
+function runModel(cycles, params){
+  const rooms=(params.fl-1)*2;
+  const buildCost=params.fl*FA*CM2*1.10/1000 + rooms*80/1000;
+  let lrem=params.loan*1e9, savings=0, payoffYr=null;
+  let totalPenalty=0, totalPrepay=0, totalInterestPaid=0;
+  const rows=[];
+
+  for(const cyc of cycles){
+    for(let yr=cyc.years[0]; yr<=cyc.years[1]; yr++){
+      const yrInCyc=yr-cyc.years[0];
+      const rate=(yr<=2)?params.rPromo:cyc.rateFloat;
+      const yrsLeft=Math.max(1,params.term-(yr-1));
+      const pm=pmt(lrem/1e9, rate, yrsLeft);
+
+      // Revenue
+      const rentM=cyc.rent*(1+cyc.rentGrowth)**yrInCyc;
+      const gross=rooms*rentM*cyc.occ*12;
+      const opx=gross*cyc.opex;
+      const noi=gross-opx;
+
+      // Obligations
+      const livingAnn=cyc.living*12;
+      const totalIn=params.income*12+noi;
+      const pmtAnn=pm*12;
+      const isPaid=(lrem<=0);
+      const surplus=totalIn-livingAnn-pmtAnn;
+
+      // Interest
+      let interestAnn=0, principalSched=0;
+      if(!isPaid){
+        interestAnn=lrem*rate;
+        principalSched=pmtAnn*1e6-interestAnn;
+        totalInterestPaid+=interestAnn;
+      }
+
+      // Prepayment
+      let prepay=0, penalty=0;
+      if(!isPaid && surplus>0 && params.prepayPct>0){
+        const wantPrepay=surplus*params.prepayPct*1e6; // annual, in VND
+        prepay=Math.min(wantPrepay, lrem);
+        if(params.usePenalty && yr<=params.penYrs && prepay>0){
+          penalty=prepay*params.penPct;
+          totalPenalty+=penalty;
+        }
+        totalPrepay+=prepay;
+        lrem=Math.max(0, lrem-principalSched-prepay+penalty);
+      } else if(!isPaid){
+        lrem=Math.max(0, lrem-principalSched);
+      }
+
+      if(lrem<=0 && payoffYr===null) payoffYr=yr;
+
+      // Savings after payoff
+      let saveAdd=0;
+      if(lrem<=0 && params.autoSave){
+        const freeCash=isPaid?(totalIn-livingAnn):(surplus+pmtAnn);
+        if(freeCash>0) saveAdd=freeCash*params.savePct*1e6;
+      }
+      savings=savings*(1+params.saveRate)+saveAdd;
+
+      // NAV
+      const t=yr;
+      const tqVal=11*(1+params.tqg)**t;
+      const buildVal=buildCost*(1-0.015)**t;
+      const nav=tqVal+buildVal-lrem/1e9+savings/1e9;
+
+      const dscr=pm>0?(noi/12)/pm:999;
+
+      rows.push({
+        yr, cycId:cyc.id, cycName:cyc.name, cycIcon:cyc.icon,
+        rate:rate*100, rentM, occ:cyc.occ*100,
+        grossM:gross/12, noiM:noi/12, livingM:livingAnn/12,
+        incomeM:params.income, pmtM:pm,
+        surplusM:surplus/12, totalInM:totalIn/12,
+        prepayM:prepay/1e6/12, penaltyM:penalty/1e6/12,
+        interestM:interestAnn/1e6/12,
+        lremBil:lrem/1e9, saveAddM:saveAdd/1e6/12,
+        savingsBil:savings/1e9, nav,
+        dscr, isPaid:lrem<=0,
+        bg:cyc.colorBg,
+      });
+    }
+  }
+  return{rows,payoffYr,totalPenalty:totalPenalty/1e6,totalPrepay:totalPrepay/1e6,
+    totalInterestPaid:totalInterestPaid/1e6,savings:savings/1e9,
+    buildCost,rooms};
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHART REGISTRY
+// ═══════════════════════════════════════════════════════════
+const charts={};
+function mkChart(id,type,data,options){
+  if(charts[id]) charts[id].destroy();
+  charts[id]=new Chart(document.getElementById(id).getContext('2d'),{type,data,options:{responsive:true,maintainAspectRatio:false,...options}});
+  return charts[id];
+}
+
+// ═══════════════════════════════════════════════════════════
+// CYCLE PILLS (hero)
+// ═══════════════════════════════════════════════════════════
+function renderCyclePills(){
+  document.getElementById('cyclePills').innerHTML=CYCLES.map((c,i)=>`
+    <div class="cyc-pill ${i===0?'active':''}" onclick="highlightCycle(${i},this)">
+      <div class="cy-num">Chu kỳ ${i+1}</div>
+      <div class="cy-name">${c.icon} ${c.name}</div>
+      <div class="cy-years">Năm ${c.years[0]}–${c.years[1]}</div>
+      <div class="cy-dot" style="background:${c.colorAccent}"></div>
+    </div>`).join('');
+}
+function highlightCycle(i,el){
+  document.querySelectorAll('.cyc-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  // Show cycle info tooltip
+  const cyc=CYCLES[i];
+  document.getElementById('heroPayoff').title=`${cyc.icon} ${cyc.name}: ${cyc.scenario}`;
+}
+renderCyclePills();
+
+// ═══════════════════════════════════════════════════════════
+// PER-CYCLE PARAM CONTROLS
+// ═══════════════════════════════════════════════════════════
+function renderCycleParams(){
+  document.getElementById('cycParamsGrid').innerHTML=CYCLES.map((c,i)=>`
+    <div class="cyc-param-card" style="background:${c.colorBg};border-color:${c.colorAccent}">
+      <div class="cpc-title" style="color:${c.colorAccent}">${c.icon} Chu kỳ ${i+1}: ${c.name} (Năm ${c.years[0]}–${c.years[1]})</div>
+      <div class="cpc-row"><span class="cpc-label">Giá thuê cơ sở (tr/ph)</span>
+        <span class="cpc-val" id="cv-rent-${i}">${c.rent}</span></div>
+      <input class="light" type="range" min="4" max="20" step=".5" value="${c.rent}" id="cr-rent-${i}" oninput="CYCLES[${i}].rent=+this.value;document.getElementById('cv-rent-${i}').textContent=this.value;us(this);rebuild()">
+      <div class="cpc-row"><span class="cpc-label">Lấp đầy (%)</span>
+        <span class="cpc-val" id="cv-occ-${i}">${c.occ*100}</span></div>
+      <input class="light" type="range" min="40" max="100" value="${c.occ*100}" id="cr-occ-${i}" oninput="CYCLES[${i}].occ=+this.value/100;document.getElementById('cv-occ-${i}').textContent=this.value;us(this);rebuild()">
+      <div class="cpc-row"><span class="cpc-label">Lãi suất thả nổi (%)</span>
+        <span class="cpc-val" id="cv-rate-${i}">${c.rateFloat*100}</span></div>
+      <input class="light" type="range" min="6" max="15" step=".5" value="${c.rateFloat*100}" id="cr-rate-${i}" oninput="CYCLES[${i}].rateFloat=+this.value/100;document.getElementById('cv-rate-${i}').textContent=this.value;us(this);rebuild()">
+      <div class="cpc-row"><span class="cpc-label">Tăng giá thuê (%/năm)</span>
+        <span class="cpc-val" id="cv-rg-${i}">${c.rentGrowth*100}</span></div>
+      <input class="light" type="range" min="-10" max="15" value="${c.rentGrowth*100}" id="cr-rg-${i}" oninput="CYCLES[${i}].rentGrowth=+this.value/100;document.getElementById('cv-rg-${i}').textContent=this.value;us(this);rebuild()">
+      <div class="cpc-row"><span class="cpc-label">Chi phí sống (tr/th)</span>
+        <span class="cpc-val" id="cv-liv-${i}">${c.living}</span></div>
+      <input class="light" type="range" min="20" max="100" value="${c.living}" id="cr-liv-${i}" oninput="CYCLES[${i}].living=+this.value;document.getElementById('cv-liv-${i}').textContent=this.value;us(this);rebuild()">
+      <div style="margin-top:8px;font-size:.72rem;color:var(--ink3);line-height:1.4">${c.scenario}</div>
+    </div>`).join('');
+  document.querySelectorAll('.cyc-param-card input[type=range]').forEach(us);
+}
+renderCycleParams();
+
+// ═══════════════════════════════════════════════════════════
+// MAIN RENDER FUNCTION
+// ═══════════════════════════════════════════════════════════
+function rebuild(){
+  const p=getParams();
+  const {rows,payoffYr,totalPenalty,totalPrepay,totalInterestPaid,savings,buildCost,rooms}=runModel(CYCLES,p);
+
+  // Update hero
+  document.getElementById('heroPayoff').textContent=payoffYr?`Năm ${payoffYr}`:`Năm ${p.term}`;
+
+  const labels=rows.map(r=>`N${r.yr}`);
+  const cfData=rows.map(r=>+f(r.surplusM));
+  const debtData=rows.map(r=>+f(r.lremBil,3));
+  const saveData=rows.map(r=>+f(r.savingsBil,3));
+  const rentData=rows.map(r=>+f(r.grossM));
+  const noiData=rows.map(r=>+f(r.noiM));
+  const pmtData=rows.map(r=>+f(r.pmtM));
+  const prepayData=rows.map(r=>+f(r.prepayM));
+  const penaltyData=rows.map(r=>+f(r.penaltyM));
+  const livingData=rows.map(r=>+f(r.livingM));
+  const navData=rows.map(r=>+f(r.nav,1));
+
+  // Background colours per year (cycle-based)
+  const bgAlpha=rows.map(r=>CYC_COLORS[r.cycId]+'40');
+
+  // ── OVERVIEW KPIs ──────────────────────────────────────
+  const r0=rows[0],r4=rows[4],r9=rows[9],r19=rows[19];
+  const earlyYrs=p.term-(payoffYr||p.term);
+  document.getElementById('ovKPIs').innerHTML=[
+    {l:'Chi phí XD',v:fB(buildCost),c:'',s:`${rooms} phòng thuê`},
+    {l:'NOI tháng đầu',v:fM(r0.noiM),c:'good',s:'DT thuê – VH – thuế'},
+    {l:'CF ròng tháng đầu',v:(r0.surplusM>0?'+':'')+fM(r0.surplusM),c:r0.surplusM>0?'good':'bad',s:'Sau PMT & sinh hoạt'},
+    {l:'DSCR năm 1',v:r0.dscr>100?'∞':f(r0.dscr,2),c:r0.dscr>=1.5?'good':r0.dscr>=1.25?'good':'bad',s:'≥1.25 an toàn'},
+    {l:'Tất nợ năm',v:payoffYr||p.term,c:earlyYrs>5?'teal':'warn',s:earlyYrs>0?`Sớm ${earlyYrs} năm`:'Đúng hạn'},
+    {l:'Tổng phí phạt',v:fM(totalPenalty),c:totalPenalty>0?'warn':'good',s:p.usePenalty?'Trong kỳ phạt':'Đã tắt'},
+    {l:'TK tích lũy 20 năm',v:fB(savings),c:'save',s:`@${p.saveRate*100}%/năm compound`},
+    {l:'NAV cuối (năm 20)',v:fB(r19.nav),c:'gold',s:'TQ+XD+TK–Nợ'},
+  ].map(k=>`<div class="kpi ${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+
+  // ── QUICK SUMMARY BAND ─────────────────────────────────
+  const qsb=document.getElementById('quickSummaryBand');
+  if(qsb){
+    const paidYr=payoffYr||p.term;
+    const earlyYrs2=p.term-paidYr;
+    qsb.innerHTML=[
+      {icon:'🏗️',title:'Phương án',body:`6 tầng · 10 phòng thuê · XD ${fB(buildCost)}`,color:'#EBF3FB',border:C_BLUE},
+      {icon:'💳',title:'Tài chính vay',body:`Vay ${fB(p.loan)} · PMT ${fM(pmt(p.loan,p.rPromo,p.term))} (ưu đãi) → ${fM(pmt(p.loan,CYCLES[1].rateFloat,p.term))} (thả nổi)`,color:'#FFF8F0',border:C_ORANGE},
+      {icon:'🎉',title:'Tất nợ',body:earlyYrs2>0?`Năm ${paidYr} – Sớm ${earlyYrs2} năm nhờ trả sớm`:`Đúng hạn năm ${paidYr}`,color:earlyYrs2>0?'#E2EFDA':'#FFF2CC',border:earlyYrs2>0?C_GREEN:C_GOLD},
+      {icon:'💰',title:'Tiết kiệm tích lũy',body:`${fB(savings)} sau 20 năm @ ${p.saveRate*100}%/năm`,color:'#EDE7F6',border:C_PURPLE},
+    ].map(q=>`<div style="background:${q.color};border-left:4px solid ${q.border};border-radius:9px;padding:12px 14px">
+      <div style="font-size:.78rem;font-weight:800;color:${q.border};margin-bottom:4px">${q.icon} ${q.title}</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.5">${q.body}</div>
+    </div>`).join('');
+  }
+
+  // ── OVERVIEW CHARTS ─────────────────────────────────────
+  mkChart('ovCFChart','bar',{
+    labels,
+    datasets:[
+      {label:'CF ròng/th (tr)',data:cfData,backgroundColor:cfData.map(v=>v>0?C_GREEN+'BB':C_RED+'BB'),borderRadius:4,order:2},
+      {type:'line',label:'PMT/th (tr)',data:pmtData,borderColor:C_GOLD,borderWidth:2,pointRadius:2,tension:.3,fill:false,order:1},
+    ]
+  },{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Triệu/tháng'}}}});
+
+  mkChart('ovDebtSaveChart','line',{
+    labels,
+    datasets:[
+      {label:'Dư nợ (tỷ)',data:debtData,borderColor:C_RED,backgroundColor:C_RED+'15',borderWidth:2.5,fill:true,tension:.4},
+      {label:'Tiết kiệm (tỷ)',data:saveData,borderColor:C_PURPLE,backgroundColor:C_PURPLE+'15',borderWidth:2.5,fill:true,tension:.4},
+    ]
+  },{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+
+  mkChart('ovRentChart','bar',{labels,
+    datasets:[{label:'DT thuê/th',data:rentData,backgroundColor:CYC_COLORS.flatMap((c,i)=>Array(5).fill(c+'BB')),borderRadius:3}]
+  },{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tr/tháng'}}}});
+
+  const costStacked=rows.map(r=>+f(r.livingM+r.pmtM+(r.noiM-r.surplusM-r.pmtM)));
+  mkChart('ovCostChart','bar',{labels,
+    datasets:[
+      {label:'Sinh hoạt',data:livingData,backgroundColor:C_RED+'88',borderRadius:2,stack:'s'},
+      {label:'PMT',data:pmtData,backgroundColor:C_ORANGE+'88',borderRadius:2,stack:'s'},
+    ]
+  },{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,title:{display:true,text:'Tr/tháng'}}}});
+
+  mkChart('ovSaveChart','line',{labels,
+    datasets:[{label:'Tiết kiệm (tỷ)',data:saveData,borderColor:C_PURPLE,backgroundColor:C_PURPLE+'20',fill:true,borderWidth:2.5,tension:.4,pointRadius:rows.map(r=>r.isPaid&&r.saveAddM>0?4:0)}]
+  },{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+
+  // ── CYCLE SUMMARY CARDS ─────────────────────────────────
+  document.getElementById('cycleSummaryCards').innerHTML=CYCLES.map((c,i)=>{
+    const cyRows=rows.filter(r=>r.cycId===i);
+    const avgCF=cyRows.reduce((a,r)=>a+r.surplusM,0)/cyRows.length;
+    const avgDSCR=cyRows.reduce((a,r)=>a+Math.min(r.dscr,20),0)/cyRows.length;
+    const avgOcc=c.occ*100;
+    const paidInCyc=cyRows.some(r=>r.isPaid&&r.lremBil<=0);
+    return `<div class="card" style="border-left:4px solid ${c.colorAccent};background:${c.colorBg}">
+      <div style="font-weight:800;color:${c.colorAccent};font-size:.88rem;margin-bottom:8px">${c.icon} ${c.name}<br><span style="font-weight:400;font-size:.72rem;color:var(--ink2)">Năm ${c.years[0]}–${c.years[1]}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--ink2)">CF TB/tháng</span><span class="${avgCF>0?'pos':'neg'}" style="font-weight:700">${avgCF>0?'+':''}${f(avgCF,1)} tr</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--ink2)">Lấp đầy</span><span style="font-weight:700">${avgOcc}%</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--ink2)">Lãi suất</span><span style="font-weight:700">${i===0?'8%→':''}${c.rateFloat*100}%</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem"><span style="color:var(--ink2)">DSCR TB</span><span class="${avgDSCR>=1.5?'pos':avgDSCR>=1?'':'neg'}" style="font-weight:700">${avgDSCR>18?'∞':f(avgDSCR,2)}</span></div>
+      ${paidInCyc?`<div style="margin-top:8px;font-size:.72rem;font-weight:800;color:${C_DKGREEN}">🎉 Tất nợ trong chu kỳ này!</div>`:''}
+      <div style="margin-top:8px;font-size:.7rem;color:var(--ink3);line-height:1.4">${c.scenario}</div>
+    </div>`;
+  }).join('');
+
+  // ── WATERFALL ────────────────────────────────────────────
+  const r1=rows[0];
+  const wfItems=[
+    {label:'Thu nhập GĐ/tháng', val:r1.incomeM, color:C_GREEN},
+    {label:'DT thuê/tháng',     val:r1.grossM,  color:C_TEAL},
+    {label:'− Chi phí VH/thuê', val:-r1.grossM*(CYCLES[0].opex), color:C_ORANGE},
+    {label:'= NOI/tháng',       val:r1.noiM,    color:C_BLUE},
+    {label:'− Chi phí sinh hoạt',val:-r1.livingM,color:C_RED},
+    {label:'− PMT ngân hàng',   val:-r1.pmtM,   color:C_RED+'CC'},
+    {label:'= Tiền dư/tháng',   val:r1.surplusM,color:r1.surplusM>0?C_GREEN:C_RED},
+    {label:'  Trả gốc sớm (70%)',val:-r1.prepayM,color:C_PURPLE+'BB'},
+    {label:'  Phí phạt',        val:-r1.penaltyM,color:C_GOLD},
+    {label:'→ CF thực tế/tháng',val:r1.surplusM-r1.prepayM-r1.penaltyM,color:C_NAVY},
+  ];
+  const wfMax=Math.max(...wfItems.map(w=>Math.abs(w.val)))||1;
+  document.getElementById('waterfallContainer').innerHTML=wfItems.map(w=>`
+    <div class="wf">
+      <div class="wf-lbl">${w.label}</div>
+      <div class="wf-bar-wrap"><div class="wf-bar" style="width:${Math.abs(w.val)/wfMax*100}%;background:${w.color}"></div></div>
+      <div class="wf-val" style="color:${w.val>=0?C_DKGREEN:C_RED}">${w.val>=0?'+':''}${f(w.val,1)} tr</div>
+    </div>`).join('');
+
+  // ── DETAIL TABLE ─────────────────────────────────────────
+  const payoffBadge=document.getElementById('detailPayoffBadge');
+  if(payoffBadge){
+    payoffBadge.textContent=payoffYr?`🎉 Tất nợ năm ${payoffYr} – Sớm ${p.term-payoffYr} năm`:`Tất nợ đúng hạn năm ${p.term}`;
+    payoffBadge.style.background=payoffYr&&payoffYr<p.term?'#C6EFCE':'#FFF2CC';
+    payoffBadge.style.color=payoffYr&&payoffYr<p.term?C_DKGREEN:'#7E5C00';
+  }
+
+  const tblHtml=`<thead><tr>
+    <th>Năm</th><th>Chu kỳ</th><th>Lãi%</th>
+    <th>Thuê/ph (tr)</th><th>Lấp đầy</th><th>DT thuê (tr)</th><th>NOI (tr)</th>
+    <th>TN GĐ (tr)</th><th>Sinh hoạt (tr)</th><th>PMT (tr)</th>
+    <th>Tiền dư (tr)</th><th>Trả gốc sớm (tr)</th><th>Phí phạt (tr)</th>
+    <th>Dư nợ (tỷ)</th><th>Gửi TK (tr)</th><th>TK tích lũy (tỷ)</th>
+    <th>NAV (tỷ)</th><th>DSCR</th>
+  </tr></thead><tbody>`+rows.map(r=>{
+    const isSep=false;
+    const rowCls=r.isPaid&&r.saveAddM>0?'rw-save':r.isPaid?'rw-paid':r.surplusM<0?'rw-bad':
+                 ['rw-c1','rw-c2','rw-c3','rw-c4'][r.cycId];
+    const note=r.isPaid&&r.lremBil<=0&&rows[r.yr-2]&&rows[r.yr-2].lremBil>0?'🎉':'';
+    return `<tr class="${rowCls}">
+      <td class="bold">${r.yr} ${note}</td>
+      <td style="color:${CYCLES[r.cycId].colorAccent};font-weight:700;font-size:.72rem">${r.cycIcon} ${r.cycName}</td>
+      <td>${f(r.rate,0)}%</td>
+      <td class="bold">${f(r.rentM,1)}</td>
+      <td>${f(r.occ,0)}%</td>
+      <td class="pos">${f(r.grossM,1)}</td>
+      <td class="pos">${f(r.noiM,1)}</td>
+      <td>${f(r.incomeM,0)}</td>
+      <td class="neg">${f(r.livingM,1)}</td>
+      <td class="${r.pmtM>0?'neg':'dim'}">${r.pmtM>0?f(r.pmtM,1):'–'}</td>
+      <td class="${r.surplusM>0?'pos':'neg'} bold">${r.surplusM>0?'+':''}${f(r.surplusM,1)}</td>
+      <td class="${r.prepayM>0?'pos':'dim'}">${r.prepayM>0?f(r.prepayM,1):'–'}</td>
+      <td class="${r.penaltyM>0?'neg':'dim'}">${r.penaltyM>0?f(r.penaltyM,2):'–'}</td>
+      <td class="bold" style="color:${r.lremBil<=0?C_DKGREEN:C_RED}">${r.lremBil<=0?'✅ 0':f(r.lremBil,3)}</td>
+      <td class="${r.saveAddM>0?'':'dim'}" style="color:${C_PURPLE}">${r.saveAddM>0?f(r.saveAddM,1):'–'}</td>
+      <td style="color:${C_PURPLE};font-weight:700">${r.savingsBil>0?fB(r.savingsBil):'–'}</td>
+      <td class="bold" style="color:${C_NAVY}">${f(r.nav,1)}</td>
+      <td class="${r.dscr>=1.5?'pos':r.dscr>=1.25?'':r.dscr>0?'neg':'dim'}">${r.dscr>100?'∞':f(r.dscr,2)}</td>
+    </tr>`;
+  }).join('')+'</tbody>';
+  const dtbl=document.getElementById('detailTable');
+  if(dtbl) dtbl.innerHTML=tblHtml;
+
+  // ── CASHFLOW TAB ─────────────────────────────────────────
+  const cfKPIs=document.getElementById('cfKPIs');
+  if(cfKPIs) cfKPIs.innerHTML=[
+    {l:'Tổng CF dương 20 năm',v:fB(rows.filter(r=>r.surplusM>0).reduce((a,r)=>a+r.surplusM*12,0)/1000),c:'good',s:'Cộng dồn'},
+    {l:'CF trung bình/tháng',v:fM(rows.reduce((a,r)=>a+r.surplusM,0)/rows.length),c:'teal',s:'20 năm'},
+    {l:'CF thấp nhất/tháng',v:fM(Math.min(...rows.map(r=>r.surplusM))),c:Math.min(...rows.map(r=>r.surplusM))<0?'bad':'good',s:'Chu kỳ xấu nhất'},
+    {l:'CF cao nhất/tháng',v:fM(Math.max(...rows.map(r=>r.surplusM))),c:'good',s:'Chu kỳ tốt nhất'},
+    {l:'Năm CF dương đầu tiên',v:rows.find(r=>r.surplusM>0)?.yr||'–',c:'teal',s:''},
+    {l:'Tổng tiền dư tái đầu tư',v:fB(rows.reduce((a,r)=>a+r.prepayM*12,0)/1000),c:'save',s:'Vào gốc sớm'},
+  ].map(k=>`<div class="kpi ${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+
+  if(document.getElementById('cfStackedChart')){
+    mkChart('cfStackedChart','bar',{labels,datasets:[
+      {label:'DT thuê',data:rentData,backgroundColor:C_TEAL+'99',borderRadius:3,stack:'in'},
+      {label:'Thu nhập GĐ',data:rows.map(r=>r.incomeM),backgroundColor:C_GREEN+'66',borderRadius:3,stack:'in'},
+      {label:'Sinh hoạt',data:livingData.map(v=>-v),backgroundColor:C_RED+'88',borderRadius:3,stack:'out'},
+      {label:'PMT',data:pmtData.map(v=>-v),backgroundColor:C_ORANGE+'88',borderRadius:3,stack:'out'},
+      {label:'VH+Thuế',data:rows.map(r=>-(r.grossM-r.noiM)),backgroundColor:C_GOLD+'88',borderRadius:3,stack:'out'},
+    ]},{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:false,title:{display:true,text:'Tr/tháng'}}}});
+
+    let cumRaw=0,cumComp=0;
+    const cumRawData=[],cumCompData=[];
+    rows.forEach(r=>{cumRaw+=Math.max(0,r.surplusM*12);cumRawData.push(+f(cumRaw/1000,2));
+      cumComp=cumComp*1.07+Math.max(0,r.surplusM*12*1e6)/1e9;cumCompData.push(+f(cumComp,2));});
+    mkChart('cfCumChart','line',{labels,datasets:[
+      {label:'CF Tích lũy Raw (tỷ)',data:cumRawData,borderColor:C_BLUE,borderWidth:2,tension:.4,fill:false},
+      {label:'CF+7% compound (tỷ)',data:cumCompData,borderColor:C_PURPLE,backgroundColor:C_PURPLE+'15',borderWidth:2.5,tension:.4,fill:true},
+    ]},{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+  }
+
+  // Break-even table
+  const beContainer=document.getElementById('breakEvenContainer');
+  if(beContainer){
+    beContainer.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+    ${CYCLES.map((c,i)=>{
+      const cyRows=rows.filter(r=>r.cycId===i);
+      const negMonths=cyRows.filter(r=>r.surplusM<0).length*12;
+      const avgCF=cyRows.reduce((a,r)=>a+r.surplusM,0)/cyRows.length;
+      const breakEvenRent=(p.income+CYCLES[i].occ*(CYCLES[i].rateFloat>0?CYCLES[i].rateFloat:0.10)*p.loan*1e9/1e6/12)/(rooms*CYCLES[i].occ);
+      return `<div class="ibox ${avgCF>0?'best':avgCF>-10?'warn':'danger'}">
+        <h3>${c.icon} ${c.name}</h3>
+        <ul>
+          <li>CF TB: <strong>${avgCF>0?'+':''}${f(avgCF,1)} tr/th</strong></li>
+          <li>Số tháng CF âm: <strong>${negMonths} tháng</strong></li>
+          <li>Giá thuê hoà vốn: <strong>≥ ${f(breakEvenRent,1)} tr/ph</strong></li>
+          <li>Lấp đầy hiện tại: <strong>${c.occ*100}%</strong></li>
+        </ul>
+      </div>`;
+    }).join('')}
+    </div>`;
+  }
+
+  // ── DEBT TAB ──────────────────────────────────────────────
+  const debtKPIs=document.getElementById('debtKPIs');
+  if(debtKPIs){
+    const baseInterest=(()=>{let l=p.loan*1e9,tot=0;for(let yr=1;yr<=p.term;yr++){const r=yr<=2?p.rPromo:CYCLES[Math.min(3,Math.floor((yr-1)/5))].rateFloat;const pm2=pmt(l/1e9,r,Math.max(1,p.term-(yr-1)))*12*1e6;const interest=l*r;tot+=interest;l=Math.max(0,l-pm2+interest);}return tot/1e6;})();
+    const actualInterest=totalInterestPaid;
+    debtKPIs.innerHTML=[
+      {l:'Tổng lãi (không trả sớm)',v:fM(baseInterest),c:'bad',s:'Lịch gốc 20 năm'},
+      {l:'Tổng lãi thực tế',v:fM(actualInterest),c:'warn',s:'Sau trả sớm'},
+      {l:'Tiết kiệm lãi',v:fM(baseInterest-actualInterest),c:'good',s:'Nhờ trả sớm'},
+      {l:'Tổng trả gốc sớm',v:fM(totalPrepay),c:'teal',s:'20 năm'},
+      {l:'Tổng phí phạt',v:fM(totalPenalty),c:totalPenalty>0?'warn':'good',s:'Trả trong kỳ phạt'},
+      {l:'Net savings',v:fM(baseInterest-actualInterest-totalPenalty),c:'good',s:'Tiết kiệm lãi – Phí phạt'},
+    ].map(k=>`<div class="kpi ${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+  }
+
+  if(document.getElementById('debtCompareChart')){
+    // Scheduled vs Actual remaining balance
+    const schedBal=[], actualBal=[];
+    let ls=p.loan*1e9;
+    rows.forEach(r=>{schedBal.push(+f(ls/1e9,3));actualBal.push(+f(r.lremBil,3));
+      const rate=r.rate/100; const pm2=pmt(ls/1e9,rate,Math.max(1,p.term-(r.yr-1)))*12*1e6;
+      ls=Math.max(0,ls-pm2+ls*rate);});
+    mkChart('debtCompareChart','line',{labels,datasets:[
+      {label:'Dư nợ gốc (theo lịch)',data:schedBal,borderColor:C_GOLD,borderWidth:2,tension:.3,borderDash:[5,3]},
+      {label:'Dư nợ thực tế (trả sớm)',data:actualBal,borderColor:C_RED,backgroundColor:C_RED+'15',borderWidth:2.5,tension:.3,fill:true},
+    ]},{plugins:{legend:{position:'top'}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+  }
+
+  // Penalty analysis bars
+  const penContainer=document.getElementById('penaltyAnalysis');
+  if(penContainer){
+    const penRows=rows.slice(0,p.penYrs);
+    const maxNet=Math.max(...penRows.map(r=>Math.abs(r.prepayM*r.rate/100*12-r.penaltyM)))||1;
+    penContainer.innerHTML=`<div style="font-size:.78rem;color:var(--ink2);margin-bottom:8px">Mỗi năm: Lãi tiết kiệm (trả sớm) vs Phí phạt → Net có dương không?</div>`+
+      penRows.map(r=>{
+        const interestSaved=r.prepayM*12*1000*(r.rate/100);
+        const net=interestSaved-r.penaltyM*12*1000;
+        const isBeneficial=net>0;
+        return `<div class="pen-row">
+          <div class="pen-yr">Năm ${r.yr}</div>
+          <div style="flex:1">
+            <div style="font-size:.7rem;color:var(--ink3)">Trả sớm: ${f(r.prepayM,1)} tr/th · Phí phạt: ${f(r.penaltyM,2)} tr/th</div>
+            <div class="pen-bar-wrap"><div class="pen-bar" style="width:${Math.min(100,Math.abs(net)/maxNet*100)}%;background:${isBeneficial?C_GREEN:C_RED}"></div></div>
+          </div>
+          <div class="pen-verdict" style="color:${isBeneficial?C_DKGREEN:C_RED}">${isBeneficial?'✅ Có lợi':'⚠️ Cân nhắc'}</div>
+        </div>`;
+      }).join('');
+  }
+
+  if(document.getElementById('debtTable')){
+    document.getElementById('debtTable').innerHTML=`<thead><tr><th>Năm</th><th>Lãi suất</th><th>PMT lý thuyết</th><th>Trả gốc sớm/th</th><th>Phí phạt/th</th><th>Dư nợ cuối (tỷ)</th><th>Lãi tiết kiệm được</th><th>Net benefit</th></tr></thead><tbody>`+
+      rows.map(r=>{const saved=r.prepayM*r.rate/100*12*1000;const net=saved-r.penaltyM*12;const rowCls=r.isPaid?'rw-paid':r.yr<=p.penYrs&&r.penaltyM>0?'rw-warn':'';
+        return `<tr class="${rowCls}"><td>${r.yr}</td><td>${f(r.rate,0)}%</td><td class="neg">${r.pmtM>0?f(r.pmtM,1):'–'}</td><td class="pos">${r.prepayM>0?f(r.prepayM,1):'–'}</td><td class="${r.penaltyM>0?'neg':'dim'}">${r.penaltyM>0?f(r.penaltyM,2):'–'}</td><td class="${r.lremBil<=0?'pos':''}">${r.lremBil<=0?'✅ 0':f(r.lremBil,3)}</td><td class="pos">${r.prepayM>0?f(r.prepayM*r.rate/100,2):'–'}</td><td class="${net>0?'pos':net<0?'neg':'dim'}">${r.prepayM>0?(net>0?'+':'')+f(net,2):'–'}</td></tr>`;
+      }).join('')+'</tbody>';
+  }
+
+  // ── SAVINGS TAB ──────────────────────────────────────────
+  const saveKPIs=document.getElementById('saveKPIs');
+  if(saveKPIs) saveKPIs.innerHTML=[
+    {l:'TK tích lũy 20 năm',v:fB(savings),c:'save',s:`@${p.saveRate*100}%/năm`},
+    {l:'Bắt đầu tích lũy',v:`Năm ${payoffYr||p.term}`,c:'teal',s:'Sau tất nợ'},
+    {l:'Số năm tích lũy',v:`${20-(payoffYr||p.term)} năm`,c:'teal',s:'Hiệu quả compound'},
+    {l:'TK raw (không lãi)',v:fB(rows.filter(r=>r.saveAddM>0).reduce((a,r)=>a+r.saveAddM*12,0)/1000),c:'',s:'Không compound'},
+    {l:'Lợi từ lãi kép',v:fB(savings-rows.filter(r=>r.saveAddM>0).reduce((a,r)=>a+r.saveAddM*12,0)/1000),c:'good',s:'Compound interest'},
+    {l:'NAV cuối cùng (năm 20)',v:fB(rows[19].nav),c:'gold',s:'TQ+XD+TK–Nợ'},
+  ].map(k=>`<div class="kpi ${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+
+  if(document.getElementById('saveGrowthChart')){
+    mkChart('saveGrowthChart','line',{labels,datasets:[
+      {label:'Gửi TK/tháng (tr)',data:rows.map(r=>+f(r.saveAddM,1)),borderColor:C_PURPLE+'88',backgroundColor:C_PURPLE+'15',fill:true,borderWidth:1.5,tension:.3,yAxisID:'y',type:'bar'},
+      {type:'line',label:'TK tích lũy (tỷ)',data:saveData,borderColor:C_PURPLE,borderWidth:3,pointRadius:rows.map(r=>r.saveAddM>0?3:0),tension:.4,yAxisID:'y2'},
+    ]},{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Gửi/th (tr)'}},y2:{position:'right',title:{display:true,text:'Tích lũy (tỷ)'},grid:{display:false}}}});
+
+    // Save rate comparison
+    const ratesCompare=[5,6,7,8,9,10];
+    const compareData=ratesCompare.map(sr=>{
+      // Run the model with this save rate to get accurate compound result
+      const altP={...p,saveRate:sr/100};
+      const altResult=runModel(CYCLES,altP);
+      return +f(altResult.savings,2);
+    });
+    mkChart('saveRateCompareChart','bar',{
+      labels:ratesCompare.map(r=>r+'%/năm'),
+      datasets:[{label:'TK tích lũy 20 năm (tỷ)',data:compareData,backgroundColor:ratesCompare.map(r=>r<7?C_GOLD+'88':r===7?C_GREEN+'CC':C_PURPLE+'88'),borderRadius:6}]
+    },{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+  }
+
+  if(document.getElementById('saveTable')){
+    document.getElementById('saveTable').innerHTML=`<thead><tr><th>Năm</th><th>CF dư (tr/th)</th><th>Gửi TK/th (tr)</th><th>TK đầu năm (tỷ)</th><th>Lãi 7% (tr)</th><th>TK cuối năm (tỷ)</th></tr></thead><tbody>`+
+      rows.map((r,i)=>{const prev=i>0?rows[i-1].savingsBil:0;const interest=(prev*p.saveRate);return `<tr class="${r.saveAddM>0?'rw-save':''}"><td>${r.yr}</td><td class="${r.surplusM>0?'pos':''}">${r.surplusM>0?'+':''}${f(r.surplusM,1)}</td><td class="${r.saveAddM>0?'':'dim'}" style="color:${C_PURPLE}">${r.saveAddM>0?f(r.saveAddM,1):'–'}</td><td>${f(prev,3)}</td><td class="${interest>0?'pos':'dim'}">${interest>0?'+'+f(interest*1000,1):'–'}</td><td style="font-weight:700;color:${C_PURPLE}">${r.savingsBil>0?f(r.savingsBil,3):'–'}</td></tr>`;}).join('')+'</tbody>';
+  }
+
+  // ── SCENARIOS TAB ────────────────────────────────────────
+  renderScenarios(rows,labels,p);
+
+  // ── SENSITIVITY TAB ──────────────────────────────────────
+  renderSensitivity(p,rows);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCENARIOS
+// ═══════════════════════════════════════════════════════════
+const MAIN_SCENS={
+  base: {name:'Cơ sở',cycles:null}, // uses current CYCLES
+  opt:  {name:'Lạc quan',mods:{rentMult:1.2,occAdd:.05,rateReduce:.01}},
+  pess: {name:'Bi quan',  mods:{rentMult:0.85,occAdd:-.10,rateAdd:.02}},
+  stress:{name:'Cực xấu', mods:{rentMult:0.70,occAdd:-.20,rateAdd:.04}},
+};
+let activeScen='base';
+function setMainScen(s,btn){
+  activeScen=s;
+  document.querySelectorAll('.st-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  rebuild();
+}
+function applyScenMods(cycles,mods){
+  if(!mods) return cycles;
+  return cycles.map(c=>({...c,
+    rent:c.rent*(mods.rentMult||1),
+    occ:Math.max(.3,Math.min(1,c.occ+(mods.occAdd||0))),
+    rateFloat:c.rateFloat+(mods.rateAdd||0)-(mods.rateReduce||0),
+  }));
+}
+
+function renderScenarios(baseRows,labels,p){
+  const sContainer=document.getElementById('scenKPIs');
+  if(!sContainer) return;
+  const scens=['base','opt','pess','stress'];
+  const results={};
+  scens.forEach(s=>{
+    const mods=MAIN_SCENS[s].mods;
+    const adjCycles=applyScenMods(CYCLES,mods);
+    const r=runModel(adjCycles,p);
+    results[s]=r;
+  });
+
+  sContainer.innerHTML=scens.map(s=>{
+    const r=results[s];const cols={base:'',opt:'good',pess:'warn',stress:'bad'};
+    const names={base:'📊 Cơ sở',opt:'🟢 Lạc quan',pess:'🔴 Bi quan',stress:'💀 Cực xấu'};
+    return `<div class="kpi ${cols[s]}"><div class="kl">${names[s]}</div><div class="kv">${fM(r.rows[0].surplusM)}</div><div class="ks">CF T1 · Tất nợ N${r.payoffYr||p.term} · TK ${fB(r.savings)}</div></div>`;
+  }).join('');
+
+  if(document.getElementById('scenCFChart')){
+    const colors={base:C_BLUE,opt:C_DKGREEN,pess:C_ORANGE,stress:C_RED};
+    const names={base:'Cơ sở',opt:'Lạc quan',pess:'Bi quan',stress:'Cực xấu'};
+    mkChart('scenCFChart','line',{labels,datasets:scens.map(s=>({
+      label:names[s],data:results[s].rows.map(r=>+f(r.surplusM)),
+      borderColor:colors[s],backgroundColor:colors[s]+'15',borderWidth:s==='base'?2.5:1.8,
+      tension:.4,fill:s==='base',borderDash:s==='stress'?[4,3]:[],pointRadius:2,
+    }))},{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tr/tháng'}}}});
+
+    mkChart('scenNAVChart','line',{labels,datasets:scens.map(s=>({
+      label:names[s],data:results[s].rows.map(r=>+f(r.nav,1)),
+      borderColor:colors[s],borderWidth:s==='base'?2.5:1.8,tension:.4,fill:false,
+      borderDash:s==='stress'?[4,3]:[],pointRadius:2,
+    }))},{plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>`${c.dataset.label}: ${c.raw} tỷ`}}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tỷ VNĐ'}}}});
+
+    // Scenario comparison table
+    const stbl=document.getElementById('scenTable');
+    if(stbl) stbl.innerHTML=`<thead><tr><th>Chỉ tiêu</th>${scens.map(s=>`<th>${{base:'📊 Cơ sở',opt:'🟢 Lạc quan',pess:'🔴 Bi quan',stress:'💀 Cực xấu'}[s]}</th>`).join('')}</tr></thead><tbody>`+
+      [['CF ròng T1 (tr/th)',s=>fM(results[s].rows[0].surplusM),''],
+       ['CF ròng T5 (tr/th)',s=>fM(results[s].rows[4].surplusM),''],
+       ['CF ròng T10 (tr/th)',s=>fM(results[s].rows[9].surplusM),''],
+       ['Tất nợ năm',s=>results[s].payoffYr||p.term,''],
+       ['Tổng phí phạt (tr)',s=>fM(results[s].totalPenalty),''],
+       ['TK 20 năm (tỷ)',s=>fB(results[s].savings),''],
+       ['NAV cuối (tỷ)',s=>fB(results[s].rows[19].nav),''],
+      ].map(([label,fn])=>`<tr><td class="bold">${label}</td>${scens.map(s=>`<td>${fn(s)}</td>`).join('')}</tr>`).join('')+'</tbody>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SENSITIVITY ANALYSIS
+// ═══════════════════════════════════════════════════════════
+function renderSensitivity(p,baseRows){
+  if(!document.getElementById('tornadoChart')) return;
+  const baseP=getParams();
+  const baseCF=baseRows[0].surplusM;
+  const rooms=(baseP.fl-1)*2;
+
+  // Tornado: vary each param ±20% and see CF impact
+  const vars=[
+    {label:'Giá thuê (+20%)', cfHigh:runModel(CYCLES.map(c=>({...c,rent:c.rent*1.2})),baseP).rows[0].surplusM},
+    {label:'Giá thuê (−20%)', cfHigh:runModel(CYCLES.map(c=>({...c,rent:c.rent*0.8})),baseP).rows[0].surplusM},
+    {label:'Lấp đầy +10%', cfHigh:runModel(CYCLES.map((c,i)=>i===0?{...c,occ:Math.min(1,c.occ+.10)}:c),baseP).rows[0].surplusM},
+    {label:'Lấp đầy −10%', cfHigh:runModel(CYCLES.map((c,i)=>i===0?{...c,occ:Math.max(.3,c.occ-.10)}:c),baseP).rows[0].surplusM},
+    {label:'Lãi suất +2%', cfHigh:runModel(CYCLES.map((c,i)=>i===0?{...c,rateFloat:c.rateFloat+.02}:c),baseP).rows[0].surplusM},
+    {label:'Lãi suất −2%', cfHigh:runModel(CYCLES.map((c,i)=>i===0?{...c,rateFloat:Math.max(.05,c.rateFloat-.02)}:c),baseP).rows[0].surplusM},
+    {label:'Chi phí sống +20%', cfHigh:runModel(CYCLES.map((c,i)=>i===0?{...c,living:c.living*1.2}:c),baseP).rows[0].surplusM},
+    {label:'Thu nhập GĐ +20%', cfHigh:runModel(CYCLES,{...baseP,income:baseP.income*1.2}).rows[0].surplusM},
+  ];
+  const diffs=vars.map(v=>+f(v.cfHigh-baseCF,1));
+  const colors=diffs.map(d=>d>0?C_GREEN+'CC':C_RED+'CC');
+  mkChart('tornadoChart','bar',{
+    labels:vars.map(v=>v.label),
+    datasets:[{label:'Thay đổi CF (tr/th)',data:diffs,backgroundColor:colors,borderRadius:4}]
+  },{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw>0?'+':''}${c.raw} tr/th so với cơ sở`}}},
+    scales:{x:{title:{display:true,text:'Thay đổi CF (tr/tháng)'},grid:{color:'rgba(0,0,0,.04)'}},y:{grid:{display:false}}}});
+
+  // Sensitivity matrix: occupancy × interest rate
+  const occs=[.60,.65,.70,.75,.80,.85,.90,.95];
+  const rates=[.08,.09,.10,.11,.12,.13];
+  const matrix=rates.map(r=>occs.map(o=>{
+    const cf=runModel(CYCLES.map((c,i)=>i===0?{...c,occ:o,rateFloat:r}:c),baseP).rows[0].surplusM;
+    return cf;
+  }));
+  const mContainer=document.getElementById('sensitivityMatrix');
+  if(mContainer){
+    mContainer.innerHTML=`<table><thead><tr><th>Lãi\\ Lấp đầy</th>${occs.map(o=>`<th>${Math.round(o*100)}%</th>`).join('')}</tr></thead><tbody>`+
+      rates.map((r,ri)=>`<tr><td class="bold">${Math.round(r*100)}%</td>${matrix[ri].map(v=>`<td style="background:${v>20?C_DKGREEN+22:v>0?C_GREEN+22:v>-15?'#FFF8E1':C_RED+22};font-weight:${Math.abs(v)>10?700:400};color:${v>0?C_DKGREEN:C_RED};text-align:center">${v>0?'+':''}${f(v,1)}</td>`).join('')}</tr>`
+      ).join('')+'</tbody></table>';
+  }
+
+  // Rent sensitivity
+  const rentVals=[5,6,7,8,9,10,11,12,13,14,15];
+  mkChart('rentSensChart','line',{labels:rentVals.map(r=>r+' tr'),datasets:[{
+    label:'CF ròng/tháng',
+    data:rentVals.map(rv=>+f(runModel(CYCLES.map((c,i)=>i===0?{...c,rent:rv}:c),baseP).rows[0].surplusM,1)),
+    borderColor:C_TEAL,backgroundColor:C_TEAL+'20',fill:true,borderWidth:2.5,tension:.4,
+  }]},{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tr/tháng'}}}});
+
+  // Rate sensitivity
+  const rateVals=[7,8,9,10,11,12,13,14];
+  mkChart('rateSensChart','line',{labels:rateVals.map(r=>r+'%'),datasets:[{
+    label:'CF ròng/tháng',
+    data:rateVals.map(rv=>+f(runModel(CYCLES.map((c,i)=>i===0?{...c,rateFloat:rv/100}:c),baseP).rows[0].surplusM,1)),
+    borderColor:C_RED,backgroundColor:C_RED+'15',fill:true,borderWidth:2.5,tension:.4,
+  }]},{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'Tr/tháng'}}}});
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── PARAMS PANEL in params tab ──────────────────────────
+document.querySelectorAll('.params-hdr').forEach(hdr=>{
+  hdr.addEventListener('click',function(){
+    this.classList.toggle('open');
+    this.nextElementSibling.classList.toggle('open');
+  });
+});
+
+// ── INITIAL RENDER ──────────────────────────────────────
+rebuild();
+</script>
+</body>
+</html>

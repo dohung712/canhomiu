@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phân Tích Đầu Tư BĐS — Hùng 2025 Pro v3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{
+  --ink:#0c0e14;--ink2:#1a1d2e;--ink3:#42486a;--ink4:#8891b3;
+  --line:#e2e6f3;--line2:#eef0f9;--bg:#f1f4fc;--surf:#fff;
+  --g:#b8860b;--g2:#d4a017;--gl:#fdf3d8;
+  --green:#0d6e4a;--gr2:#1a9e6c;--grl:#d5f3e8;
+  --red:#a8201a;--rd2:#cf3730;--rdl:#fce5e4;
+  --blue:#1348a0;--bl2:#2665d0;--bll:#dce8fc;
+  --pur:#4e2390;--pul:#ede4f8;
+  --teal:#0a6678;--tel:#cdf0f7;
+  --ora:#b84a08;--orl:#fde8d5;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --shadow2:0 2px 8px rgba(0,0,0,.1);
+}
+[data-dark]{
+  --ink:#e8ecf8;--ink2:#c0c8e8;--ink3:#8891b3;--ink4:#4a5070;
+  --line:#2a2f45;--line2:#232739;--bg:#141720;--surf:#1c2030;
+  --g:#d4a017;--g2:#f0b820;--gl:#2a2410;
+  --green:#1a9e6c;--gr2:#28c888;--grl:#0a2a1c;
+  --red:#cf3730;--rd2:#e85550;--rdl:#2a0e0e;
+  --blue:#2665d0;--bl2:#4d88f0;--bll:#0e1e3a;
+  --pur:#7040c0;--pul:#1e1230;
+  --teal:#1090a8;--tel:#082028;
+  --ora:#d4600a;--orl:#2a1408;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.65;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.hdr{background:var(--ink2);padding:0 36px;display:flex;align-items:stretch;min-height:62px;border-bottom:2px solid var(--g2);position:sticky;top:0;z-index:200;box-shadow:var(--shadow2)}
+.hdr-brand{display:flex;align-items:center;gap:12px;padding:14px 24px 14px 0;border-right:1px solid rgba(255,255,255,.07);margin-right:20px;flex-shrink:0}
+.hdr-logo{width:34px;height:34px;background:var(--g2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0}
+.hdr-title{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.hdr-sub{font-size:10px;color:var(--ink4);margin-top:1px}
+.hdr-stats{display:flex;align-items:stretch;flex:1}
+.hs{padding:10px 18px;border-right:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;justify-content:center}
+.hs-v{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:700;color:#fff}
+.hs-v.pos{color:#52e0a0}.hs-v.gold{color:var(--g2)}
+.hs-l{font-size:9px;color:var(--ink4);margin-top:1px;letter-spacing:.5px;text-transform:uppercase}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px;padding-left:16px}
+.btn-dark{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.btn-dark:hover{background:rgba(255,255,255,.14)}
+.hdr-badge{background:var(--g2);color:white;font-size:9.5px;font-weight:800;padding:4px 11px;border-radius:4px;letter-spacing:.6px;text-transform:uppercase}
+.nav{background:var(--surf);display:flex;overflow-x:auto;padding:0 36px;scrollbar-width:none;border-bottom:1px solid var(--line);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.nav::-webkit-scrollbar{display:none}
+.nb{padding:13px 16px;font-size:11px;font-weight:800;color:var(--ink4);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .18s;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:5px;user-select:none}
+.nb:hover{color:var(--ink3)}
+.nb.active{color:var(--g2);border-bottom-color:var(--g2)}
+.main{padding:24px 36px 60px;max-width:1300px;margin:0 auto}
+.sec{display:none;animation:fadeIn .18s ease}
+.sec.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:10px 0 0 10px}
+.kpi.kg::before{background:var(--gr2)}.kpi.kr::before{background:var(--rd2)}.kpi.ko::before{background:var(--g2)}.kpi.kb::before{background:var(--bl2)}.kpi.kp::before{background:var(--pur)}
+.kpi-lbl{font-size:9.5px;font-weight:800;color:var(--ink4);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.kpi-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;line-height:1.2}
+.kpi-val.pos{color:var(--green)}.kpi-val.neg{color:var(--red)}.kpi-val.gold{color:var(--g)}
+.kpi-sub{font-size:10px;color:var(--ink4);margin-top:4px}
+.sh{margin-bottom:20px}
+.sh-title{font-size:19px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px}
+.sh-sub{font-size:12px;color:var(--ink3);line-height:1.5}
+.hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:22px}
+.hero-card{background:var(--ink2);border-radius:13px;padding:26px;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(212,160,23,.1)}
+.hero-tag{font-size:9px;font-weight:800;color:var(--g2);text-transform:uppercase;letter-spacing:1.6px;margin-bottom:10px}
+.hero-h{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.3;margin-bottom:7px}
+.hero-h span{color:var(--g2)}
+.hero-p{font-size:11.5px;color:rgba(255,255,255,.55);line-height:1.65}
+.hero-m{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.hm-v{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#fff}
+.hm-v.gold{color:var(--g2)}.hm-v.green{color:#52e0a0}
+.hm-l{font-size:9.5px;color:rgba(255,255,255,.45);margin-top:2px}
+.profile{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:20px;box-shadow:var(--shadow)}
+.pf-h{font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.pf-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line2);font-size:12.5px}
+.pf-row:last-child{border-bottom:none}
+.pf-k{color:var(--ink3)}.pf-v{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pf-v.pos{color:var(--green)}.pf-v.g{color:var(--g)}
+.ctrl-panel{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:22px;box-shadow:var(--shadow)}
+.ctrl-lbl{font-size:9.5px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:13px;display:flex;align-items:center;gap:7px}
+.ctrl-lbl::before{content:'';display:inline-block;width:3px;height:12px;background:var(--g2);border-radius:2px}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px 16px}
+.cg label{display:block;font-size:9.5px;font-weight:700;color:var(--ink4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.cg input{width:100%;border:1.5px solid var(--line);border-radius:7px;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s}
+.cg input:focus{border-color:var(--g2);background:var(--surf)}
+.cg-hint{font-size:9.5px;color:var(--ink4);margin-top:3px}
+.ctrl-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.btn{border:none;padding:8px 20px;border-radius:7px;font-family:'Be Vietnam Pro',sans-serif;font-size:11.5px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:.3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--g2);color:white}.btn-primary:hover{background:var(--g)}
+.btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--ink3)}.btn-outline:hover{border-color:var(--g2);color:var(--g2)}
+.btn-red{background:var(--rdl);color:var(--red);border:1.5px solid var(--rd2)}.btn-red:hover{background:var(--rd2);color:#fff}
+.stress-panel{background:var(--surf);border:1.5px solid var(--rd2);border-radius:10px;padding:18px 20px;margin-bottom:22px;box-shadow:var(--shadow)}
+.stress-title{font-size:12px;font-weight:800;color:var(--red);margin-bottom:14px}
+.stress-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.stress-card{background:var(--rdl);border-radius:8px;padding:12px 14px}
+.stress-card.ok{background:var(--grl)}
+.stress-lbl{font-size:9.5px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stress-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700}
+.stress-val.neg{color:var(--red)}.stress-val.ok{color:var(--green)}.stress-val.warn{color:var(--g)}
+.stress-sub{font-size:10px;color:var(--ink3);margin-top:2px}
+.tbl-wrap{background:var(--surf);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:18px;box-shadow:var(--shadow)}
+.tbl-hdr{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tbl-title{font-size:12.5px;font-weight:700}
+.badge{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.badge.g{background:var(--grl);color:var(--green)}.badge.r{background:var(--rdl);color:var(--red)}.badge.o{background:var(--gl);color:var(--g)}.badge.b{background:var(--bll);color:var(--blue)}
+.tbl-ov{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--bg);padding:8px 13px;text-align:left;font-size:9.5px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--line);white-space:nowrap}
+thead th:first-child{padding-left:16px}
+tbody td{padding:8px 13px;font-size:12px;border-bottom:1px solid var(--line2);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+tbody td:first-child{padding-left:16px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+tfoot td{padding:9px 13px;background:var(--bg);border-top:2px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+tfoot td:first-child{padding-left:16px}
+.tdl{font-family:'Be Vietnam Pro',sans-serif;font-weight:500;color:var(--ink)}
+.tdl.b{font-weight:700}
+.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}.gld{color:var(--g);font-weight:600}.dim{color:var(--ink4)}.bld{font-weight:700}
+.hbox{border-radius:9px;padding:14px 16px;margin-bottom:16px;font-size:12.5px;line-height:1.7}
+.hbox strong{font-weight:800;display:block;margin-bottom:4px;font-size:13px}
+.hbox.ok{background:var(--grl);border-left:4px solid var(--gr2)}.hbox.warn{background:var(--gl);border-left:4px solid var(--g2)}.hbox.bad{background:var(--rdl);border-left:4px solid var(--rd2)}.hbox.info{background:var(--bll);border-left:4px solid var(--bl2)}
+.sc-hdr{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;box-shadow:var(--shadow)}
+.sc-num{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0}
+.sc-num.pa1{background:var(--rdl);color:var(--red)}.sc-num.pa2{background:var(--bll);color:var(--blue)}.sc-num.pa3{background:var(--grl);color:var(--green)}.sc-num.pa4{background:var(--gl);color:var(--g)}.sc-num.pa5{background:var(--pul);color:var(--pur)}.sc-num.pa6{background:var(--tel);color:var(--teal)}.sc-num.pa7{background:var(--orl);color:var(--ora)}
+.sc-meta{flex:1}
+.sc-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.sc-desc{font-size:11px;color:var(--ink3);line-height:1.5}
+.verdict{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.3px;white-space:nowrap;flex-shrink:0}
+.verdict.best{background:var(--ink2);color:var(--g2)}.verdict.good{background:var(--grl);color:var(--green)}.verdict.caut{background:var(--gl);color:var(--g)}.verdict.danger{background:var(--rdl);color:var(--red)}
+.pa-tabs{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.pa-tab{padding:6px 13px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .14s;user-select:none}
+.pa-tab.pa1{background:var(--rdl);color:var(--red)}.pa-tab.pa1.active{border-color:var(--red)}
+.pa-tab.pa2{background:var(--bll);color:var(--blue)}.pa-tab.pa2.active{border-color:var(--blue)}
+.pa-tab.pa3{background:var(--grl);color:var(--green)}.pa-tab.pa3.active{border-color:var(--green)}
+.pa-tab.pa4{background:var(--gl);color:var(--g)}.pa-tab.pa4.active{border-color:var(--g)}
+.pa-tab.pa5{background:var(--pul);color:var(--pur)}.pa-tab.pa5.active{border-color:var(--pur)}
+.pa-tab.pa6{background:var(--tel);color:var(--teal)}.pa-tab.pa6.active{border-color:var(--teal)}
+.pa-tab.pa7{background:var(--orl);color:var(--ora)}.pa-tab.pa7.active{border-color:var(--ora)}
+.pa-detail{display:none}.pa-detail.active{display:block;animation:fadeIn .18s ease}
+.cf-sel{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:18px;box-shadow:var(--shadow)}
+.cf-sel-lbl{font-size:9.5px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cf-sel-lbl::before{content:'';display:inline-block;width:3px;height:12px;background:var(--g2);border-radius:2px}
+.cf-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.cft{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .14s;user-select:none}
+.cft.pa1{background:var(--rdl);color:var(--red)}.cft.pa1.active{border-color:var(--red);box-shadow:0 0 0 3px rgba(168,32,26,.1)}
+.cft.pa2{background:var(--bll);color:var(--blue)}.cft.pa2.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(19,72,160,.1)}
+.cft.pa3{background:var(--grl);color:var(--green)}.cft.pa3.active{border-color:var(--green);box-shadow:0 0 0 3px rgba(13,110,74,.1)}
+.cft.pa4{background:var(--gl);color:var(--g)}.cft.pa4.active{border-color:var(--g);box-shadow:0 0 0 3px rgba(184,134,11,.1)}
+.cft.pa5{background:var(--pul);color:var(--pur)}.cft.pa5.active{border-color:var(--pur);box-shadow:0 0 0 3px rgba(78,35,144,.1)}
+.cft.pa6{background:var(--tel);color:var(--teal)}.cft.pa6.active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,102,120,.1)}
+.cft.pa7{background:var(--orl);color:var(--ora)}.cft.pa7.active{border-color:var(--ora);box-shadow:0 0 0 3px rgba(184,74,8,.1)}
+.chart-outer{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px;margin-bottom:18px;box-shadow:var(--shadow)}
+.chart-title{font-size:12px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+.cl{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--ink3)}
+.cl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.cmp-best{background:var(--grl)!important;color:var(--green);font-weight:700}
+.cmp-worst{background:var(--rdl)!important;color:var(--red)}
+.cmp-mid{background:var(--gl)!important;color:var(--g)}
+.cmp-sticky{position:sticky;left:0;background:var(--bg)!important;z-index:5}
+.score-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.score-card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:13px;flex:1;min-width:115px;text-align:center;box-shadow:var(--shadow)}
+.sc-ring{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:'JetBrains Mono',monospace;margin:0 auto 7px}
+.sc-pname{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.sc-cat{font-size:10px;color:var(--ink3)}
+.radar-wrap{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:18px;box-shadow:var(--shadow);display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.roadmap-wrap{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.rm-title{font-size:12.5px;font-weight:800;margin-bottom:18px}
+.rm-steps{display:flex;gap:0;position:relative}
+.rm-steps::before{content:'';position:absolute;top:18px;left:20px;right:20px;height:2px;background:var(--line);z-index:0}
+.rm-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}
+.rm-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-bottom:8px;border:3px solid var(--surf);flex-shrink:0}
+.rm-dot.now{background:var(--g2);color:#fff}.rm-dot.soon{background:var(--bl2);color:#fff}.rm-dot.future{background:var(--line);color:var(--ink3)}
+.rm-label{font-size:10px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.rm-sub{font-size:9px;color:var(--ink3);line-height:1.4;max-width:80px}
+.mkt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:13px;margin-bottom:18px}
+.mkt-card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+.mkt-title{font-size:11.5px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mkt-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line2);font-size:11.5px}
+.mkt-row:last-child{border-bottom:none}
+.mkt-k{color:var(--ink3)}.mkt-v{font-weight:700;font-family:'JetBrains Mono',monospace}
+.rb{margin-bottom:9px}
+.rb-hdr{display:flex;justify-content:space-between;margin-bottom:3px}
+.rb-lbl{font-size:11px;font-weight:600}
+.rb-val{font-size:9.5px;font-family:'JetBrains Mono',monospace;color:var(--ink3)}
+.rb-bg{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.rb-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.cf-info{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.cf-info-num{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0}
+.cf-info-meta{flex:1}
+.cf-info-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.cf-info-desc{font-size:11px;color:var(--ink3);line-height:1.45}
+.footer{background:var(--ink2);color:var(--ink4);text-align:center;font-size:10.5px;padding:16px 36px;line-height:1.7}
+@media(max-width:780px){.hero-grid,.two-col{grid-template-columns:1fr}.main{padding:16px 16px 50px}.nav,.hdr{padding-left:16px;padding-right:16px}.hdr-stats{display:none}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo">BĐS</div>
+    <div><div class="hdr-title">Phân Tích Đầu Tư — Hùng</div><div class="hdr-sub">Đà Nẵng 2025 · 7 Phương Án</div></div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="hs-v gold">15–17 tỷ</div><div class="hs-l">Tổng tài sản</div></div>
+    <div class="hs"><div class="hs-v pos" id="hdr-cf">+54 tr</div><div class="hs-l">CF PA3/tháng</div></div>
+    <div class="hs"><div class="hs-v" id="hdr-payback">Năm 9</div><div class="hs-l">Hoàn vốn PA3</div></div>
+    <div class="hs"><div class="hs-v pos">PA3 ⭐</div><div class="hs-l">Khuyến nghị</div></div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn-dark" onclick="toggleDark()" id="dark-btn">🌙 Dark</button>
+    <div class="hdr-badge">Pro v5</div>
+  </div>
+</div>
+<div class="nav">
+  <div class="nb active" onclick="showSec('overview')">🏠 Tổng Quan</div>
+  <div class="nb" onclick="showSec('scenarios')">📋 7 Phương Án</div>
+  <div class="nb" onclick="showSec('cashflow')">💰 Dòng Tiền</div>
+  <div class="nb" onclick="showSec('compare')">⚖️ So Sánh</div>
+  <div class="nb" onclick="showSec('market')">📈 Thị Trường</div>
+  <div class="nb" onclick="showSec('risk')">🛡️ Rủi Ro</div>
+  <div class="nb" onclick="showSec('roadmap')">🗺️ Lộ Trình</div>
+  <div class="nb" onclick="showSec('tanggia')">📐 Tăng Giá Đất</div>
+</div>
+<div class="main">
+
+<!-- OVERVIEW -->
+<div class="sec active" id="overview">
+  <div class="hero-grid">
+    <div class="hero-card">
+      <div class="hero-tag">📍 Đà Nẵng · 2025 · Phân Tích Độc Lập</div>
+      <div class="hero-h">Chuyển tài sản chết<br>thành <span>dòng tiền thật</span></div>
+      <div class="hero-p">Gia đình 5 người, 3 trẻ nhỏ — mục tiêu: chỗ ở ổn định + tài sản sinh lời + rủi ro tối thiểu. 7 phương án từ thận trọng đến tấn công.</div>
+      <div class="hero-m">
+        <div><div class="hm-v gold">5 tỷ</div><div class="hm-l">Đất Điện Ngọc bán</div></div>
+        <div><div class="hm-v">100m²</div><div class="hm-l">Lô trung tâm ĐN</div></div>
+        <div><div class="hm-v green" id="hero-cf">54 tr/th</div><div class="hm-l">Thu thuê PA3 năm 1</div></div>
+        <div><div class="hm-v gold">8–9 năm</div><div class="hm-l">Hoàn vốn PA3</div></div>
+      </div>
+    </div>
+    <div class="profile">
+      <div class="pf-h">🏡 Hồ Sơ Tài Chính</div>
+      <div class="pf-row"><span class="pf-k">Thu nhập gia đình</span><span class="pf-v pos">~60 tr/tháng</span></div>
+      <div class="pf-row"><span class="pf-k">Chi tiêu gia đình</span><span class="pf-v">~30–35 tr/tháng</span></div>
+      <div class="pf-row"><span class="pf-k">Tiết kiệm ròng</span><span class="pf-v pos">~25–30 tr/tháng</span></div>
+      <div class="pf-row"><span class="pf-k">Đất Điện Ngọc</span><span class="pf-v g">~5 tỷ</span></div>
+      <div class="pf-row"><span class="pf-k">Lô trung tâm (100m²)</span><span class="pf-v g">~10–12 tỷ</span></div>
+      <div class="pf-row"><span class="pf-k">Dư nợ hiện tại</span><span class="pf-v pos">0 đồng ✅</span></div>
+      <div class="pf-row"><span class="pf-k">Tổng tài sản</span><span class="pf-v g">~15–17 tỷ</span></div>
+      <div class="pf-row"><span class="pf-k">Đang thuê nhà</span><span class="pf-v">~8–10 tr/tháng</span></div>
+    </div>
+  </div>
+  <div class="ctrl-panel">
+    <div class="ctrl-lbl">⚙️ Thông Số Mô Phỏng — Thay đổi để tính lại toàn bộ tức thì</div>
+    <div class="ctrl-grid">
+      <div class="cg"><label>Lãi ưu đãi (%/năm)</label><input type="number" id="rate_pref" value="8.5" step="0.5" min="5" max="13"><div class="cg-hint">Năm 1–2 · Hiện tại 8–10%</div></div>
+      <div class="cg"><label>Lãi thả nổi (%/năm)</label><input type="number" id="rate_float" value="11.5" step="0.5" min="7" max="18"><div class="cg-hint">Từ năm 3 · Thị trường 10.5–13%</div></div>
+      <div class="cg"><label>Giá thuê/phòng (tr)</label><input type="number" id="rent_room" value="10" step="0.5" min="5" max="22"><div class="cg-hint">Trung tâm ĐN: 8–14tr/phòng</div></div>
+      <div class="cg"><label>Tăng giá thuê (%/năm)</label><input type="number" id="rent_growth" value="5" step="1" min="0" max="15"><div class="cg-hint">Lịch sử ĐN: 4–8%/năm</div></div>
+      <div class="cg"><label>Tăng giá BĐS (%/năm)</label><input type="number" id="asset_growth" value="8" step="1" min="2" max="20"><div class="cg-hint">Trung tâm ĐN: 7–12%</div></div>
+      <div class="cg"><label>Phòng trống (%)</label><input type="number" id="vacancy" value="10" step="5" min="0" max="40"><div class="cg-hint">Trung tâm ĐN: 5–15%</div></div>
+    </div>
+    <div class="ctrl-actions">
+      <button class="btn btn-primary" onclick="recalcAll()">🔄 Tính Lại</button>
+      <button class="btn btn-red" onclick="runStress()">⚡ Stress Test (Kịch Bản Xấu Nhất)</button>
+      <button class="btn btn-outline" onclick="resetP()">↩ Mặc Định</button>
+    </div>
+  </div>
+  <div class="stress-panel" id="stress-panel" style="display:none">
+    <div class="stress-title">⚡ Stress Test — Lãi 14% + Phòng Trống 30% + Giá Thuê Không Tăng</div>
+    <div class="stress-grid" id="stress-grid"></div>
+    <div class="hbox bad" id="stress-verdict"></div>
+  </div>
+  <div class="card-row">
+    <div class="kpi ko"><div class="kpi-lbl">Tài sản tổng</div><div class="kpi-val gold">~15–17 tỷ</div><div class="kpi-sub">2 lô đất (lô TT 10–12T, ĐN 5T)</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">Thu thuê PA3 năm 1</div><div class="kpi-val pos" id="ov-rent">54 tr</div><div class="kpi-sub">6 phòng · 90% lấp đầy</div></div>
+    <div class="kpi kr"><div class="kpi-lbl">CF PA1 thiếu hụt</div><div class="kpi-val neg" id="ov-pa1cf">-12 tr</div><div class="kpi-sub">Vay 3.8 tỷ — nguy hiểm</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">Hoàn vốn PA3</div><div class="kpi-val pos" id="ov-pb">Năm 9</div><div class="kpi-sub">Kịch bản lãi 11.5%</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">Tài sản PA3 năm 10</div><div class="kpi-val gold" id="ov-a10">10.8 tỷ</div><div class="kpi-sub">+8%/năm từ gốc 5 tỷ</div></div>
+    <div class="kpi kb"><div class="kpi-lbl">Tổng CF PA3 (20 năm)</div><div class="kpi-val" id="ov-tcf">~8 tỷ</div><div class="kpi-sub">Tích lũy dòng tiền thuần</div></div>
+  </div>
+  <div class="chart-outer">
+    <div class="chart-title">📊 So Sánh Tích Lũy Dòng Tiền — 4 Phương Án Chính (tỷ đồng, 20 năm)</div>
+    <div style="position:relative;height:280px"><canvas id="ov-chart" role="img" aria-label="So sánh CF tích lũy 4 PA">Biểu đồ so sánh.</canvas></div>
+    <div class="chart-legend">
+      <div class="cl"><div class="cl-dot" style="background:#17a36e"></div>PA3: Bán+Xây 4T ⭐</div>
+      <div class="cl"><div class="cl-dot" style="background:#d4a017"></div>PA4: Bán+Vay 3T Xây 6T</div>
+      <div class="cl"><div class="cl-dot" style="background:#5c2d99"></div>PA5: Bán+Vay 4T Xây 7T</div>
+      <div class="cl"><div class="cl-dot" style="background:#d63b33"></div>PA1: Vay 4T Xây 3T (⚠️)</div>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">📊 Dòng Tiền PA1 — 5 Năm Đầu</div><div class="badge r">⚠️ Rủi Ro Cao</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Năm</th><th>Lãi Suất</th><th>Thu Thuê/th</th><th>Trả Nợ/th</th><th>Chi GĐ/th</th><th>CF Thuần/th</th><th>Tích Lũy CF</th><th>Trạng Thái</th></tr></thead>
+      <tbody id="ov-pa1-tbl"></tbody>
+    </table></div>
+  </div>
+  <div class="hbox bad"><strong>⚠️ Tại sao PA1 là bẫy tài chính với gia đình 3 trẻ nhỏ</strong>Sau năm 2 lãi thả nổi đẩy trả nợ lên 36–42tr/tháng. Cộng chi GĐ 35tr = tổng chi 71–77tr. Biên an toàn chỉ 19–25tr — bị xóa sạch chỉ cần 1 phòng trống hoặc sự cố y tế. Đất Điện Ngọc vẫn chôn vốn không sinh lợi.</div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="sec" id="scenarios">
+  <div class="sh"><div class="sh-title">7 Phương Án — Phân Tích Chi Tiết</div><div class="sh-sub">Mỗi phương án có: cơ cấu phòng, dòng tiền từng năm, biểu đồ, timeline tương lai và đánh giá chuyên sâu.</div></div>
+  <div class="pa-tabs">
+    <div class="pa-tab pa1 active" onclick="showPA(1)">PA1: Vay 4T Xây 3T</div>
+    <div class="pa-tab pa2" onclick="showPA(2)">PA2: Sửa Nhà</div>
+    <div class="pa-tab pa3" onclick="showPA(3)">PA3: Bán+Xây 4T ⭐</div>
+    <div class="pa-tab pa4" onclick="showPA(4)">PA4: Bán+Vay 3T Xây 6T</div>
+    <div class="pa-tab pa5" onclick="showPA(5)">PA5: Bán+Vay 4T Xây 7T</div>
+  </div>
+
+  <!-- PA detail panels — all rendered by JS -->
+  <div class="pa-detail active" id="pa-1"><div id="pa1-inner"></div></div>
+  <div class="pa-detail" id="pa-2"><div id="pa2-inner"></div></div>
+  <div class="pa-detail" id="pa-3"><div id="pa3-inner"></div></div>
+  <div class="pa-detail" id="pa-4"><div id="pa4-inner"></div></div>
+  <div class="pa-detail" id="pa-5"><div id="pa5-inner"></div></div>
+</div>
+
+<!-- CASHFLOW -->
+<div class="sec" id="cashflow">
+  <div class="sh"><div class="sh-title">Dòng Tiền Chi Tiết — Chọn Từng Phương Án</div><div class="sh-sub">Phân tích dòng tiền đầy đủ 20 năm. Thay đổi thông số ở tab Tổng Quan.</div></div>
+  <div class="cf-sel">
+    <div class="cf-sel-lbl">📊 Chọn phương án để xem dòng tiền chi tiết:</div>
+    <div class="cf-tabs">
+      <div class="cft pa1" onclick="setCF(1)">PA1: Vay 4T Xây 3T</div>
+      <div class="cft pa2" onclick="setCF(2)">PA2: Sửa Nhà</div>
+      <div class="cft pa3 active" onclick="setCF(3)">PA3: Bán+Xây 4T ⭐</div>
+      <div class="cft pa4" onclick="setCF(4)">PA4: Bán+Vay 3T Xây 6T</div>
+      <div class="cft pa5" onclick="setCF(5)">PA5: Bán+Vay 4T Xây 7T</div>
+    </div>
+  </div>
+  <div class="cf-info" id="cf-info"></div>
+  <div class="card-row" id="cf-cards"></div>
+  <div class="chart-outer">
+    <div class="chart-title">📊 Dòng Tiền Thuần Hàng Tháng — 20 Năm</div>
+    <div style="position:relative;height:240px"><canvas id="cf-monthly" role="img" aria-label="CF tháng 20 năm">Biểu đồ CF tháng.</canvas></div>
+    <div class="chart-legend"><div class="cl"><div class="cl-dot" style="background:#17a36e"></div>Tháng dương</div><div class="cl"><div class="cl-dot" style="background:#d63b33"></div>Tháng âm</div></div>
+  </div>
+  <div class="chart-outer">
+    <div class="chart-title">📈 Tích Lũy Dòng Tiền & Giá Trị Tài Sản — 20 Năm (tỷ đồng)</div>
+    <div style="position:relative;height:260px"><canvas id="cf-cum" role="img" aria-label="Tích lũy CF và TS">Biểu đồ tích lũy.</canvas></div>
+    <div class="chart-legend">
+      <div class="cl"><div class="cl-dot" style="background:#2a6fd4"></div>Tích lũy CF</div>
+      <div class="cl"><div class="cl-dot" style="background:#d4a017"></div>Giá trị tài sản</div>
+      <div class="cl"><div class="cl-dot" style="background:#17a36e"></div>Tài sản ròng</div>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title" id="cf-tbl-title">Bảng Dòng Tiền Chi Tiết 20 Năm</div><div class="badge g" id="cf-badge">PA3</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Năm</th><th>Lãi Suất</th><th>Dư Nợ</th><th>Thu Thuê/th</th><th>Trả Nợ/th</th><th>Chi Khác/th</th><th>CF Thuần/th</th><th>Tích Lũy CF</th><th>Giá Trị TS</th><th>TS Ròng</th></tr></thead>
+      <tbody id="cf-body"></tbody>
+      <tfoot id="cf-foot"></tfoot>
+    </table></div>
+  </div>
+  <div class="hbox ok" id="cf-sum-box"><strong>📈 Nhận Định</strong><span id="cf-sum-txt">Đang tính...</span></div>
+</div>
+
+<!-- COMPARE -->
+<div class="sec" id="compare">
+  <div class="sh"><div class="sh-title">So Sánh Toàn Diện 7 Phương Án</div><div class="sh-sub">Radar chart + Heatmap + Điểm tổng hợp. Xanh tốt nhất · Đỏ kém nhất · Vàng trung bình.</div></div>
+  <div class="score-row" id="score-rings"></div>
+  <div class="radar-wrap">
+    <div style="flex:1;min-width:260px">
+      <div style="font-size:12px;font-weight:800;margin-bottom:12px">🕸️ Radar — PA3 vs PA1 vs PA5 (6 tiêu chí)</div>
+      <div style="position:relative;height:280px"><canvas id="radar-chart" role="img" aria-label="Radar so sánh">Radar chart.</canvas></div>
+    </div>
+    <div style="flex:1;min-width:260px">
+      <div style="font-size:12px;font-weight:800;margin-bottom:12px">📊 Tài Sản Ròng Năm 20 — 7 Phương Án (tỷ đồng)</div>
+      <div style="position:relative;height:280px"><canvas id="net-chart" role="img" aria-label="Tài sản ròng 7 PA">Bar chart.</canvas></div>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">Ma Trận So Sánh — Heatmap</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr>
+        <th class="cmp-sticky">Tiêu Chí</th>
+        <th>PA1<br><span style="color:#d63b33;font-size:9px">Vay 4T/3T</span></th>
+        <th>PA2<br><span style="color:#1752a8;font-size:9px">Sửa Nhà</span></th>
+        <th>PA3 ⭐<br><span style="color:#0f7b54;font-size:9px">Bán+Xây 4T</span></th>
+        <th>PA4<br><span style="color:#b8860b;font-size:9px">Bán+Vay 3T/6T</span></th>
+        <th>PA5<br><span style="color:#5c2d99;font-size:9px">Bán+Vay 4T/7T</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="tdl cmp-sticky">Dư nợ vay</td><td class="cmp-worst">3.8 tỷ</td><td class="cmp-best">0.5 tỷ</td><td class="cmp-best">1.2 tỷ</td><td class="cmp-mid">3.0 tỷ</td><td class="cmp-worst">4.0 tỷ</td></tr>
+        <tr><td class="tdl cmp-sticky">Số phòng cho thuê</td><td class="cmp-worst">4 phòng</td><td class="cmp-worst">0 phòng</td><td class="cmp-mid">6 phòng</td><td class="cmp-best">9 phòng</td><td class="cmp-best">11 phòng</td></tr>
+        <tr><td class="tdl cmp-sticky">Thu thuê/tháng (năm 1)</td><td class="cmp-worst" id="cmp-pa1r">~36 tr</td><td class="cmp-worst">0 tr</td><td class="cmp-mid" id="cmp-pa3r">~54 tr</td><td class="cmp-best">~81 tr</td><td class="cmp-best">~99 tr</td></tr>
+        <tr><td class="tdl cmp-sticky">Trả nợ/tháng</td><td class="cmp-worst">32–42 tr</td><td class="cmp-best">6.6 tr</td><td class="cmp-best">13 tr</td><td class="cmp-mid">28–32 tr</td><td class="cmp-worst">36–40 tr</td></tr>
+        <tr><td class="tdl cmp-sticky">CF tự do/tháng</td><td class="cmp-worst" id="cmp-pa1c">-12 đến -20</td><td class="cmp-worst">~+3 tr</td><td class="cmp-best" id="cmp-pa3c">+41–59 tr</td><td class="cmp-best">+49–53 tr</td><td class="cmp-best">+59–63 tr</td></tr>
+        <tr><td class="tdl cmp-sticky">Chỗ ở gia đình</td><td class="cmp-best">✅ Tầng 1</td><td class="cmp-best">✅ Nhà sửa</td><td class="cmp-best">✅ Tầng 1 mới</td><td class="cmp-best">✅ Tầng 1</td><td class="cmp-best">✅ Tầng 1</td></tr>
+        <tr><td class="tdl cmp-sticky">Hoàn vốn</td><td class="cmp-worst">14–17 năm</td><td class="cmp-worst">N/A</td><td class="cmp-best">8–9 năm</td><td class="cmp-mid">9–10 năm</td><td class="cmp-mid">10–11 năm</td></tr>
+        <tr><td class="tdl cmp-sticky">Tài sản ròng năm 20</td><td class="cmp-worst">~22–25 tỷ</td><td class="cmp-worst">~18–20 tỷ</td><td class="cmp-best" id="cmp-pa3a">~28–32 tỷ</td><td class="cmp-best">~33–38 tỷ</td><td class="cmp-best">~37–43 tỷ</td></tr>
+        <tr><td class="tdl cmp-sticky">Rủi ro tài chính</td><td class="cmp-worst">⚠️⚠️⚠️ Cao</td><td class="cmp-best">⚠️ Rất thấp</td><td class="cmp-best">⚠️ Thấp</td><td class="cmp-mid">⚠️⚠️ Trung bình</td><td class="cmp-worst">⚠️⚠️⚠️ Cao</td></tr>
+        <tr><td class="tdl cmp-sticky">Thời gian xây</td><td class="cmp-mid">18 tháng</td><td class="cmp-best">3–4 tháng</td><td class="cmp-best">18–20 tháng</td><td class="cmp-mid">20–22 tháng</td><td class="cmp-worst">22–24 tháng</td></tr>
+        <tr><td class="tdl cmp-sticky">Quản lý phức tạp</td><td class="cmp-mid">Trung bình</td><td class="cmp-best">Rất thấp</td><td class="cmp-mid">Trung bình</td><td class="cmp-mid">Cao</td><td class="cmp-worst">Rất cao</td></tr>
+        <tr class="bld"><td class="tdl bld cmp-sticky">ĐIỂM TỔNG /10</td><td class="cmp-worst bld">3/10</td><td class="cmp-worst bld">2/10</td><td class="cmp-best bld">9/10 ⭐</td><td class="cmp-best bld">8/10</td><td class="cmp-mid bld">7/10</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- MARKET -->
+<div class="sec" id="market">
+  <div class="sh"><div class="sh-title">Phân Tích Thị Trường Đà Nẵng 2025–2030</div><div class="sh-sub">Xu hướng, dự báo và các yếu tố ảnh hưởng đến quyết định đầu tư.</div></div>
+  <div class="chart-outer">
+    <div class="chart-title">📈 Dự Báo Giá Đất Trung Tâm & Vùng Ven ĐN (triệu/m²)</div>
+    <div style="position:relative;height:250px"><canvas id="mkt-chart" role="img" aria-label="Dự báo giá đất ĐN">Biểu đồ.</canvas></div>
+    <div class="chart-legend"><div class="cl"><div class="cl-dot" style="background:#17a36e"></div>Trung tâm ĐN (thực tế)</div><div class="cl"><div class="cl-dot" style="background:#d4a017"></div>Vùng ven Điện Ngọc (thực tế)</div><div class="cl"><div class="cl-dot" style="background:#17a36e;opacity:.4"></div>Dự báo TT</div><div class="cl"><div class="cl-dot" style="background:#d4a017;opacity:.4"></div>Dự báo vùng ven</div></div>
+  </div>
+  <div class="mkt-grid">
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--green)"></span>Cho Thuê Trung Tâm ĐN</div><div class="mkt-row"><span class="mkt-k">Giá thuê studio/1PN</span><span class="mkt-v pos">6–10 tr/tháng</span></div><div class="mkt-row"><span class="mkt-k">Giá thuê 2PN dài hạn</span><span class="mkt-v pos">10–18 tr/tháng</span></div><div class="mkt-row"><span class="mkt-k">Tăng trưởng/năm</span><span class="mkt-v">4–8%</span></div><div class="mkt-row"><span class="mkt-k">Tỷ lệ lấp đầy</span><span class="mkt-v pos">85–92%</span></div><div class="mkt-row"><span class="mkt-k">Xu hướng 2025</span><span class="mkt-v pos">↑ Tăng mạnh</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--g2)"></span>Đất Vùng Ven Điện Ngọc</div><div class="mkt-row"><span class="mkt-k">Giá hiện tại (7m ngang)</span><span class="mkt-v">25–35 tr/m²</span></div><div class="mkt-row"><span class="mkt-k">Tăng 2020–2025</span><span class="mkt-v pos">+80–120%</span></div><div class="mkt-row"><span class="mkt-k">Dự báo 2025–2030</span><span class="mkt-v gld">+30–60%</span></div><div class="mkt-row"><span class="mkt-k">Thanh khoản</span><span class="mkt-v gld">Trung bình</span></div><div class="mkt-row"><span class="mkt-k">Rủi ro quy hoạch</span><span class="mkt-v gld">Trung bình</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--blue)"></span>Lãi Suất & Điều Kiện Vay 2025</div><div class="mkt-row"><span class="mkt-k">Lãi ưu đãi 12–24 tháng</span><span class="mkt-v">7.5–9.5%</span></div><div class="mkt-row"><span class="mkt-k">Lãi thả nổi hiện tại</span><span class="mkt-v neg">10.5–12.5%</span></div><div class="mkt-row"><span class="mkt-k">Dự báo 2026–2027</span><span class="mkt-v gld">9.5–11%</span></div><div class="mkt-row"><span class="mkt-k">LTV tối đa BĐS</span><span class="mkt-v">60–70%</span></div><div class="mkt-row"><span class="mkt-k">Kỳ hạn vay tối đa</span><span class="mkt-v">20–25 năm</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--pur)"></span>Airbnb Đà Nẵng 2025</div><div class="mkt-row"><span class="mkt-k">Tổng listings ĐN</span><span class="mkt-v">~9,500</span></div><div class="mkt-row"><span class="mkt-k">Giá đêm trung bình</span><span class="mkt-v">400–900k</span></div><div class="mkt-row"><span class="mkt-k">Occupancy rate</span><span class="mkt-v">52–68%</span></div><div class="mkt-row"><span class="mkt-k">Mùa cao điểm</span><span class="mkt-v pos">T3–T8, Tết</span></div><div class="mkt-row"><span class="mkt-k">Rủi ro chính sách</span><span class="mkt-v gld">Có thể siết</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--teal)"></span>Hạ Tầng & Tương Lai Điện Ngọc</div><div class="mkt-row"><span class="mkt-k">Cầu Cửa Đại 2</span><span class="mkt-v pos">Dự kiến 2026–2028</span></div><div class="mkt-row"><span class="mkt-k">Đường ven biển mở rộng</span><span class="mkt-v pos">Đang thi công</span></div><div class="mkt-row"><span class="mkt-k">KCN Điện Nam-Điện Ngọc</span><span class="mkt-v pos">Mở rộng</span></div><div class="mkt-row"><span class="mkt-k">Thời gian lên TT</span><span class="mkt-v">15–20 phút</span></div><div class="mkt-row"><span class="mkt-k">Tiềm năng tăng giá</span><span class="mkt-v pos">↑ Cao 2026+</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--red)"></span>Rủi Ro Kinh Tế Vĩ Mô</div><div class="mkt-row"><span class="mkt-k">Lạm phát VN 2025</span><span class="mkt-v">3.5–4.5%</span></div><div class="mkt-row"><span class="mkt-k">Tăng trưởng GDP</span><span class="mkt-v pos">6.5–7%</span></div><div class="mkt-row"><span class="mkt-k">Tín dụng BĐS</span><span class="mkt-v gld">Có thể siết</span></div><div class="mkt-row"><span class="mkt-k">Chu kỳ BĐS ĐN</span><span class="mkt-v pos">Đang phục hồi</span></div><div class="mkt-row"><span class="mkt-k">Rủi ro tỷ giá</span><span class="mkt-v gld">Trung bình</span></div></div>
+  </div>
+  <div class="hbox warn"><strong>🔮 Dự Báo 2025–2030</strong><b>Trung tâm ĐN:</b> Tăng 8–12%/năm, thuê 5–8%/năm. Cầu thuê tăng từ chuyên gia, du học sinh về, người nước ngoài remote. Thị trường người bán có lợi thế.<br><b>Điện Ngọc:</b> Nếu hạ tầng hoàn thiện 2026–2028, giá tăng thêm 20–40%. Nên bán khi thị trường đang tốt, không chờ đỉnh.<br><b>Airbnb:</b> 2025–2027 vẫn tốt nhưng cạnh tranh tăng. Từ 2028+ có thể bị siết. Thiết kế phòng linh hoạt chuyển dài hạn được.</div>
+</div>
+
+<!-- RISK -->
+<div class="sec" id="risk">
+  <div class="sh"><div class="sh-title">Ma Trận Rủi Ro & Kế Hoạch Ứng Phó</div><div class="sh-sub">Phân tích 360° các rủi ro, xác suất, tác động và chiến lược phòng thủ.</div></div>
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">Ma Trận Rủi Ro — Xác Suất × Tác Động</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Rủi Ro</th><th>Xác Suất</th><th>Tác Động</th><th>PA Ảnh Hưởng</th><th>Kế Hoạch Ứng Phó</th></tr></thead>
+      <tbody>
+        <tr><td class="tdl">Lãi suất tăng &gt;13%</td><td class="gld">30%</td><td class="neg">Cao</td><td>PA1 (nợ cao)</td><td>Chọn PA3 (nợ thấp). Dự phòng 200tr quỹ thanh khoản</td></tr>
+        <tr><td class="tdl">Phòng trống &gt;25%</td><td class="gld">25%</td><td class="gld">Trung bình</td><td>PA1, PA3, PA4</td><td>Quỹ dự phòng 100–150tr, hạ giá thuê mùa thấp điểm</td></tr>
+        <tr><td class="tdl">Chi phí xây vượt 20%</td><td class="gld">35%</td><td class="gld">Trung bình</td><td>PA1, PA3</td><td>Ký hợp đồng trọn gói, giữ 15% vốn dự phòng</td></tr>
+        <tr><td class="tdl">Thị trường BĐS đóng băng</td><td class="pos">15%</td><td class="neg">Cao</td><td>PA3 (khi bán ĐN)</td><td>Có offer trong tay mới bắt đầu xây</td></tr>
+        <tr><td class="tdl">Sự cố y tế gia đình</td><td class="pos">10%</td><td class="neg">Rất cao (PA1)</td><td>PA1 (nợ cao)</td><td>BH sức khỏe 3–5tr/tháng + quỹ khẩn cấp 6 tháng</td></tr>
+        <tr><td class="tdl">Thay đổi quy hoạch ĐN</td><td class="pos">10%</td><td class="neg">Cao</td><td>PA4, PA5 (đang xây)</td><td>Kiểm tra quy hoạch 1/500, không giữ quá 3 năm</td></tr>
+        <tr><td class="tdl">Siết chặt Airbnb TP</td><td class="gld">40%</td><td class="gld">Trung bình</td><td>PA4</td><td>Thiết kế phòng linh hoạt, chuyển được sang dài hạn</td></tr>
+        <tr><td class="tdl">Mất thu nhập lương</td><td class="pos">15%</td><td class="neg">Rất cao (PA1)</td><td>PA1, PA5 nợ cao nhất</td><td>Tránh nợ &gt;40% thu nhập. PA3 an toàn vì nợ thấp</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="two-col">
+    <div class="tbl-wrap" style="margin:0"><div class="tbl-hdr"><div class="tbl-title">Rủi Ro PA3 — Thấp Nhất</div><div class="badge g">Khuyến nghị</div></div>
+    <div style="padding:16px">
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro lãi suất</span><span class="rb-val">Thấp — nợ ≤1.5 tỷ</span></div><div class="rb-bg"><div class="rb-fill" style="width:22%;background:var(--gr2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro dòng tiền</span><span class="rb-val">Thấp — CF +41tr/th</span></div><div class="rb-bg"><div class="rb-fill" style="width:18%;background:var(--gr2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro xây dựng</span><span class="rb-val">Trung bình</span></div><div class="rb-bg"><div class="rb-fill" style="width:40%;background:var(--g2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro cho thuê</span><span class="rb-val">Thấp — TT ĐN tốt</span></div><div class="rb-bg"><div class="rb-fill" style="width:25%;background:var(--gr2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro gia đình</span><span class="rb-val">Thấp — nợ ít</span></div><div class="rb-bg"><div class="rb-fill" style="width:20%;background:var(--gr2)"></div></div></div>
+    </div></div>
+    <div class="tbl-wrap" style="margin:0"><div class="tbl-hdr"><div class="tbl-title">Rủi Ro PA1 — Cao Nhất</div><div class="badge r">Nguy Hiểm</div></div>
+    <div style="padding:16px">
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro lãi suất</span><span class="rb-val">Rất cao — nợ 3.8 tỷ</span></div><div class="rb-bg"><div class="rb-fill" style="width:88%;background:var(--rd2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro dòng tiền</span><span class="rb-val">Cao — CF âm từ năm 3</span></div><div class="rb-bg"><div class="rb-fill" style="width:80%;background:var(--rd2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro xây dựng</span><span class="rb-val">Trung bình</span></div><div class="rb-bg"><div class="rb-fill" style="width:40%;background:var(--g2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro cho thuê</span><span class="rb-val">Cao — phải lấp đầy</span></div><div class="rb-bg"><div class="rb-fill" style="width:65%;background:var(--g2)"></div></div></div>
+      <div class="rb"><div class="rb-hdr"><span class="rb-lbl">Rủi ro gia đình</span><span class="rb-val">Rất cao — 3 trẻ nhỏ</span></div><div class="rb-bg"><div class="rb-fill" style="width:85%;background:var(--rd2)"></div></div></div>
+    </div></div>
+  </div>
+  <div class="mkt-grid">
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--green)"></span>Kịch Bản Lạc Quan (35%)</div><div class="mkt-row"><span class="mkt-k">Lãi suất</span><span class="mkt-v pos">9–10%</span></div><div class="mkt-row"><span class="mkt-k">Giá thuê tăng</span><span class="mkt-v pos">+8–10%/năm</span></div><div class="mkt-row"><span class="mkt-k">PA3 hoàn vốn</span><span class="mkt-v pos">6–7 năm</span></div><div class="mkt-row"><span class="mkt-k">Tài sản 10 năm</span><span class="mkt-v pos">18–22 tỷ</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--g2)"></span>Kịch Bản Cơ Sở (45%)</div><div class="mkt-row"><span class="mkt-k">Lãi suất</span><span class="mkt-v gld">11–12.5%</span></div><div class="mkt-row"><span class="mkt-k">Giá thuê tăng</span><span class="mkt-v">+5%/năm</span></div><div class="mkt-row"><span class="mkt-k">PA3 hoàn vốn</span><span class="mkt-v">8–9 năm</span></div><div class="mkt-row"><span class="mkt-k">Tài sản 10 năm</span><span class="mkt-v">14–18 tỷ</span></div></div>
+    <div class="mkt-card"><div class="mkt-title"><span class="dot" style="background:var(--red)"></span>Kịch Bản Tiêu Cực (20%)</div><div class="mkt-row"><span class="mkt-k">Lãi suất</span><span class="mkt-v neg">13–15%</span></div><div class="mkt-row"><span class="mkt-k">Giá thuê tăng</span><span class="mkt-v gld">+2–3%/năm</span></div><div class="mkt-row"><span class="mkt-k">PA3 hoàn vốn</span><span class="mkt-v neg">11–12 năm</span></div><div class="mkt-row"><span class="mkt-k">Tài sản 10 năm</span><span class="mkt-v">10–13 tỷ</span></div></div>
+  </div>
+  <div class="hbox ok"><strong>🏆 Kết Luận Chuyên Gia</strong>
+<b>PA3</b> (6 phòng, vay 1.2T): Cân bằng tốt nhất — CF dương +41tr, nợ thấp, an toàn cho gia đình 3 con nhỏ. <b>Khuyến nghị hàng đầu</b>.<br>
+<b>PA4</b> (9 phòng, vay 3T): Tiềm năng cao hơn PA3 (~50% doanh thu) với rủi ro vừa phải. Chọn nếu sẵn sàng quản lý 9 phòng.<br>
+<b>PA5</b> (11 phòng, vay 4T): Tối đa hóa dài hạn nhưng áp lực nợ cao. Chỉ nên chọn khi thu nhập bên ngoài ổn định >80tr/tháng.<br>
+<b>PA1, PA2</b>: Không khuyến nghị — PA1 CF âm, PA2 bỏ lỡ hoàn toàn dòng tiền.
+</div>
+</div>
+
+<!-- ROADMAP -->
+<div class="sec" id="roadmap">
+  <div class="sh"><div class="sh-title">🗺️ Lộ Trình Thực Hiện PA3</div><div class="sh-sub">Kế hoạch hành động chi tiết từng giai đoạn — từ quyết định đến thu lợi.</div></div>
+  <div class="roadmap-wrap">
+    <div class="rm-title">📍 5 Giai Đoạn Thực Hiện PA3</div>
+    <div class="rm-steps">
+      <div class="rm-step"><div class="rm-dot now">1</div><div class="rm-label">Quyết Định</div><div class="rm-sub">Pháp lý lô TT, báo giá xây</div></div>
+      <div class="rm-step"><div class="rm-dot now">2</div><div class="rm-label">Bán Đất ĐN</div><div class="rm-sub">Chào bán, ký đặt cọc</div></div>
+      <div class="rm-step"><div class="rm-dot soon">3</div><div class="rm-label">Thiết Kế</div><div class="rm-sub">Kiến trúc sư, xin phép xây</div></div>
+      <div class="rm-step"><div class="rm-dot future">4</div><div class="rm-label">Thi Công</div><div class="rm-sub">18–24 tháng, giám sát</div></div>
+      <div class="rm-step"><div class="rm-dot future">5</div><div class="rm-label">Vận Hành</div><div class="rm-sub">+54tr/tháng bắt đầu</div></div>
+    </div>
+  </div>
+  <div class="card-row">
+    <div class="kpi ko"><div class="kpi-lbl">T1–3: Chuẩn Bị</div><div class="kpi-val gold" style="font-size:14px">Pháp lý + Khảo sát</div><div class="kpi-sub">Kiểm tra sổ đỏ, quy hoạch 1/500, thuê tư vấn xây</div></div>
+    <div class="kpi kb"><div class="kpi-lbl">T4–6: Bán Đất</div><div class="kpi-val" style="font-size:14px">Chào bán Điện Ngọc</div><div class="kpi-sub">Target 5–5.5 tỷ. Min 4.8 tỷ. Đừng bán gấp.</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">T7–9: Khởi Công</div><div class="kpi-val" style="font-size:14px">Ký hợp đồng trọn gói</div><div class="kpi-sub">Giữ 15% dự phòng. Gia đình thuê tạm 8–10tr.</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">T25+: Thu Lợi</div><div class="kpi-val gold" style="font-size:14px">54tr+/tháng</div><div class="kpi-sub">6 phòng vận hành. Hướng tới Airbnb 1–2 phòng.</div></div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">Checklist Rủi Ro Phải Giải Quyết Trước Khi Xây</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Hạng Mục</th><th>Nội Dung</th><th>Ai Làm</th><th>Khi Nào</th><th>Chi Phí Ước</th></tr></thead>
+      <tbody>
+        <tr><td class="tdl bld pos">✅ Pháp lý lô TT</td><td>Sổ đỏ, quy hoạch 1/500, mật độ, chiều cao cho phép</td><td>Luật sư BĐS</td><td>Tháng 1</td><td>5–10 tr</td></tr>
+        <tr><td class="tdl bld pos">✅ Thiết kế tối ưu</td><td>6 phòng thuê, tầng 1 ở, hướng sáng, giá thuê cao nhất</td><td>Kiến trúc sư</td><td>Tháng 2–3</td><td>20–40 tr</td></tr>
+        <tr><td class="tdl bld gld">⏳ Bán đất Điện Ngọc</td><td>Có offer cứng trong tay trước khi commit xây</td><td>Môi giới uy tín</td><td>Tháng 3–6</td><td>1–2% giá bán</td></tr>
+        <tr><td class="tdl bld gld">⏳ Hợp đồng xây</td><td>Trọn gói cố định giá, phạt chậm tiến độ, bảo hành 5 năm</td><td>Chủ đầu tư + Luật sư</td><td>Tháng 6–8</td><td>Chi phí pháp lý</td></tr>
+        <tr><td class="tdl bld">📋 Quỹ dự phòng</td><td>Giữ lại 700tr–1 tỷ dự phòng phát sinh + khẩn cấp gia đình</td><td>Tự quản lý</td><td>Trước khi xây</td><td>—</td></tr>
+        <tr><td class="tdl bld">📋 Bảo hiểm</td><td>BH công trình + BH sức khỏe gia đình 3–5tr/tháng</td><td>Công ty BH</td><td>Tháng 7+</td><td>3–5 tr/tháng</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="hbox ok"><strong>🏆 Thông Điệp Cuối — Quyết Định Rõ Ràng</strong>
+    Với hồ sơ tài chính này (15–17 tỷ tài sản, 0 nợ, thu nhập ổn 60tr/tháng), PA3 là quyết định tối ưu nhất về mọi mặt. Điều duy nhất cần tránh là trì hoãn — mỗi năm trì hoãn = mất ~648tr dòng tiền (54tr × 12), chi phí xây tăng ~5–8%, và cơ hội thị trường có thể thay đổi.<br><br>
+    <b>Bước tiếp theo ngay hôm nay:</b> Gọi cho 2–3 công ty môi giới để khảo sát giá bán Điện Ngọc thực tế. Song song liên hệ kiến trúc sư lấy báo giá xây 4 tầng lô 100m² trung tâm. Có 2 con số này trong tay, quyết định sẽ dễ dàng hơn rất nhiều.
+  </div>
+
+</div>
+
+<!-- TANG GIA -->
+<div class="sec" id="tanggia">
+  <div class="sh">
+    <div class="sh-title">📐 So Sánh Tăng Giá — Bán Đất vs Giữ Đất Xây Nhà</div>
+    <div class="sh-sub">Phân tích đầy đủ: giữ đất / xây nhà / gửi ngân hàng. Sau khi trừ 35% thuế + chi phí từ lợi nhuận xây nhà, phần còn lại được gửi ngân hàng 6%/năm. Tính toán tổng tài sản thực sau 20 năm.</div>
+  </div>
+
+  <div class="ctrl-panel">
+    <div class="ctrl-lbl">⚙️ Thông Số So Sánh — Điều chỉnh để tính lại ngay</div>
+    <div class="ctrl-grid">
+      <div class="cg"><label>Giá lô TT hiện tại (tỷ)</label><input type="number" id="tg_land_now" value="11" step="0.5" min="8" max="20"><div class="cg-hint">Lô 100m² trung tâm ĐN: 10–12 tỷ</div></div>
+      <div class="cg"><label>Tăng giá đất TT (%/năm)</label><input type="number" id="tg_land_growth" value="9" step="1" min="3" max="20"><div class="cg-hint">Trung tâm ĐN lịch sử: 8–12%</div></div>
+      <div class="cg"><label>Chi phí xây (tỷ)</label><input type="number" id="tg_build_cost" value="5" step="0.5" min="3" max="10"><div class="cg-hint">4 tầng + tum trọn gói ĐN 2025</div></div>
+      <div class="cg"><label>Tăng giá nhà (%/năm)</label><input type="number" id="tg_house_growth" value="7" step="1" min="3" max="15"><div class="cg-hint">Nhà xây trung tâm ĐN: 6–9%</div></div>
+      <div class="cg"><label>Giá thuê/phòng (tr)</label><input type="number" id="tg_rent" value="10" step="0.5" min="5" max="22"><div class="cg-hint">6 phòng × giá này × 90%</div></div>
+      <div class="cg"><label>Tăng thuê (%/năm)</label><input type="number" id="tg_rent_growth" value="5" step="1" min="0" max="15"><div class="cg-hint">Lịch sử ĐN: 4–8%/năm</div></div>
+      <div class="cg"><label>Thuế + Chi phí (%)</label><input type="number" id="tg_tax" value="35" step="5" min="10" max="60"><div class="cg-hint">35% lợi nhuận: thuế TNCN, vận hành, bảo trì, quản lý</div></div>
+      <div class="cg"><label>Lãi gửi ngân hàng (%/năm)</label><input type="number" id="tg_bank_rate" value="6" step="0.5" min="3" max="12"><div class="cg-hint">Gửi tiết kiệm NH: 5.5–7%/năm</div></div>
+      <div class="cg"><label>Vốn vay xây (tỷ)</label><input type="number" id="tg_loan" value="1.2" step="0.1" min="0" max="5"><div class="cg-hint">Vay bổ sung nếu bán đất DN không đủ</div></div>
+      <div class="cg"><label>Lãi vay (%/năm)</label><input type="number" id="tg_loan_rate" value="11.5" step="0.5" min="7" max="16"><div class="cg-hint">Thả nổi từ năm 3 trở đi</div></div>
+    </div>
+    <div class="ctrl-actions">
+      <button class="btn btn-primary" onclick="renderTangGia()">🔄 Tính Lại</button>
+      <button class="btn btn-outline" onclick="resetTG()">↩ Mặc Định</button>
+    </div>
+  </div>
+
+  <!-- Giai thich mo hinh -->
+  <div style="background:var(--bll);border:1px solid var(--bl2);border-radius:9px;padding:14px 18px;margin-bottom:18px;font-size:12px;line-height:1.8;color:var(--ink)">
+    <b style="display:block;margin-bottom:6px;font-size:13px">📌 Cách tính mô hình này</b>
+    <b>Kịch bản A — Giữ đất (không xây):</b> Đất tăng giá theo %/năm. Không có dòng tiền.<br>
+    <b>Kịch bản B — Xây nhà cho thuê:</b> Thu thuê 6 phòng → Trừ 35% (thuế TNCN + vận hành + bảo trì + quản lý) → 65% còn lại là lợi nhuận thực → Gửi ngân hàng 6%/năm tích lũy → Cộng thêm giá trị nhà tăng theo thị trường.<br>
+    <b>Kịch bản C — Gửi ngân hàng:</b> Giả sử bán đất TT (11T) gửi 100% vào ngân hàng 6%/năm, không làm gì khác.<br>
+    <span style="color:var(--blue);font-weight:700">→ So sánh tổng tài sản thực sau 20 năm của cả 3 kịch bản</span>
+  </div>
+
+  <!-- Winner banner -->
+  <div id="tg-winner" class="hbox ok" style="font-size:13.5px;padding:16px 20px;margin-bottom:18px"></div>
+
+  <!-- KPI cards -->
+  <div class="card-row" id="tg-kpi"></div>
+
+  <!-- Chart 1: 3-way comparison -->
+  <div class="chart-outer">
+    <div class="chart-title">📈 So Sánh Tổng Tài Sản — 3 Kịch Bản (tỷ đồng)</div>
+    <div style="position:relative;height:300px"><canvas id="tg-chart-3way" role="img" aria-label="So sánh 3 kịch ban">Biểu đồ.</canvas></div>
+    <div class="chart-legend">
+      <div class="cl"><div class="cl-dot" style="background:#d4a017"></div>A: Giữ đất (không xây, không dòng tiền)</div>
+      <div class="cl"><div class="cl-dot" style="background:#17a36e"></div>B: Xây nhà + 65% CF gửi NH 6% (sau 35% thuế/CP)</div>
+      <div class="cl"><div class="cl-dot" style="background:#2a6fd4"></div>C: Bán đất TT gửi ngân hàng 6%/năm</div>
+    </div>
+  </div>
+
+  <!-- Chart 2: 35% breakdown -->
+  <div class="chart-outer">
+    <div class="chart-title">💸 Phân Bổ Dòng Tiền Thuê Hàng Năm — 35% Chi Phí & 65% Lợi Nhuận (tr/tháng)</div>
+    <div style="position:relative;height:240px"><canvas id="tg-chart-breakdown" role="img" aria-label="Phan bo dong tien">Biểu đồ.</canvas></div>
+    <div class="chart-legend">
+      <div class="cl"><div class="cl-dot" style="background:#d63b33"></div>35%: Thuế TNCN + vận hành + bảo trì + quản lý</div>
+      <div class="cl"><div class="cl-dot" style="background:#17a36e"></div>65%: Lợi nhuận thực — gửi ngân hàng 6%/năm</div>
+    </div>
+  </div>
+
+  <!-- Detail table -->
+  <div class="tbl-wrap">
+    <div class="tbl-hdr">
+      <div class="tbl-title">📊 Bảng Chi Tiết Từng Năm — 3 Kịch Bản So Sánh</div>
+      <div class="badge g" id="tg-badge">Đang tính...</div>
+    </div>
+    <div class="tbl-ov"><table>
+      <thead><tr>
+        <th>Năm</th>
+        <th>A: Giá đất</th>
+        <th>B: Thu thuê/th</th>
+        <th>B: 35% CP/th</th>
+        <th>B: 65% Lợi/th</th>
+        <th>B: Tiết kiệm NH lũy kế</th>
+        <th>B: Giá trị nhà</th>
+        <th>B: Tổng TS ròng</th>
+        <th>C: Gửi NH 6%</th>
+        <th>Tốt nhất</th>
+      </tr></thead>
+      <tbody id="tg-tbl-body"></tbody>
+      <tfoot id="tg-tbl-foot"></tfoot>
+    </table></div>
+  </div>
+
+  <!-- 35% cost breakdown detail -->
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">📋 Chi Tiết 35% Chi Phí & Thuế Trừ Từ Dòng Tiền Thuê</div><div class="badge r">Bắt buộc phải trừ</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Khoản Mục</th><th>Tỷ Lệ</th><th>Ví Dụ (Thu 54tr/tháng)</th><th>Ghi Chú</th></tr></thead>
+      <tbody>
+        <tr><td class="tdl b">Thuế TNCN cho thuê nhà</td><td class="neg">5%</td><td class="neg">~2.7 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Bắt buộc theo Thông tư 111 — doanh thu >100tr/năm phải kê khai</td></tr>
+        <tr><td class="tdl b">Điện nước chung (corridor)</td><td class="neg">3%</td><td class="neg">~1.6 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Điện thang, hành lang, bơm nước, camera</td></tr>
+        <tr><td class="tdl b">Bảo trì, sửa chữa định kỳ</td><td class="neg">5%</td><td class="neg">~2.7 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Trung bình 5%/năm giá trị xây dựng — điều hòa, nước, điện, sơn</td></tr>
+        <tr><td class="tdl b">Quản lý, tìm khách thuê</td><td class="neg">5%</td><td class="neg">~2.7 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Nếu tự quản = 0, nếu thuê = 8–10% doanh thu</td></tr>
+        <tr><td class="tdl b">Quỹ dự phòng phòng trống</td><td class="neg">8%</td><td class="neg">~4.3 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Trung bình 10% trống × 80% tháng — tích vào quỹ</td></tr>
+        <tr><td class="tdl b">Bảo hiểm công trình + nhà</td><td class="neg">2%</td><td class="neg">~1.1 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">BH hỏa hoạn, thiên tai, trách nhiệm dân sự</td></tr>
+        <tr><td class="tdl b">Chi phí khác (quảng cáo, vệ sinh)</td><td class="neg">7%</td><td class="neg">~3.8 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">Đăng tin, dọn vệ sinh hành lang, phát sinh</td></tr>
+        <tr class="bld"><td class="tdl b neg">TỔNG CHI PHÍ & THUẾ</td><td class="neg bld" id="tg-tax-total">35%</td><td class="neg bld" id="tg-tax-amount">~18.9 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--red)">Điều chỉnh % tổng ở thông số bên trên</td></tr>
+        <tr class="bld"><td class="tdl b pos">LỢI NHUẬN THỰC (65%)</td><td class="pos bld" id="tg-profit-pct">65%</td><td class="pos bld" id="tg-profit-amount">~35.1 tr/tháng</td><td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--green)">Phần này gửi ngân hàng 6%/năm tích lũy kép</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Savings accumulation detail -->
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">🏦 Tích Lũy Gửi Ngân Hàng 6%/năm — 65% Lợi Nhuận Từ Thuê</div><div class="badge b">Lãi kép</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Năm</th><th>Thu Thuê/th</th><th>35% CP</th><th>65% Nộp NH/th</th><th>Lãi NH/năm</th><th>Tổng Tiết Kiệm NH</th><th>Tăng So Năm Trước</th></tr></thead>
+      <tbody id="tg-bank-body"></tbody>
+    </table></div>
+  </div>
+
+  <!-- 3 scenarios -->
+  <div class="sh" style="margin-top:8px"><div class="sh-title" style="font-size:15px">🎭 3 Kịch Bản Thị Trường</div><div class="sh-sub">Mỗi kịch bản tính toán đầy đủ cả 35% chi phí và gửi ngân hàng</div></div>
+  <div id="tg-scenarios" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:20px"></div>
+
+  <div class="hbox ok" id="tg-conclusion">
+    <strong>📌 Kết Luận So Sánh</strong>
+    <span id="tg-conclusion-txt">Đang tính...</span>
+  </div>
+</div>
+
+</div>
+<div class="footer"><strong>Phân Tích Đầu Tư BĐS — Hùng · Đà Nẵng 2025 · Pro v4.0</strong><br>Tài liệu tham khảo nội bộ · Mọi số liệu cần kiểm chứng thực tế · Lãi suất và giá thuê thay đổi theo thị trường</div>
+
+<script>
+let P={rate_pref:8.5,rate_float:11.5,rent_room:10,rent_growth:5,asset_growth:8,vacancy:10};
+let activeCF=3,activePAn=1,darkMode=false;
+const charts={};
+
+function toggleDark(){
+  darkMode=!darkMode;
+  if(darkMode)document.body.setAttribute('data-dark','1');
+  else document.body.removeAttribute('data-dark');
+  document.getElementById('dark-btn').textContent=darkMode?'☀️ Light':'🌙 Dark';
+  Object.values(charts).forEach(c=>{try{c&&c.destroy()}catch(e){}});
+  Object.keys(charts).forEach(k=>delete charts[k]);
+  renderAll();
+}
+function fmt(n){const a=Math.abs(n);if(a>=1000)return(n/1000).toFixed(2).replace(/\.?0+$/,'')+'T';return n.toFixed(1);}
+function fmtM(n){return(n>=0?'+':'')+n.toFixed(1)+' tr';}
+function mpay(principal,rate_pct_yr,yrs){
+  const r=rate_pct_yr/100/12,n=yrs*12;
+  if(r===0||yrs===0)return n>0?principal/n:0;
+  return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+}
+function setEl(id,v){const e=document.getElementById(id);if(e)e.innerHTML=v;}
+function gc(){return{grid:darkMode?'rgba(255,255,255,.07)':'rgba(0,0,0,.06)',tick:darkMode?'#8891b3':'#8e93aa'};}
+
+function mkChart(id,type,data,opts){
+  const el=document.getElementById(id);if(!el)return null;
+  if(charts[id])try{charts[id].destroy()}catch(e){}
+  charts[id]=new Chart(el,{type,data,options:{responsive:true,maintainAspectRatio:false,...opts}});
+  return charts[id];
+}
+
+function cfg(n){
+  const C={
+    1:{name:'PA1: Giữ Đất ĐN — Vay 3.8T Xây 3 Tầng',desc:'Giữ đất ĐN. Vay 3.8T, 20 năm. Xây 3T+tum lô TT. Tầng 1 ở, 4 phòng thuê T2–T3.',color:'pa1',hex:'#d63b33',loan:3800,loanYrs:20,rooms:4,assetBase:11000,extraAsset:5000,extra:35,verdict:'danger',vt:'🔴 Rủi Ro Cao'},
+    2:{name:'PA2: Giữ Đất ĐN — Sửa Nhà Cấp 4 Ở Tạm',desc:'Vay 500tr sửa cấp 4. Không phòng thuê. Ở tạm, tích lũy chờ thời cơ.',color:'pa2',hex:'#1752a8',loan:500,loanYrs:10,rooms:0,assetBase:11000,extraAsset:5000,extra:0,verdict:'caut',vt:'🟡 An Toàn / Lãng Phí'},
+    3:{name:'PA3: Bán Đất ĐN — Xây 4 Tầng + Tum',desc:'Bán ĐN 5T. Chi xây 5T. Vay bổ sung 1.2T. Tầng 1 ở, 6 phòng thuê T2–T4.',color:'pa3',hex:'#17a36e',loan:1200,loanYrs:10,rooms:6,assetBase:11000,extraAsset:0,extra:0,verdict:'best',vt:'⭐ Tối Ưu Nhất'},
+    4:{name:'PA4: Bán Đất ĐN + Vay 3T — Xây 6 Tầng',desc:'Bán ĐN 5T + Vay thêm 3T = Tổng 8T. Xây 6 tầng. Tầng 1 ở, 8–10 phòng thuê T2–T6.',color:'pa4',hex:'#d4a017',loan:3000,loanYrs:15,rooms:9,assetBase:11000,extraAsset:0,extra:0,verdict:'good',vt:'🟢 Tiềm Năng Cao'},
+    5:{name:'PA5: Bán Đất ĐN + Vay 4T — Xây 7 Tầng',desc:'Bán ĐN 5T + Vay thêm 4T = Tổng 9T. Xây 7 tầng. Tầng 1 ở, 10–12 phòng thuê T2–T7.',color:'pa5',hex:'#5c2d99',loan:4000,loanYrs:15,rooms:11,assetBase:11000,extraAsset:0,extra:0,verdict:'caut',vt:'🟡 Đòn Bẩy / Tiềm Năng'},
+  };
+  return C[n];
+}
+
+function calcCF(n,years=20){
+  const c=cfg(n),data=[];let cumCF=0;
+  for(let yr=1;yr<=years;yr++){
+    const rate=yr<=2?P.rate_pref:P.rate_float;
+    let mpM=0,remain=0;
+    {
+      if(c.loanYrs>0&&yr<=c.loanYrs){mpM=mpay(c.loan,rate,c.loanYrs);remain=Math.max(0,c.loan*(1-(yr-1)/c.loanYrs));}
+    }
+    let rooms=c.rooms;
+    const rpr=c.rentOverride||P.rent_room;
+    let rentM=0;
+    if(rooms>0){
+      rentM=c.airbnb?rooms*P.rent_room*1.35*Math.pow(1+P.rent_growth/100,yr-1)*0.58:rooms*rpr*Math.pow(1+P.rent_growth/100,yr-1)*(1-P.vacancy/100);
+    }
+    if(c.landRent)rentM+=c.landRent;
+    const extra=c.extra||0,cfM=rentM-mpM-extra;
+    cumCF+=cfM*12;
+    let assetV=c.assetBase*Math.pow(1+P.asset_growth/100,yr);
+    if(c.extraAsset>0)assetV+=c.extraAsset*Math.pow(1+(P.asset_growth-1)/100,yr);
+    data.push({yr,rate,remain,rentM,mpM,extra,cfM,cumCF,assetV,net:assetV+cumCF});
+  }
+  return data;
+}
+
+function showSec(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(t=>t.classList.remove('active'));
+  const sec=document.getElementById(id);
+  if(!sec)return;
+  sec.classList.add('active');
+  const idx=['overview','scenarios','cashflow','compare','market','risk','roadmap','tanggia'].indexOf(id);
+  if(idx>=0)document.querySelectorAll('.nb')[idx].classList.add('active');
+  // Render each tab
+  if(id==='scenarios'){renderPADetail(activePAn||1);}
+  if(id==='cashflow'){renderCF(activeCF);}
+  if(id==='compare'){setTimeout(()=>{renderCompare();renderScoreRings();},30);}
+  if(id==='market'){setTimeout(()=>renderMkt(),30);}
+  if(id==='tanggia'){setTimeout(()=>renderTangGia(),30);}
+  if(id==='risk')renderRisk();
+}
+/* ── PA DETAIL CONFIGS ── */
+const PA_META = {
+  1:{
+    title:'PA1: Giữ Đất Điện Ngọc — Vay 3.8 Tỷ Xây 3 Tầng + Tum',
+    verdict:'danger', vt:'🔴 Rủi Ro Cao', color:'pa1', hex:'#d63b33',
+    desc:'Giữ lô đất Điện Ngọc ~5 tỷ. Dùng lô 100m² trung tâm xây 3 tầng + tum. Tầng 1 gia đình ở, tầng 2–3 cho thuê 4 phòng. Vay 3.8 tỷ kỳ hạn 20 năm.',
+    vonDauTu:'Lô TT 10–12 tỷ (sẵn có) + Vay 3.8 tỷ xây',
+    chiPhiXay:'~4 tỷ (3 tầng + tum trọn gói)',
+    rooms:[
+      {ten:'Tầng 1 — Gia đình ở', dien:'~70m²', loai:'Ở', gia:'Tiết kiệm 8–10tr/th', note:'Phòng khách, bếp, 2–3 phòng ngủ'},
+      {ten:'Tầng 2 — Phòng 1', dien:'~25m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:'Phòng khép kín, ban công'},
+      {ten:'Tầng 2 — Phòng 2', dien:'~25m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:'Phòng khép kín'},
+      {ten:'Tầng 3 — Phòng 3', dien:'~25m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:'Tầng cao, thoáng mát'},
+      {ten:'Tầng 3 — Phòng 4', dien:'~25m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:'View tốt hơn'},
+    ],
+    tongPhong:4, tangSo:'3 tầng + tum',
+    timeline:[
+      {phase:'Hiện tại',time:'T0',icon:'📋',done:true,desc:'Lô TT đang có, đất ĐN đang giữ'},
+      {phase:'Thiết kế + Vay',time:'T1–3',icon:'📐',done:false,desc:'Thuê KTS, xin phép xây, ký hợp đồng vay 3.8T ngân hàng'},
+      {phase:'Thi công 3 tầng',time:'T4–18',icon:'🏗️',done:false,desc:'Xây 3 tầng + tum ~18 tháng. Gia đình thuê tạm 8–10tr/tháng'},
+      {phase:'Vận hành 4 phòng',time:'T19+',icon:'🏠',done:false,desc:'4 phòng × 10–12tr = 36–44tr/tháng. Trả nợ ~32tr. CF mỏng'},
+      {phase:'⚠️ Năm 3: Lãi thả nổi',time:'Năm 3',icon:'⚠️',done:false,desc:'Lãi tăng → trả nợ 36–42tr/tháng → CF ÂM -10 đến -20tr'},
+      {phase:'Năm 20: Xong nợ',time:'Năm 20',icon:'🏁',done:false,desc:'Xong nợ sau 20 năm. Đất ĐN vẫn "nằm chết" suốt thời gian này'},
+    ],
+    risks:['CF âm từ năm 3 khi lãi thả nổi — nguy hiểm với 3 trẻ nhỏ','Tổng lãi vay 20 năm ≈ 4.5–5 tỷ','4 phòng ít hơn PA3 (6), PA4 (9), PA5 (11) — hiệu suất thấp nhất','Đất ĐN 5 tỷ vẫn chôn vốn, không sinh lợi suốt 20 năm','1 sự kiện bất ngờ (y tế, phòng trống) → không trả được nợ'],
+    pros:['Giữ được đất ĐN kỳ vọng tăng giá','Gia đình có chỗ ở tầng 1 ngay sau xây'],
+    hboxType:'bad',
+    conclusion:'PA1 là phương án kém nhất về hiệu quả vốn. Tốn 3.8 tỷ tiền lãi vay 20 năm nhưng chỉ có 4 phòng thuê, CF âm từ năm 3. Với lô TT trị giá 10–12 tỷ, không cần vay nhiều như vậy. So sánh: PA3 vay chỉ 1.2T mà có 6 phòng + CF dương. PA4 vay 3T mà được 9 phòng, CF cao hơn nhiều.'
+  },
+  2:{
+    title:'PA2: Giữ Đất Điện Ngọc — Sửa Nhà Cấp 4 Ở Tạm',
+    verdict:'caut', vt:'🟡 An Toàn / Lãng Phí', color:'pa2', hex:'#1752a8',
+    desc:'Vay 500tr sửa nhà cấp 4 để ở. Không có phòng cho thuê. Giữ đất ĐN. Phù hợp như bước trung gian ngắn hạn trước khi xây lớn.',
+    vonDauTu:'500 triệu vay 10 năm',
+    chiPhiXay:'500 tr sửa nhà cấp 4 (nền, mái, điện nước)',
+    rooms:[
+      {ten:'Toàn bộ nhà — Gia đình ở', dien:'~100m²', loai:'Ở (không cho thuê)', gia:'Tiết kiệm 8–10tr thuê nhà', note:'Đủ không gian cho 5 người'},
+    ],
+    tongPhong:0, tangSo:'Cấp 4 (1 tầng)',
+    timeline:[
+      {phase:'Vay + Sửa',time:'T1–4',icon:'🔨',done:false,desc:'Vay 500tr, sửa nhà 3–4 tháng, gia đình về ở ngay'},
+      {phase:'Trả nợ nhẹ',time:'T1–10',icon:'💰',done:false,desc:'~6.6tr/tháng × 10 năm. Thoải mái với thu nhập 60tr'},
+      {phase:'0 Thu nhập thuê',time:'Suốt 20 năm',icon:'❌',done:false,desc:'Bỏ lỡ 50–90tr/tháng so với PA3, PA4, PA5'},
+      {phase:'Đất ĐN chờ',time:'3–7 năm',icon:'⏳',done:false,desc:'Chờ hạ tầng Điện Ngọc (cầu Cửa Đại 2), giá lên rồi bán'},
+      {phase:'Bán ĐN → Xây lớn',time:'Năm 3–7',icon:'🚀',done:false,desc:'Chuyển sang PA4 hoặc PA5 khi đất ĐN đạt 7–8 tỷ'},
+    ],
+    risks:['Bỏ lỡ toàn bộ dòng tiền thuê (40–80tr/tháng) suốt thời gian ở tạm','Nhà cấp 4 xuống cấp nhanh, chi phí bảo trì định kỳ','Không khai thác lô TT 10–12 tỷ hiệu quả'],
+    pros:['Rủi ro tài chính gần như = 0, trả nợ chỉ 6.6tr/tháng','Ổn định chỗ ở cho 3 trẻ nhỏ ngay lập tức','Giữ đất ĐN chờ tăng giá thêm','Thời gian chuẩn bị vốn và kế hoạch xây lớn hơn'],
+    hboxType:'warn',
+    conclusion:'PA2 chỉ nên là bước trung gian 3–6 tháng trước khi thực hiện PA4 hoặc PA5. Không nên kéo dài quá 2 năm vì cơ hội phí quá lớn — bỏ lỡ 600–900tr dòng tiền thuê mỗi năm so với PA4/PA5.'
+  },
+  3:{
+    title:'PA3: Bán Đất Điện Ngọc — Xây 4 Tầng + Tum (6 Phòng)',
+    verdict:'best', vt:'⭐ Cân Bằng Tốt Nhất', color:'pa3', hex:'#17a36e',
+    desc:'Bán Điện Ngọc 5 tỷ. Chi xây ~5 tỷ. Vay bổ sung 1.2 tỷ. Tầng 1 gia đình ở, tầng 2–4 mỗi tầng 2 phòng = 6 phòng cho thuê.',
+    vonDauTu:'Bán ĐN 5T + Vay 1.2T = Tổng 6.2T',
+    chiPhiXay:'~5 tỷ (4 tầng + tum hoàn thiện)',
+    rooms:[
+      {ten:'Tầng 1 — Gia đình ở (rộng nhất)', dien:'~80m²', loai:'Ở', gia:'Tiết kiệm 10tr/th', note:'Phòng khách lớn, bếp, 3 phòng ngủ, sân trước'},
+      {ten:'Tầng 2 — Phòng 1', dien:'~28m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:'Khép kín, WC riêng, cửa sổ lớn'},
+      {ten:'Tầng 2 — Phòng 2', dien:'~28m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:'Khép kín, ban công'},
+      {ten:'Tầng 3 — Phòng 3', dien:'~28m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:'Tầng cao, view tốt'},
+      {ten:'Tầng 3 — Phòng 4', dien:'~28m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:'Tầng cao, ban công'},
+      {ten:'Tầng 4 — Phòng 5', dien:'~28m²', loai:'Cho thuê / Airbnb linh hoạt', gia:'12–15 tr/tháng', note:'View đẹp nhất, có thể Airbnb'},
+      {ten:'Tầng 4 — Phòng 6 + Tum', dien:'~30m²', loai:'Cho thuê / Airbnb linh hoạt', gia:'12–15 tr/tháng', note:'Sân thượng nhỏ, view toàn thành'},
+    ],
+    tongPhong:6, tangSo:'4 tầng + tum',
+    timeline:[
+      {phase:'Quyết định + Pháp lý',time:'T0–2',icon:'✅',done:true,desc:'Kiểm tra sổ đỏ lô TT, thuê KTS báo giá, quy hoạch 1/500'},
+      {phase:'Bán đất Điện Ngọc',time:'T2–5',icon:'💵',done:false,desc:'Chào bán 5–5.5T, tối thiểu 4.8T. Có offer mới bắt đầu xây'},
+      {phase:'Thiết kế + Xin phép',time:'T3–6',icon:'📐',done:false,desc:'KTS tối ưu 6 phòng + tầng 1 rộng. Nộp hồ sơ xây dựng'},
+      {phase:'Thi công 4 tầng',time:'T7–24',icon:'🏗️',done:false,desc:'Xây 4T + tum. Gia đình thuê tạm 8–10tr/tháng. Giám sát chặt'},
+      {phase:'Vận hành 6 phòng',time:'T25+',icon:'🏠',done:false,desc:'54–72tr/tháng. Trả nợ ~13tr. CF thuần +41–59tr/tháng'},
+      {phase:'Năm 5: Nợ còn 500–600tr',time:'Năm 5',icon:'📈',done:false,desc:'CF tăng mạnh, gần hết nợ. Có thể làm Airbnb 1–2 phòng tầng cao'},
+      {phase:'Năm 8–9: Hoàn vốn',time:'Năm 8–9',icon:'🎯',done:false,desc:'CF tích lũy bù đắp đủ vốn ban đầu. Từ đây: thu nhập thuần túy'},
+      {phase:'Năm 10+: Tự do tài chính',time:'Năm 10+',icon:'🏆',done:false,desc:'60–90tr/tháng tăng dần theo thị trường. Tài sản ~18–22 tỷ'},
+    ],
+    risks:['Chờ 18–24 tháng xây mới có dòng tiền','Rủi ro phát sinh xây dựng (giữ 15% dự phòng)','Cần bán đất ĐN trước — thị trường phải thuận lợi'],
+    pros:['CF cao 54–72tr/tháng với nợ chỉ 1.2T — cân bằng tốt nhất','An toàn tài chính: nợ thấp, gia đình 3 con yên tâm','Chỗ ở mới rộng rãi tầng 1 hoàn toàn cho gia đình','Hoàn vốn nhanh 8–9 năm','Linh hoạt: 1–2 phòng trên Airbnb, phòng còn lại dài hạn'],
+    hboxType:'ok',
+    conclusion:'PA3 là điểm cân bằng tốt nhất: đủ phòng (6), nợ thấp (1.2T), CF dương mạnh (+41–59tr). So với PA4 (9 phòng, vay 3T) và PA5 (11 phòng, vay 4T): PA3 an toàn hơn nhiều cho gia đình 3 trẻ nhỏ. Nếu muốn nhiều phòng hơn sau khi ổn định tài chính, có thể nâng tầng sau này.'
+  },
+  4:{
+    title:'PA4: Bán Đất Điện Ngọc + Vay 3 Tỷ — Xây 6 Tầng (9 Phòng)',
+    verdict:'good', vt:'🟢 Tiềm Năng Cao / Vay Vừa', color:'pa4', hex:'#d4a017',
+    desc:'Bán Điện Ngọc 5T + Vay thêm 3T = Tổng 8T vốn. Xây 6 tầng. Tầng 1 gia đình ở, tầng 2–6 mỗi tầng ~2 phòng = 8–10 phòng cho thuê.',
+    vonDauTu:'Bán ĐN 5T + Vay 3T = Tổng 8T. Trả nợ ~28–32tr/tháng × 15 năm',
+    chiPhiXay:'~7.5 tỷ (6 tầng hoàn thiện đầy đủ)',
+    rooms:[
+      {ten:'Tầng 1 — Gia đình ở', dien:'~70m²', loai:'Ở', gia:'Tiết kiệm 10tr/th', note:'Tầng trệt, ra vào thuận tiện, giữ riêng tư'},
+      {ten:'Tầng 2 — Phòng 1', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:'Phòng khép kín, WC riêng'},
+      {ten:'Tầng 2 — Phòng 2', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:''},
+      {ten:'Tầng 3 — Phòng 3', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:''},
+      {ten:'Tầng 3 — Phòng 4', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:''},
+      {ten:'Tầng 4 — Phòng 5', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'12–14 tr/tháng', note:'Tầng giữa, view tốt dần'},
+      {ten:'Tầng 4 — Phòng 6', dien:'~27m²', loai:'Cho thuê dài hạn', gia:'12–14 tr/tháng', note:''},
+      {ten:'Tầng 5 — Phòng 7', dien:'~27m²', loai:'Cho thuê / Airbnb', gia:'13–15 tr/tháng', note:'Tầng cao, view đẹp'},
+      {ten:'Tầng 5 — Phòng 8', dien:'~27m²', loai:'Cho thuê / Airbnb', gia:'13–15 tr/tháng', note:''},
+      {ten:'Tầng 6 — Phòng 9 (Premium)', dien:'~35m²', loai:'Airbnb / Thuê cao cấp', gia:'15–20 tr/tháng', note:'Penthouse nhỏ, sân thượng, view toàn TP'},
+    ],
+    tongPhong:9, tangSo:'6 tầng',
+    timeline:[
+      {phase:'Bán đất Điện Ngọc',time:'T1–5',icon:'💵',done:false,desc:'Chào bán 5–5.5T. Dùng toàn bộ làm vốn xây'},
+      {phase:'Vay ngân hàng 3T',time:'T3–5',icon:'🏦',done:false,desc:'Thế chấp lô TT 10–12T. LTV 25–30% — dễ vay, lãi thấp hơn'},
+      {phase:'Thiết kế 6 tầng',time:'T4–7',icon:'📐',done:false,desc:'KTS tối ưu 9 phòng + tầng 1 ở. Penthouse tầng 6 cao cấp'},
+      {phase:'Thi công 6 tầng',time:'T8–28',icon:'🏗️',done:false,desc:'Xây 6 tầng ~20 tháng. Gia đình thuê tạm'},
+      {phase:'Vận hành 9 phòng',time:'T29+',icon:'🏠',done:false,desc:'81–108tr/tháng thu thuê. Trả nợ 28–32tr. CF thuần +49–76tr'},
+      {phase:'Năm 8: Nợ còn ~1.5T',time:'Năm 8',icon:'📈',done:false,desc:'Đã trả 50% nợ. CF tăng mạnh theo giá thuê'},
+      {phase:'Năm 10+: Hoàn vốn',time:'Năm 10',icon:'🎯',done:false,desc:'Hoàn vốn đầu tư. Tài sản ước đạt 25–30 tỷ'},
+    ],
+    risks:['Vay 3T → trả nợ 28–32tr/tháng (cao hơn PA3 đáng kể)','Chi phí xây 6 tầng cao hơn (7–7.5T vs 5T của PA3)','Xây 6 tầng mất 20–24 tháng — lâu hơn PA3','Quản lý 9 phòng phức tạp hơn 6 phòng','Nếu thị trường thuê yếu, 9 phòng khó lấp đầy hơn 6 phòng'],
+    pros:['Thu thuê 81–108tr/tháng — cao hơn PA3 ~50%','CF thuần sau nợ vẫn mạnh +49–76tr','Penthouse tầng 6 — giá thuê premium 15–20tr hoặc Airbnb','Lô TT 10–12T tăng giá cùng với nhà xây','Đòn bẩy hợp lý: chỉ vay 3T trên tài sản 10–12T (LTV ~25%)'],
+    hboxType:'ok',
+    conclusion:'PA4 là nâng cấp hợp lý từ PA3: vay thêm 3T nhưng được thêm 3 phòng (+50% doanh thu). CF thuần +49–76tr/tháng vẫn rất mạnh. Phù hợp nếu gia đình sẵn sàng quản lý 9 phòng và chịu được áp lực trả nợ 3T trong 15 năm đầu. Đặc biệt: penthouse tầng 6 là lợi thế cạnh tranh lớn trên thị trường thuê cao cấp và Airbnb.'
+  },
+  5:{
+    title:'PA5: Bán Đất Điện Ngọc + Vay 4 Tỷ — Xây 7 Tầng (11 Phòng)',
+    verdict:'caut', vt:'🟡 Đòn Bẩy / Tối Đa Hóa', color:'pa5', hex:'#5c2d99',
+    desc:'Bán Điện Ngọc 5T + Vay thêm 4T = Tổng 9T vốn. Xây 7 tầng. Tầng 1 gia đình ở, tầng 2–7 mỗi tầng ~2 phòng = 10–12 phòng cho thuê.',
+    vonDauTu:'Bán ĐN 5T + Vay 4T = Tổng 9T. Trả nợ ~36–40tr/tháng × 15 năm',
+    chiPhiXay:'~9 tỷ (7 tầng hoàn thiện + thiết bị tòa nhà)',
+    rooms:[
+      {ten:'Tầng 1 — Gia đình ở', dien:'~70m²', loai:'Ở', gia:'Tiết kiệm 10tr/th', note:''},
+      {ten:'Tầng 2 — Phòng 1', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:''},
+      {ten:'Tầng 2 — Phòng 2', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'10–12 tr/tháng', note:''},
+      {ten:'Tầng 3 — Phòng 3', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:''},
+      {ten:'Tầng 3 — Phòng 4', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'11–13 tr/tháng', note:''},
+      {ten:'Tầng 4 — Phòng 5', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'12–14 tr/tháng', note:''},
+      {ten:'Tầng 4 — Phòng 6', dien:'~26m²', loai:'Cho thuê dài hạn', gia:'12–14 tr/tháng', note:''},
+      {ten:'Tầng 5 — Phòng 7', dien:'~26m²', loai:'Cho thuê / Airbnb', gia:'13–15 tr/tháng', note:'Tầng cao dần, view tốt hơn'},
+      {ten:'Tầng 5 — Phòng 8', dien:'~26m²', loai:'Cho thuê / Airbnb', gia:'13–15 tr/tháng', note:''},
+      {ten:'Tầng 6 — Phòng 9', dien:'~28m²', loai:'Airbnb / Premium', gia:'15–18 tr/tháng', note:'Tầng cao, view đẹp'},
+      {ten:'Tầng 6 — Phòng 10', dien:'~28m²', loai:'Airbnb / Premium', gia:'15–18 tr/tháng', note:''},
+      {ten:'Tầng 7 — Phòng 11 (Penthouse)', dien:'~45m²', loai:'Penthouse Airbnb cao cấp', gia:'20–30 tr/tháng', note:'Sân thượng lớn, view 360°, phòng suite'},
+    ],
+    tongPhong:11, tangSo:'7 tầng',
+    timeline:[
+      {phase:'Bán đất Điện Ngọc',time:'T1–5',icon:'💵',done:false,desc:'Chào bán 5–5.5T. Có offer mới proceed'},
+      {phase:'Vay ngân hàng 4T',time:'T3–5',icon:'🏦',done:false,desc:'Thế chấp lô TT. Cần thẩm định kỹ, chuẩn bị hồ sơ đầy đủ'},
+      {phase:'Thiết kế 7 tầng',time:'T5–8',icon:'📐',done:false,desc:'KTS tối ưu 11 phòng + penthouse + tầng 1 ở. Thiết kế phòng linh hoạt Airbnb/dài hạn'},
+      {phase:'Thi công 7 tầng',time:'T9–32',icon:'🏗️',done:false,desc:'Xây 7 tầng ~22–24 tháng. Lâu nhất trong các PA. Gia đình thuê tạm'},
+      {phase:'Vận hành 11 phòng',time:'T33+',icon:'🏠',done:false,desc:'99–132tr/tháng thu thuê. Trả nợ 36–40tr. CF thuần +59–92tr'},
+      {phase:'Chiến lược Airbnb hỗn hợp',time:'Năm 3+',icon:'⭐',done:false,desc:'4 phòng tầng cao (T5–T7) làm Airbnb: 600–900k/đêm cao điểm. 7 phòng còn lại dài hạn ổn định'},
+      {phase:'Năm 10: Hoàn vốn',time:'Năm 10',icon:'🎯',done:false,desc:'Tích lũy CF đủ bù vốn. Nợ còn ~1.5–2T. Tài sản ước 30–38 tỷ'},
+    ],
+    risks:['Vay 4T — trả nợ 36–40tr/tháng, áp lực lớn hơn PA4','Xây 7 tầng = 22–24 tháng, chi phí tăng rủi ro phát sinh','11 phòng phải quản lý phức tạp — cần hệ thống quản lý tốt','Nếu 20–30% phòng trống → CF tụt mạnh','Cần giấy phép xây dựng và thẩm tra kết cấu nghiêm ngặt hơn'],
+    pros:['Thu thuê tối đa: 99–132tr/tháng (cao nhất trong 5 PA)','CF thuần +59–92tr/tháng sau trả nợ — rất mạnh','Penthouse tầng 7 + sân thượng: điểm nhấn cạnh tranh tuyệt đối','Tòa nhà 7 tầng tăng giá trị BĐS mạnh nhất (lô TT + nhà)','Đòn bẩy 4T trên tài sản 10–12T: LTV chỉ ~33%'],
+    hboxType:'info',
+    conclusion:'PA5 là phương án tối đa hóa dòng tiền và tài sản dài hạn, phù hợp nếu sẵn sàng quản lý 11 phòng và chịu áp lực nợ 4T trong 15 năm. Khác biệt lớn so với PA4: thêm 2 phòng premium + penthouse tầng 7 — lợi thế cạnh tranh lớn trên thị trường Airbnb Đà Nẵng. CF thuần +59–92tr/tháng là cao nhất. Rủi ro: thời gian xây dài (33 tháng mới thu tiền), áp lực quản lý 11 phòng cần hệ thống tốt.'
+  }
+};
+
+
+function renderPADetail(n){
+  const m=PA_META[n];
+  if(!m)return;
+  const el=document.getElementById('pa'+n+'-inner');
+  if(!el)return;
+
+  const data=calcCF(n);
+  const d0=data[0],d4=data[4],d9=data[9],dL=data[19];
+  const pb=data.findIndex(d=>d.cumCF>=0)+1;
+
+  // Rooms table HTML
+  const roomsHTML=m.rooms.map((r,i)=>`
+    <tr>
+      <td class="tdl b">${i+1}. ${r.ten}</td>
+      <td>${r.dien}</td>
+      <td><span class="badge ${r.loai.includes('Ở')?'b':r.loai.includes('Airbnb')?'o':'g'}" style="font-size:9px">${r.loai}</span></td>
+      <td class="${r.gia==='—'?'dim':'pos'}">${r.gia}</td>
+      <td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">${r.note}</td>
+    </tr>`).join('');
+
+  // Timeline HTML
+  const tlHTML=m.timeline.map(t=>`
+    <div style="display:flex;gap:12px;margin-bottom:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:50%;background:${t.done?'var(--gr2)':n===3?'var(--bll)':'var(--line)'};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;border:2px solid ${t.done?'var(--green)':'var(--line)'}">${t.icon}</div>
+      <div style="flex:1;padding-top:6px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-size:12px;font-weight:700;color:var(--ink)">${t.phase}</span>
+          <span style="font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--bg);color:var(--ink3)">${t.time}</span>
+          ${t.done?'<span style="font-size:9.5px;background:var(--grl);color:var(--green);padding:2px 7px;border-radius:10px;font-weight:700">✅ Hiện tại</span>':''}
+        </div>
+        <div style="font-size:11.5px;color:var(--ink3);line-height:1.5">${t.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Cashflow table (10 milestones)
+  const milestones=[1,2,3,4,5,6,7,8,9,10,12,15,18,20];
+  const cfRows=milestones.map(yr=>{
+    const d=calcCF(n).find(x=>x.yr===yr);if(!d)return '';
+    return `<tr>
+      <td class="tdl b">Năm ${yr}</td>
+      <td>${d.rate}%</td>
+      <td class="${d.remain>0?'neg':'dim'}">${d.remain>200?d.remain.toFixed(0)+' tr':'—'}</td>
+      <td class="pos">${d.rentM.toFixed(1)} tr</td>
+      <td class="${d.mpM>0?'neg':'dim'}">${d.mpM>0?d.mpM.toFixed(1)+' tr':'0'}</td>
+      <td class="${d.extra>0?'gld':'dim'}">${d.extra>0?d.extra+' tr':'—'}</td>
+      <td class="${d.cfM>=0?'pos':'neg'}" style="font-weight:700">${fmtM(d.cfM)}</td>
+      <td class="${d.cumCF>=0?'pos':'neg'}">${fmt(d.cumCF)}T</td>
+      <td class="gld">${fmt(d.assetV)}T</td>
+      <td class="${d.net>=0?'pos':'neg'}">${fmt(d.net)}T</td>
+    </tr>`;
+  }).join('');
+
+  // Risks / pros
+  const riskHTML=m.risks.map(r=>`<div style="display:flex;gap:7px;margin-bottom:6px"><span style="color:var(--red);flex-shrink:0">⚠️</span><span style="font-size:12px;color:var(--ink3)">${r}</span></div>`).join('');
+  const prosHTML=m.pros.map(p=>`<div style="display:flex;gap:7px;margin-bottom:6px"><span style="color:var(--green);flex-shrink:0">✅</span><span style="font-size:12px;color:var(--ink3)">${p}</span></div>`).join('');
+
+  el.innerHTML=`
+  <div class="sc-hdr">
+    <div class="sc-num ${m.color}">${n}</div>
+    <div class="sc-meta">
+      <div class="sc-name">${m.title}</div>
+      <div class="sc-desc">${m.desc}</div>
+    </div>
+    <div class="verdict ${m.verdict}">${m.vt}</div>
+  </div>
+
+  <!-- KPI row -->
+  <div class="card-row">
+    <div class="kpi ${d0.cfM>=0?'kg':'kr'}"><div class="kpi-lbl">CF tháng – Năm 1</div><div class="kpi-val ${d0.cfM>=0?'pos':'neg'}">${fmtM(d0.cfM)}</div><div class="kpi-sub">Thu ${d0.rentM.toFixed(0)}tr − nợ ${d0.mpM.toFixed(0)}tr − chi ${d0.extra||0}tr</div></div>
+    <div class="kpi ${d4&&d4.cfM>=0?'kg':'kr'}"><div class="kpi-lbl">CF tháng – Năm 5</div><div class="kpi-val ${d4&&d4.cfM>=0?'pos':'neg'}">${d4?fmtM(d4.cfM):'—'}</div><div class="kpi-sub">Sau lãi thả nổi từ năm 3</div></div>
+    <div class="kpi ${d9&&d9.cfM>=0?'kg':'kr'}"><div class="kpi-lbl">CF tháng – Năm 10</div><div class="kpi-val ${d9&&d9.cfM>=0?'pos':'neg'}">${d9?fmtM(d9.cfM):'—'}</div><div class="kpi-sub">Thu ${d9?d9.rentM.toFixed(0):'—'}tr sau tăng giá thuê 5%</div></div>
+    <div class="kpi kb"><div class="kpi-lbl">Hoàn vốn đầu tư</div><div class="kpi-val">${pb>0?'Năm '+pb:'> 20 năm'}</div><div class="kpi-sub">Tích lũy CF ≥ vốn bỏ vào</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">Tổng CF thuần 20 năm</div><div class="kpi-val ${dL.cumCF>=0?'gold':'neg'}">${fmt(dL.cumCF)}T</div><div class="kpi-sub">Chưa tính tăng giá tài sản</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">Tài sản ròng năm 20</div><div class="kpi-val pos">${fmt(dL.net)}T</div><div class="kpi-sub">Giá trị nhà + tích lũy CF</div></div>
+  </div>
+
+  <!-- Rooms table -->
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">🏠 Cơ Cấu Phòng & Thu Nhập — ${m.title.split('—')[0].trim()}</div><div class="badge ${n===3?'g':n===1||n===4?'r':'b'}">${m.rooms.filter(r=>r.loai!=='Ở'&&!r.loai.includes('Ở tạm')).length} phòng cho thuê</div></div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--line);padding:12px 16px;font-size:11.5px;color:var(--ink3)">
+      <b>Vốn đầu tư:</b> ${m.vonDauTu} &nbsp;·&nbsp; <b>Chi phí xây/sửa:</b> ${m.chiPhiXay}
+    </div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>#</th><th>Tên / Vị Trí</th><th>Diện Tích</th><th>Loại</th><th>Giá Thuê</th><th>Ghi Chú</th></tr></thead>
+      <tbody>${m.rooms.map((r,i)=>`<tr>
+        <td class="dim">${i+1}</td>
+        <td class="tdl b">${r.ten}</td>
+        <td>${r.dien}</td>
+        <td><span class="badge ${r.loai.includes('Ở')&&!r.loai.includes('tạm')?'b':r.loai.includes('Airbnb')?'o':'g'}" style="font-size:9px;white-space:normal;line-height:1.3">${r.loai}</span></td>
+        <td class="${r.gia==='—'?'dim':'pos'}">${r.gia}</td>
+        <td style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:var(--ink3)">${r.note}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>
+
+  <!-- CF Chart -->
+  <div class="chart-outer">
+    <div class="chart-title">📊 Dòng Tiền Hàng Tháng — 20 Năm (xanh = dương / đỏ = âm)</div>
+    <div style="position:relative;height:220px"><canvas id="sc${n}-chart" role="img" aria-label="CF PA${n} 20 năm">Biểu đồ dòng tiền.</canvas></div>
+  </div>
+
+  <!-- CF Detail table -->
+  <div class="tbl-wrap">
+    <div class="tbl-hdr"><div class="tbl-title">📋 Dòng Tiền Chi Tiết Từng Năm — 20 Năm</div><div class="badge ${dL.cumCF>=0?'g':'r'}">${pb>0?'Hoàn vốn năm '+pb:'Chưa hoàn vốn trong 20N'}</div></div>
+    <div class="tbl-ov"><table>
+      <thead><tr><th>Năm</th><th>Lãi S.</th><th>Dư Nợ</th><th>Thu Thuê/th</th><th>Trả Nợ/th</th><th>Chi Khác/th</th><th>CF Thuần/th</th><th>Tích Lũy CF</th><th>Giá Trị TS</th><th>TS Ròng</th></tr></thead>
+      <tbody>${cfRows}</tbody>
+    </table></div>
+  </div>
+
+  <!-- Timeline + Risks/Pros grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+    <div class="tbl-wrap" style="margin:0">
+      <div class="tbl-hdr"><div class="tbl-title">📅 Timeline & Lộ Trình</div></div>
+      <div style="padding:16px 18px">${tlHTML}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="tbl-wrap" style="margin:0;flex:1">
+        <div class="tbl-hdr"><div class="tbl-title">⚠️ Rủi Ro Cần Biết</div></div>
+        <div style="padding:14px 16px">${riskHTML}</div>
+      </div>
+      <div class="tbl-wrap" style="margin:0;flex:1">
+        <div class="tbl-hdr"><div class="tbl-title">✅ Điểm Mạnh</div></div>
+        <div style="padding:14px 16px">${prosHTML}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hbox ${m.hboxType}"><strong>📌 Kết Luận & Khuyến Nghị PA${n}</strong>${m.conclusion}</div>
+  `;
+
+  // Render chart after DOM update
+  setTimeout(()=>renderScen(n,'sc'+n+'-chart'),50);
+}
+
+function showPA(n){
+  activePAn=n;
+  document.querySelectorAll('.pa-detail').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.pa-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pa-'+n).classList.add('active');
+  document.querySelectorAll('.pa-tab')[n-1].classList.add('active');
+  renderPADetail(n);
+}
+function setCF(n){
+  activeCF=n;
+  document.querySelectorAll('.cft').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.cft')[n-1].classList.add('active');
+  renderCF(n);
+}
+
+function renderOverview(){
+  const tb=document.getElementById('ov-pa1-tbl');
+  let rows='',cum=0;
+  for(let yr=1;yr<=5;yr++){
+    const r=yr<=2?P.rate_pref:P.rate_float;
+    const mpV=mpay(3800,r,20),rent=4*P.rent_room*Math.pow(1+P.rent_growth/100,yr-1)*(1-P.vacancy/100);
+    const cf=rent-mpV-35;cum+=cf*12;
+    rows+=`<tr><td class="tdl b">Năm ${yr}</td><td>${r}%</td><td class="pos">${rent.toFixed(1)} tr</td><td class="neg">${mpV.toFixed(1)} tr</td><td>35 tr</td><td class="${cf>=0?'pos':'neg'}">${fmtM(cf)}</td><td class="${cum>=0?'pos':'neg'}">${fmt(cum)}T</td><td>${cf>=0?'<span class="pos">✅</span>':'<span class="neg">⚠️ Âm</span>'}</td></tr>`;
+  }
+  if(tb)tb.innerHTML=rows;
+  const rent3=6*P.rent_room*(1-P.vacancy/100),mp3=mpay(1200,P.rate_float,10),cf3=rent3-mp3;
+  const mpA1=mpay(3800,P.rate_float,20),rentA1=4*P.rent_room*(1-P.vacancy/100),cfA1=rentA1-mpA1-35;
+  const a10=5000*Math.pow(1+P.asset_growth/100,10);
+  const d3=calcCF(3);const tcf3=d3[19].cumCF;
+  const pb3=d3.findIndex(d=>d.cumCF>=0)+1;
+  setEl('ov-rent',rent3.toFixed(0)+' tr');setEl('ov-pa1cf',fmtM(cfA1));
+  setEl('ov-pb',pb3>0?'Năm '+pb3:'> 20 năm');
+  setEl('ov-a10',fmt(a10)+'T');setEl('ov-tcf',fmt(tcf3)+'T');
+  setEl('hero-cf',rent3.toFixed(0)+' tr/th');
+  setEl('hdr-cf','+'+rent3.toFixed(0)+' tr');
+  setEl('hdr-payback',pb3>0?'Năm '+pb3:'> 20N');
+  setEl('sc1-debt',mpay(3800,P.rate_float,20).toFixed(0)+' tr');
+  setEl('sc1-rent',rentA1.toFixed(0)+' tr');setEl('sc1-fcf',fmtM(cfA1));
+  setEl('sc3-rent',rent3.toFixed(0)+' tr');setEl('sc3-fcf',fmtM(cf3));
+  setEl('cmp-pa1r',rentA1.toFixed(0)+' tr');setEl('cmp-pa3r',rent3.toFixed(0)+' tr');
+  setEl('cmp-pa1c',fmtM(cfA1));setEl('cmp-pa3c',fmtM(cf3));
+  setEl('cmp-pa3a',fmt(a10)+'T');
+}
+
+function renderOvChart(){
+  const yrs=[1,3,5,7,10,12,15,17,20];
+  const d=[calcCF(3),calcCF(4),calcCF(5),calcCF(1)];
+  const colors=['#17a36e','#d4a017','#5c2d99','#d63b33'];
+  const labels=['PA3 ⭐ Bán+Xây 4T','PA4 Bán+Vay 3T Xây 6T','PA5 Bán+Vay 4T Xây 7T','PA1 ⚠️ Vay 4T Xây 3T'];
+  const dashes=[[],[3,2],[5,3],[2,4]];
+  const col=gc();
+  mkChart('ov-chart','line',{
+    labels:yrs.map(y=>'N'+y),
+    datasets:d.map((data,i)=>({
+      label:labels[i],data:yrs.map(y=>+(data[y-1].cumCF/1000).toFixed(2)),
+      borderColor:colors[i],backgroundColor:colors[i]+'18',fill:true,tension:.4,
+      borderWidth:i===0?2.5:2,pointRadius:i===0?3:2,borderDash:dashes[i]
+    }))
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} tỷ`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}},y:{ticks:{color:col.tick,font:{size:10},callback:v=>v+'T'},grid:{color:col.grid}}}
+  });
+}
+
+function renderScen(n,cid){
+  const data=calcCF(n);const col=gc();
+  mkChart(cid,'bar',{
+    labels:data.map(d=>'N'+d.yr),
+    datasets:[{label:'CF/th',data:data.map(d=>+d.cfM.toFixed(1)),backgroundColor:data.map(d=>d.cfM>=0?'rgba(23,163,110,.8)':'rgba(214,59,51,.8)'),borderRadius:3}]
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Năm ${data[ctx.dataIndex].yr}: ${fmtM(data[ctx.dataIndex].cfM)}/tháng`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:9},maxRotation:0},grid:{display:false}},y:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}}}
+  });
+}
+
+function renderCF(n){
+  const c=cfg(n),data=calcCF(n),col=gc();
+  const d0=data[0],dL=data[19];
+  const pb=data.findIndex(d=>d.cumCF>=0)+1,tcf=dL.cumCF;
+  setEl('cf-info',`<div class="cf-info-num sc-num ${c.color}">${n}</div><div class="cf-info-meta"><div class="cf-info-name">${c.name}</div><div class="cf-info-desc">${c.desc}</div></div><div class="verdict ${c.verdict}">${c.vt}</div>`);
+  setEl('cf-cards',`
+    <div class="kpi ${d0.cfM>=0?'kg':'kr'}"><div class="kpi-lbl">CF tháng Năm 1</div><div class="kpi-val ${d0.cfM>=0?'pos':'neg'}">${fmtM(d0.cfM)}</div><div class="kpi-sub">Thu ${d0.rentM.toFixed(0)}tr − nợ ${d0.mpM.toFixed(0)}tr − chi ${d0.extra}tr</div></div>
+    <div class="kpi ${data[9]&&data[9].cfM>=0?'kg':'kr'}"><div class="kpi-lbl">CF tháng Năm 10</div><div class="kpi-val ${data[9]&&data[9].cfM>=0?'pos':'neg'}">${data[9]?fmtM(data[9].cfM):'—'}</div><div class="kpi-sub">Thu ${data[9]?data[9].rentM.toFixed(0):'—'}tr sau tăng giá thuê</div></div>
+    <div class="kpi kb"><div class="kpi-lbl">Hoàn vốn</div><div class="kpi-val">${pb>0?'Năm '+pb:'> 20 năm'}</div><div class="kpi-sub">Tích lũy CF bù đủ vốn</div></div>
+    <div class="kpi ${tcf>=0?'kg':'kr'}"><div class="kpi-lbl">Tổng CF 20 năm</div><div class="kpi-val ${tcf>=0?'pos':'neg'}">${fmt(tcf)}T</div><div class="kpi-sub">Chưa tính tăng giá TS</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">Tài sản năm 20</div><div class="kpi-val gld">${fmt(dL.assetV)}T</div><div class="kpi-sub">+${P.asset_growth}%/năm từ gốc</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">Tài sản ròng năm 20</div><div class="kpi-val pos">${fmt(dL.net)}T</div><div class="kpi-sub">TS + tích lũy CF</div></div>`);
+
+  mkChart('cf-monthly','bar',{
+    labels:data.map(d=>'N'+d.yr),
+    datasets:[{label:'CF/th',data:data.map(d=>+d.cfM.toFixed(1)),backgroundColor:data.map(d=>d.cfM>=0?'rgba(23,163,110,.8)':'rgba(214,59,51,.8)'),borderRadius:3}]
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Năm ${data[ctx.dataIndex].yr}: ${fmtM(data[ctx.dataIndex].cfM)}/tháng`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:9},maxRotation:0},grid:{display:false}},y:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}}}
+  });
+
+  const yrs=[1,2,3,5,7,10,12,15,17,20];
+  mkChart('cf-cum','line',{
+    labels:yrs.map(y=>'N'+y),
+    datasets:[
+      {label:'Tích lũy CF',data:yrs.map(y=>+(data[y-1].cumCF/1000).toFixed(2)),borderColor:'#2a6fd4',backgroundColor:'rgba(42,111,212,.1)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+      {label:'Giá trị TS',data:yrs.map(y=>+(data[y-1].assetV/1000).toFixed(2)),borderColor:'#d4a017',fill:false,tension:.4,borderWidth:2,pointRadius:2,borderDash:[5,3]},
+      {label:'TS ròng',data:yrs.map(y=>+(data[y-1].net/1000).toFixed(2)),borderColor:'#17a36e',fill:false,tension:.4,borderWidth:2,pointRadius:2},
+    ]
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} tỷ`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}},y:{ticks:{color:col.tick,font:{size:10},callback:v=>v+'T'},grid:{color:col.grid}}}
+  });
+
+  const tb=document.getElementById('cf-body'),tf=document.getElementById('cf-foot');
+  if(!tb)return;
+  tb.innerHTML='';let totR=0,totD=0;
+  data.forEach(d=>{
+    totR+=d.rentM*12;totD+=d.mpM*12;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="tdl b">Năm ${d.yr}</td><td>${d.rate}%</td><td class="${d.remain>0?'neg':'dim'}">${d.remain>0?d.remain.toFixed(0)+' tr':'—'}</td><td class="pos">${d.rentM.toFixed(1)} tr</td><td class="${d.mpM>0?'neg':'dim'}">${d.mpM>0?d.mpM.toFixed(1)+' tr':'0'}</td><td class="${d.extra>0?'':'dim'}">${d.extra>0?d.extra+' tr':'—'}</td><td class="${d.cfM>=0?'pos':'neg'}">${fmtM(d.cfM)}</td><td class="${d.cumCF>=0?'pos':'neg'}">${fmt(d.cumCF)}T</td><td class="gld">${fmt(d.assetV)}T</td><td class="${d.net>=0?'pos':'neg'}">${fmt(d.net)}T</td>`;
+    tb.appendChild(tr);
+  });
+  if(tf)tf.innerHTML=`<tr><td class="bld">TỔNG 20 NĂM</td><td>—</td><td>—</td><td class="pos bld">${fmt(totR)}T</td><td class="neg bld">${fmt(totD)}T</td><td>—</td><td class="${tcf>=0?'pos bld':'neg bld'}">${fmt(tcf)}T</td><td class="${tcf>=0?'pos bld':'neg bld'}">${fmt(tcf)}T</td><td class="gld bld">${fmt(dL.assetV)}T</td><td class="${dL.net>=0?'pos bld':'neg bld'}">${fmt(dL.net)}T</td></tr>`;
+
+  setEl('cf-tbl-title','Bảng Dòng Tiền Chi Tiết 20 Năm — '+c.name);
+  const bdg=document.getElementById('cf-badge');if(bdg){bdg.textContent=c.vt;bdg.className='badge '+(n===1||n===4||n===7?'r':n===2||n===6?'o':'g');}
+  const box=document.getElementById('cf-sum-box');if(box)box.className='hbox '+(tcf>=0?'ok':'bad');
+  setEl('cf-sum-txt',`Lãi ưu đãi ${P.rate_pref}%, thả nổi ${P.rate_float}%, giá thuê ${P.rent_room}tr/phòng tăng ${P.rent_growth}%/năm, trống ${P.vacancy}%: ${c.name} ${pb>0?'hoàn vốn năm '+pb:'không hoàn vốn trong 20 năm'}. Tổng CF 20 năm: ${fmt(tcf)}T. Tài sản ròng năm 20: ${fmt(dL.net)}T.`);
+}
+
+function renderCompare(){
+  const col=gc();
+  mkChart('radar-chart','radar',{
+    labels:['Dòng tiền CF','Nợ thấp','Hoàn vốn nhanh','Tài sản tích lũy','An toàn gia đình','Dễ quản lý'],
+    datasets:[
+      {label:'PA3 ⭐',data:[8,9,8,8,9,7],borderColor:'#17a36e',backgroundColor:'rgba(23,163,110,.18)',pointBackgroundColor:'#17a36e',borderWidth:2.5},
+      {label:'PA4',data:[9,7,7,9,7,6],borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.15)',pointBackgroundColor:'#d4a017',borderWidth:2},
+      {label:'PA5',data:[10,6,6,10,6,5],borderColor:'#5c2d99',backgroundColor:'rgba(92,45,153,.12)',pointBackgroundColor:'#5c2d99',borderWidth:2},
+      {label:'PA1 ⚠️',data:[2,1,3,4,1,5],borderColor:'#d63b33',backgroundColor:'rgba(214,59,51,.1)',pointBackgroundColor:'#d63b33',borderWidth:1.5,borderDash:[4,2]},
+    ]
+  },{plugins:{legend:{display:false}},
+    scales:{r:{ticks:{display:false,backdropColor:'transparent'},grid:{color:col.grid},pointLabels:{color:col.tick,font:{size:10}},suggestedMin:0,suggestedMax:10}}
+  });
+
+  const ps=[1,2,3,4,5];
+  const nets=ps.map(n=>+(calcCF(n)[19].net/1000).toFixed(2));
+  const bColors=ps.map(n=>(cfg(n)||{hex:'#888'}).hex+'cc');
+  mkChart('net-chart','bar',{
+    labels:ps.map(n=>'PA'+n),
+    datasets:[{label:'TS ròng N20 (tỷ)',data:nets,backgroundColor:bColors,borderRadius:5}]
+  },{indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.x.toFixed(2)} tỷ`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:10},callback:v=>v+'T'},grid:{color:col.grid}},y:{ticks:{color:col.tick,font:{size:11}},grid:{display:false}}}
+  });
+}
+
+function renderScoreRings(){
+  const el=document.getElementById('score-rings');if(!el)return;
+  const scores=[
+    {pa:'PA1',s:3,c:'#d63b33',bg:'#fce5e4',cat:'Rủi Ro / Kém Nhất'},
+    {pa:'PA2',s:2,c:'#d63b33',bg:'#fce5e4',cat:'Lãng Phí Tài Sản'},
+    {pa:'PA3 ⭐',s:9,c:'#0d6e4a',bg:'#d5f3e8',cat:'Cân Bằng Tốt Nhất'},
+    {pa:'PA4',s:8,c:'#b8860b',bg:'#fdf3d8',cat:'Tiềm Năng Cao'},
+    {pa:'PA5',s:7,c:'#5c2d99',bg:'#ede4f8',cat:'Tối Đa Hóa'},
+  ];
+  el.innerHTML=scores.map(x=>`<div class="score-card"><div class="sc-ring" style="background:${x.bg};color:${x.c}">${x.s}/10</div><div class="sc-pname">${x.pa}</div><div class="sc-cat">${x.cat}</div></div>`).join('');
+}
+
+function renderMkt(){
+  const col=gc();
+  const years=['2020','2021','2022','2023','2024','2025','2026*','2027*','2028*','2030*'];
+  const tt=[45,52,58,65,72,80,88,96,105,122];
+  const vv=[12,16,22,28,28,32,36,40,46,56];
+  mkChart('mkt-chart','line',{
+    labels:years,
+    datasets:[
+      {label:'Trung tâm ĐN',data:tt,borderColor:'#17a36e',backgroundColor:'rgba(23,163,110,.12)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3,segment:{borderDash:ctx=>ctx.p0DataIndex>=4?[5,3]:undefined}},
+      {label:'Vùng ven ĐN',data:vv,borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.08)',fill:true,tension:.4,borderWidth:2,pointRadius:2,segment:{borderDash:ctx=>ctx.p0DataIndex>=4?[5,3]:undefined}},
+    ]
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y} triệu/m²`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}},y:{ticks:{color:col.tick,font:{size:10},callback:v=>v+' tr'},grid:{color:col.grid}}}
+  });
+}
+
+function runStress(){
+  const panel=document.getElementById('stress-panel');
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const sv={...P};
+  P.rate_pref=10;P.rate_float=14;P.vacancy=30;P.rent_growth=0;
+  const d3=calcCF(3),d1=calcCF(1),d4=calcCF(4),d5=calcCF(5);
+  P={...sv};
+  const cf3y1=d3[0].cfM,cf3y5=d3[4].cfM,cf3y10=d3[9].cfM;
+  const cf1y1=d1[0].cfM,cf1y5=d1[4].cfM;
+  const cf4y1=d4[0].cfM,cf4y5=d4[4].cfM,cf4y10=d4[9].cfM;
+  const cf5y1=d5[0].cfM,cf5y5=d5[4].cfM,cf5y10=d5[9].cfM;
+  const grid=document.getElementById('stress-grid');
+  grid.innerHTML=`
+    <div class="stress-card ${cf3y1>=0?'ok':''}"><div class="stress-lbl">PA3 (6P) — CF Năm 1</div><div class="stress-val ${cf3y1>=0?'ok':'neg'}">${fmtM(cf3y1)}</div><div class="stress-sub">Lãi 14%, trống 30%, thuê không tăng</div></div>
+    <div class="stress-card ${cf3y5>=0?'ok':''}"><div class="stress-lbl">PA3 (6P) — CF Năm 5</div><div class="stress-val ${cf3y5>=0?'ok':'neg'}">${fmtM(cf3y5)}</div><div class="stress-sub">${cf3y5>=0?'✅ Vẫn dương':'⚠️ Âm nhẹ'}</div></div>
+    <div class="stress-card ${cf4y1>=0?'ok':''}"><div class="stress-lbl">PA4 (9P) — CF Năm 1</div><div class="stress-val ${cf4y1>=0?'ok':'warn'}">${fmtM(cf4y1)}</div><div class="stress-sub">${cf4y1>=0?'✅ Còn dương':'⚠️ Âm khi stress'}</div></div>
+    <div class="stress-card ${cf4y5>=0?'ok':''}"><div class="stress-lbl">PA4 (9P) — CF Năm 5</div><div class="stress-val ${cf4y5>=0?'ok':'warn'}">${fmtM(cf4y5)}</div><div class="stress-sub">${cf4y5>=0?'✅ Ổn':'⚠️ Cần theo dõi'}</div></div>
+    <div class="stress-card ${cf5y1>=0?'ok':''}"><div class="stress-lbl">PA5 (11P) — CF Năm 1</div><div class="stress-val ${cf5y1>=0?'ok':'neg'}">${fmtM(cf5y1)}</div><div class="stress-sub">${cf5y1>=0?'✅ Dương':'❌ Âm — áp lực nợ lớn'}</div></div>
+    <div class="stress-card"><div class="stress-lbl">PA1 (4P) — CF Năm 5</div><div class="stress-val neg">${fmtM(cf1y5)}</div><div class="stress-sub">❌ CF âm nặng — nguy cơ vỡ nợ</div></div>`;
+  const v=document.getElementById('stress-verdict');
+  const safePA=cf3y1>=0?'PA3':cf4y1>=0?'PA4':'Không PA nào';
+  v.className='hbox '+(cf3y1>=0?'ok':'warn');
+  v.innerHTML='<strong>⚡ Stress Test: Lãi 14% + Trống 30% + Giá Thuê Không Tăng</strong><br>'
+    +'Kịch bản cực xấu nhất: <b>PA3 '+fmtM(cf3y1)+'/th (Năm 1)</b>, <b>PA4 '+fmtM(cf4y1)+'/th</b>, <b>PA5 '+fmtM(cf5y1)+'/th</b>, PA1 '+fmtM(cf1y1)+'/th.<br>'
+    +'→ PA3 có nợ thấp nhất (1.2T) nên chịu đựng tốt nhất. PA5 vay 4T nên áp lực cao khi thị trường xấu. PA1 luôn âm vì vay nhiều mà ít phòng.';
+}
+
+function resetP(){
+  P={rate_pref:8.5,rate_float:11.5,rent_room:10,rent_growth:5,asset_growth:8,vacancy:10};
+  ['rate_pref','rate_float','rent_room','rent_growth','asset_growth','vacancy'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value=P[id];
+  });
+  document.getElementById('stress-panel').style.display='none';
+  renderAll();
+}
+
+function recalcAll(){
+  const g=id=>parseFloat(document.getElementById(id)?.value)||0;
+  P.rate_pref=g('rate_pref');P.rate_float=g('rate_float');
+  P.rent_room=g('rent_room');P.rent_growth=g('rent_growth');
+  P.asset_growth=g('asset_growth');P.vacancy=g('vacancy');
+  document.getElementById('stress-panel').style.display='none';
+  renderAll();
+}
+
+function renderAll(){
+  renderOverview();renderOvChart();
+  renderCF(activeCF);
+  if(document.getElementById('scenarios').classList.contains('active'))renderPADetail(activePAn);
+  if(document.getElementById('compare').classList.contains('active')){setTimeout(()=>{renderCompare();renderScoreRings();},30);}
+  if(document.getElementById('market').classList.contains('active'))setTimeout(()=>renderMkt(),30);
+  if(document.getElementById('tanggia').classList.contains('active'))setTimeout(()=>renderTangGia(),30);
+}
+
+function renderRisk(){/* static HTML */}
+function resetTG(){
+  const defs={tg_land_now:11,tg_land_growth:9,tg_build_cost:5,tg_house_growth:7,tg_rent:10,tg_rent_growth:5,tg_tax:35,tg_bank_rate:6,tg_loan:1.2,tg_loan_rate:11.5};
+  Object.entries(defs).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v;});
+  renderTangGia();
+}
+
+function renderTangGia(){
+  const g=id=>parseFloat(document.getElementById(id)?.value)||0;
+  const landNow    = g('tg_land_now')||11;
+  const landGrowth = g('tg_land_growth')||9;
+  const buildCost  = g('tg_build_cost')||5;
+  const houseGrowth= g('tg_house_growth')||7;
+  const rentRoom   = g('tg_rent')||10;
+  const rentGrowth = g('tg_rent_growth')||5;
+  const taxPct     = g('tg_tax')||35;
+  const bankRate   = g('tg_bank_rate')||6;
+  const loanAmt    = g('tg_loan')||1.2;
+  const loanRate   = g('tg_loan_rate')||11.5;
+
+  const profitPct  = (100 - taxPct) / 100;  // 65% if taxPct=35
+  const vacancy    = 0.10;
+  const baseHouse  = landNow + buildCost;    // total capital invested in building
+  const bankRateM  = bankRate / 100 / 12;   // monthly bank rate
+  // Loan repayment if any (monthly payment, 10yr term)
+  const loanPayM   = loanAmt > 0 ? mpay(loanAmt*1000, loanRate, 10) : 0; // in tr
+
+  const allYears = Array.from({length:20},(_,i)=>i+1);
+  const milestones = [1,2,3,4,5,6,7,8,9,10,12,15,18,20];
+
+  // ── Compute year-by-year for all 20 years ──
+  let bankSavingsB = 0; // cumulative bank savings from 65% profit (kịch bản B)
+  let bankSavingsC = landNow * 1000; // Kịch bản C: sell land TT at landNow, put in bank
+
+  const yearData = allYears.map(yr => {
+    // A: Keep land, no income
+    const datVal = landNow * Math.pow(1 + landGrowth/100, yr); // tỷ
+
+    // B: Build house
+    const nhaVal = baseHouse * Math.pow(1 + houseGrowth/100, yr); // tỷ
+    const rentMonth = 6 * rentRoom * Math.pow(1 + rentGrowth/100, yr-1) * (1-vacancy); // tr/month gross
+    const costMonth = rentMonth * (taxPct/100); // 35% cost tr/month
+    const profitMonth = rentMonth * profitPct; // 65% profit tr/month
+    const loanPay = (loanAmt > 0 && yr <= 10) ? loanPayM : 0;
+    const netProfit = profitMonth - loanPay; // after loan repayment
+    const depositMonth = Math.max(0, netProfit); // amount deposited to bank each month
+
+    // Accumulate bank savings B with compound interest (monthly)
+    bankSavingsB = bankSavingsB * (1 + bankRateM) + depositMonth; // tr
+    const totalB = nhaVal + bankSavingsB/1000; // tỷ (house + savings)
+
+    // C: Bank savings (just grows at bank rate)
+    bankSavingsC = bankSavingsC * (1 + bankRateM); // tr
+
+    return {
+      yr,
+      datVal,           // tỷ — A
+      nhaVal,           // tỷ — B house value
+      rentMonth,        // tr — B gross rent
+      costMonth,        // tr — B 35% cost
+      profitMonth,      // tr — B 65% profit
+      loanPay,          // tr — B loan repayment
+      netProfit,        // tr — B net after loan
+      depositMonth,     // tr — deposited to bank
+      bankSavingsB,     // tr — cumulative bank B
+      totalB,           // tỷ — B total
+      bankC: bankSavingsC/1000, // tỷ — C
+    };
+  });
+
+  const col = gc();
+  const lbYrs = milestones.map(y=>'N'+y);
+  const msData = milestones.map(y=>yearData[y-1]);
+
+  // ── Chart 1: 3-way comparison ──
+  mkChart('tg-chart-3way','line',{
+    labels: lbYrs,
+    datasets:[
+      {label:'A: Giữ đất',data:msData.map(d=>+d.datVal.toFixed(3)),borderColor:'#d4a017',backgroundColor:'rgba(212,160,23,.12)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+      {label:'B: Xây nhà + NH',data:msData.map(d=>+d.totalB.toFixed(3)),borderColor:'#17a36e',backgroundColor:'rgba(23,163,110,.1)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+      {label:'C: Gửi NH 6%',data:msData.map(d=>+d.bankC.toFixed(3)),borderColor:'#2a6fd4',backgroundColor:'rgba(42,111,212,.08)',fill:true,tension:.4,borderWidth:2,pointRadius:2,borderDash:[5,3]},
+    ]
+  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} tỷ`}}},
+    scales:{x:{ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}},y:{ticks:{color:col.tick,font:{size:10},callback:v=>v+'T'},grid:{color:col.grid}}}
+  });
+
+  // ── Chart 2: breakdown bar ──
+  mkChart('tg-chart-breakdown','bar',{
+    labels: milestones.map(y=>'N'+y),
+    datasets:[
+      {label:'35% Chi phí & thuế',data:msData.map(d=>+d.costMonth.toFixed(1)),backgroundColor:'rgba(207,55,48,.75)',borderRadius:3,stack:'s'},
+      {label:'65% Lợi nhuận → NH',data:msData.map(d=>+d.profitMonth.toFixed(1)),backgroundColor:'rgba(23,163,110,.8)',borderRadius:3,stack:'s'},
+    ]
+  },{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} tr/tháng`}}},
+    scales:{x:{stacked:true,ticks:{color:col.tick,font:{size:9}},grid:{display:false}},y:{stacked:true,ticks:{color:col.tick,font:{size:10}},grid:{color:col.grid}}}
+  });
+
+  // ── Main comparison table ──
+  const tb=document.getElementById('tg-tbl-body'),tf=document.getElementById('tg-tbl-foot');
+  if(tb){
+    tb.innerHTML='';
+    msData.forEach(d=>{
+      const best = d.totalB>=d.datVal&&d.totalB>=d.bankC?'B':d.datVal>=d.totalB&&d.datVal>=d.bankC?'A':'C';
+      const bestLabel = best==='B'?'<span class="pos">🏠 Xây nhà</span>':best==='A'?'<span class="gld">🌳 Giữ đất</span>':'<span style="color:var(--blue)">🏦 Gửi NH</span>';
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="tdl b">Năm ${d.yr}</td>
+        <td class="gld">${d.datVal.toFixed(2)} tỷ</td>
+        <td class="pos">${d.rentMonth.toFixed(1)} tr</td>
+        <td class="neg">${d.costMonth.toFixed(1)} tr (${taxPct}%)</td>
+        <td class="pos">${d.profitMonth.toFixed(1)} tr (${100-taxPct}%)</td>
+        <td class="pos">${(d.bankSavingsB/1000).toFixed(2)} tỷ</td>
+        <td class="gld">${d.nhaVal.toFixed(2)} tỷ</td>
+        <td class="${d.totalB>=d.datVal?'pos':'neg'}" style="font-weight:700">${d.totalB.toFixed(2)} tỷ</td>
+        <td style="color:var(--blue);font-weight:600">${d.bankC.toFixed(2)} tỷ</td>
+        <td>${bestLabel}</td>`;
+      tb.appendChild(tr);
+    });
+  }
+  const dL=yearData[19];
+  if(tf) tf.innerHTML=`<tr>
+    <td class="bld">Năm 20</td>
+    <td class="gld bld">${dL.datVal.toFixed(2)} tỷ</td>
+    <td>—</td><td>—</td><td>—</td>
+    <td class="pos bld">${(dL.bankSavingsB/1000).toFixed(2)} tỷ (tiết kiệm NH)</td>
+    <td class="gld bld">${dL.nhaVal.toFixed(2)} tỷ</td>
+    <td class="pos bld">${dL.totalB.toFixed(2)} tỷ</td>
+    <td style="color:var(--blue);font-weight:700">${dL.bankC.toFixed(2)} tỷ</td>
+    <td class="${dL.totalB>=dL.datVal&&dL.totalB>=dL.bankC?'pos bld':'gld bld'}">${dL.totalB>=dL.datVal&&dL.totalB>=dL.bankC?'🏠 B thắng':dL.datVal>=dL.totalB&&dL.datVal>=dL.bankC?'🌳 A thắng':'🏦 C thắng'}</td>
+  </tr>`;
+
+  // ── Bank savings detail table ──
+  const bb=document.getElementById('tg-bank-body');
+  if(bb){
+    bb.innerHTML='';
+    let prevSav=0;
+    milestones.forEach(yr=>{
+      const d=yearData[yr-1];
+      const interest=(d.bankSavingsB-prevSav)*bankRate/100; // approx interest earned this period
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="tdl b">Năm ${yr}</td>
+        <td class="pos">${d.rentMonth.toFixed(1)} tr</td>
+        <td class="neg">${d.costMonth.toFixed(1)} tr</td>
+        <td class="pos">${d.depositMonth.toFixed(1)} tr</td>
+        <td class="pos">+${Math.max(0,(d.bankSavingsB-prevSav-(d.depositMonth*12))).toFixed(0)} tr</td>
+        <td class="pos bld">${(d.bankSavingsB/1000).toFixed(3)} tỷ</td>
+        <td class="gld">${(d.bankSavingsB-prevSav>=0?'+':'')+(((d.bankSavingsB-prevSav)/1000).toFixed(3))} tỷ</td>`;
+      bb.appendChild(tr);
+      prevSav=d.bankSavingsB;
+    });
+  }
+
+  // ── Update 35% breakdown table display ──
+  const rentY1=6*rentRoom*(1-vacancy);
+  setEl('tg-tax-total',taxPct+'%');
+  setEl('tg-tax-amount','~'+(rentY1*taxPct/100).toFixed(1)+' tr/tháng');
+  setEl('tg-profit-pct',(100-taxPct)+'%');
+  setEl('tg-profit-amount','~'+(rentY1*(100-taxPct)/100).toFixed(1)+' tr/tháng');
+
+  // ── KPI cards ──
+  const r5=yearData[4],r10=yearData[9];
+  const winner20=dL.totalB>=dL.datVal&&dL.totalB>=dL.bankC?'B':dL.datVal>=dL.totalB&&dL.datVal>=dL.bankC?'A':'C';
+  setEl('tg-kpi',`
+    <div class="kpi ko"><div class="kpi-lbl">A: Giữ Đất — Năm 20</div><div class="kpi-val gold">${dL.datVal.toFixed(2)} tỷ</div><div class="kpi-sub">Từ ${landNow}T, tăng ${landGrowth}%/năm · 0 dòng tiền</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">B: Xây Nhà + NH — Năm 20</div><div class="kpi-val pos">${dL.totalB.toFixed(2)} tỷ</div><div class="kpi-sub">Nhà ${dL.nhaVal.toFixed(1)}T + tiết kiệm NH ${(dL.bankSavingsB/1000).toFixed(1)}T</div></div>
+    <div class="kpi kb"><div class="kpi-lbl">C: Gửi NH 6% — Năm 20</div><div class="kpi-val" style="color:var(--blue)">${dL.bankC.toFixed(2)} tỷ</div><div class="kpi-sub">Bán đất TT ${landNow}T gửi ngân hàng ${bankRate}%/năm</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">65% Lợi nhuận NH lũy kế</div><div class="kpi-val pos">${(dL.bankSavingsB/1000).toFixed(2)} tỷ</div><div class="kpi-sub">Sau 35% thuế + chi phí, gửi NH ${bankRate}%/năm tích lũy kép</div></div>
+    <div class="kpi ${winner20==='B'?'kg':winner20==='A'?'ko':'kb'}"><div class="kpi-lbl">Phương Án Thắng Năm 20</div><div class="kpi-val ${winner20==='B'?'pos':winner20==='A'?'gold':''}">${winner20==='B'?'🏠 Xây Nhà':winner20==='A'?'🌳 Giữ Đất':'🏦 Gửi NH'}</div><div class="kpi-sub">Chênh vs nhì: ${Math.abs(dL.totalB-Math.max(dL.datVal,dL.bankC)).toFixed(2)} tỷ</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">CF thực/tháng (năm 1, 65%)</div><div class="kpi-val gld">${(rentY1*(100-taxPct)/100).toFixed(1)} tr</div><div class="kpi-sub">Sau ${taxPct}% thuế/CP từ ${rentY1.toFixed(0)} tr tổng thu</div></div>
+  `);
+
+  // ── Winner banner ──
+  const winEl=document.getElementById('tg-winner');
+  if(winEl){
+    const winnerMap={
+      B:`<strong>🏠 Kịch Bản B (Xây Nhà) THẮNG sau 20 năm — ${dL.totalB.toFixed(2)} tỷ</strong>
+         Nhà tăng giá ${dL.nhaVal.toFixed(1)}T + Tiết kiệm NH từ 65% lợi nhuận = ${(dL.bankSavingsB/1000).toFixed(1)}T. 
+         Vượt giữ đất <b>${(dL.totalB-dL.datVal).toFixed(2)} tỷ</b> · Vượt gửi NH <b>${(dL.totalB-dL.bankC).toFixed(2)} tỷ</b>.
+         Sau khi trừ ${taxPct}% thuế & chi phí, 65% lợi nhuận gửi NH ${bankRate}%/năm tích lũy kép là lợi thế quyết định.`,
+      A:`<strong>🌳 Kịch Bản A (Giữ Đất) THẮNG sau 20 năm — ${dL.datVal.toFixed(2)} tỷ</strong>
+         Đất tăng ${landGrowth}%/năm quá mạnh vượt qua cả xây nhà lẫn gửi NH. 
+         Tuy nhiên: <b>không có dòng tiền</b>, không có chỗ ở, rủi ro thị trường BĐS.`,
+      C:`<strong>🏦 Kịch Bản C (Gửi Ngân Hàng) THẮNG sau 20 năm — ${dL.bankC.toFixed(2)} tỷ</strong>
+         Lãi kép NH ${bankRate}%/năm trên ${landNow}T gốc vượt cả hai phương án còn lại. Kiểm tra lại thông số — trường hợp hiếm gặp.`
+    };
+    winEl.className='hbox '+(winner20==='B'?'ok':winner20==='A'?'warn':'info');
+    winEl.innerHTML=winnerMap[winner20];
+  }
+
+  // ── 3 Scenarios ──
+  const scEl=document.getElementById('tg-scenarios');
+  if(scEl){
+    const scenarios=[
+      {name:'🐂 Lạc Quan — Thuê Cao, Đất Chậm',note:'Đất TT tăng chậm hơn, thuê tăng mạnh',lg:7,hg:9,rg:8,color:'var(--grl)',border:'var(--gr2)'},
+      {name:'⚖️ Cơ Sở — Thông Số Hiện Tại',note:'Thông số bạn đang đặt',lg:landGrowth,hg:houseGrowth,rg:rentGrowth,color:'var(--gl)',border:'var(--g2)'},
+      {name:'🐻 Thận Trọng — Đất Mạnh, Thuê Chậm',note:'Đất tăng mạnh, giá thuê tăng chậm',lg:12,hg:6,rg:3,color:'var(--rdl)',border:'var(--rd2)'},
+    ];
+    scEl.innerHTML=scenarios.map(sc=>{
+      // Compute scenario result
+      let savB=0,savC=landNow*1000;
+      let totalB20=0,datV20=0,bankC20=0;
+      for(let yr=1;yr<=20;yr++){
+        const baseH=(landNow+buildCost);
+        const nhaV=baseH*Math.pow(1+sc.hg/100,yr);
+        const rent=6*rentRoom*Math.pow(1+sc.rg/100,yr-1)*(1-vacancy);
+        const profit=rent*profitPct;
+        const loan=(loanAmt>0&&yr<=10)?loanPayM:0;
+        const deposit=Math.max(0,profit-loan);
+        savB=savB*(1+bankRateM)+deposit;
+        savC=savC*(1+bankRateM);
+        if(yr===20){totalB20=nhaV+(savB/1000);datV20=landNow*Math.pow(1+sc.lg/100,20);bankC20=savC/1000;}
+      }
+      const best20=totalB20>=datV20&&totalB20>=bankC20?'B':datV20>=totalB20&&datV20>=bankC20?'A':'C';
+      const bWins=totalB20>=datV20&&totalB20>=bankC20;
+      return `<div style="background:${sc.color};border:1.5px solid ${sc.border};border-radius:10px;padding:16px 18px">
+        <div style="font-size:12px;font-weight:800;margin-bottom:6px">${sc.name}</div>
+        <div style="font-size:10.5px;color:var(--ink3);margin-bottom:12px">${sc.note}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">Đất/năm</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700">${sc.lg}%</div></div>
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">Nhà/năm</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700">${sc.hg}%</div></div>
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">Thuê/năm</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700">${sc.rg}%</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">A: Giữ đất</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g)">${datV20.toFixed(1)}T</div></div>
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">B: Xây+NH</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green)">${totalB20.toFixed(1)}T</div></div>
+          <div><div style="font-size:9px;color:var(--ink4);text-transform:uppercase;margin-bottom:2px">C: NH 6%</div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--blue)">${bankC20.toFixed(1)}T</div></div>
+        </div>
+        <div style="font-size:11px;font-weight:800;border-top:1px solid rgba(0,0,0,.08);padding-top:10px;color:${bWins?'var(--green)':'var(--g)'}">
+          ${bWins?'🏠 Xây nhà thắng':(datV20>=totalB20&&datV20>=bankC20?'🌳 Giữ đất thắng':'🏦 Gửi NH thắng')} · Chênh: ${Math.abs(Math.max(totalB20,datV20,bankC20)-([totalB20,datV20,bankC20].sort((a,b)=>b-a)[1])).toFixed(2)}T
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Conclusion ──
+  const winner=dL.totalB>=dL.datVal&&dL.totalB>=dL.bankC?'B':dL.datVal>=dL.totalB&&dL.datVal>=dL.bankC?'A':'C';
+  const conBox=document.getElementById('tg-conclusion');
+  if(conBox){
+    conBox.className='hbox '+(winner==='B'?'ok':winner==='A'?'warn':'info');
+    const rentY1g=6*rentRoom*(1-vacancy);
+    const netPerMonthY1=(rentY1g*(100-taxPct)/100-(loanAmt>0?loanPayM:0));
+    let concText='';
+    if(winner==='B'){
+      concText='<b>Xây nhà (B) thắng sau 20 năm</b> với tổng tài sản <b>'+dL.totalB.toFixed(2)+' tỷ</b> = Nhà '+dL.nhaVal.toFixed(1)+'T + Tiết kiệm NH <b>'+(dL.bankSavingsB/1000).toFixed(1)+'T</b>.'
+        +'<br><b>Mỗi tháng:</b> Thu '+rentY1g.toFixed(0)+'tr → Trừ '+taxPct+'% CP+thuế ('+((rentY1g*taxPct/100)).toFixed(0)+'tr) → Còn '+(rentY1g*(100-taxPct)/100).toFixed(0)+'tr → Trừ nợ '+loanPayM.toFixed(0)+'tr → <b>Gửi NH '+netPerMonthY1.toFixed(0)+'tr/tháng × '+bankRate+'%/năm lãi kép</b>.'
+        +'<br>Sau 20 năm tiết kiệm NH = <b>'+(dL.bankSavingsB/1000).toFixed(1)+'T</b>. Vượt giữ đất: <b>'+(dL.totalB-dL.datVal).toFixed(2)+'T</b>. Vượt gửi NH: <b>'+(dL.totalB-dL.bankC).toFixed(2)+'T</b>. Thêm chỗ ở miễn phí tầng 1.';
+    } else if(winner==='A'){
+      concText='<b>Giữ đất (A) thắng sau 20 năm</b> với <b>'+dL.datVal.toFixed(2)+' tỷ</b> nhờ đất tăng <b>'+landGrowth+'%/năm</b>. Lưu ý: giữ đất = 0 dòng tiền, không chỗ ở, vẫn trả thuê nhà 8–10tr/tháng. Thử giảm tỷ lệ chi phí về 25–28% để xem kịch bản thực tế hơn.';
+    } else {
+      concText='<b>Gửi NH (C) thắng</b> — trường hợp hiếm. Thử tăng giá thuê hoặc giảm % chi phí xuống 25–28%.';
+    }
+    document.getElementById('tg-conclusion-txt').innerHTML=concText;
+  }
+
+  const bdg=document.getElementById('tg-badge');
+  if(bdg){const map={B:'🏠 Xây Nhà Thắng',A:'🌳 Giữ Đất Thắng',C:'🏦 Gửi NH Thắng'};bdg.textContent=map[winner];bdg.className='badge '+(winner==='B'?'g':winner==='A'?'o':'b');}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  renderOverview();
+  renderOvChart();
+  renderCF(3);
+  renderPADetail(1);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDS RENTAL AI VIP</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-primary: #0a0d14;
+  --bg-secondary: #0f1520;
+  --bg-card: rgba(15,25,45,0.85);
+  --bg-glass: rgba(20,35,65,0.6);
+  --border: rgba(60,120,200,0.25);
+  --border-bright: rgba(60,160,255,0.5);
+  --accent: #1e90ff;
+  --accent2: #00d4aa;
+  --accent3: #f59e0b;
+  --text-primary: #e8f0fe;
+  --text-secondary: #8aafdb;
+  --text-muted: #4a6a9a;
+  --green: #00d4aa;
+  --yellow: #f59e0b;
+  --red: #f43f5e;
+  --radius: 12px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(30,100,255,0.12),transparent),radial-gradient(ellipse 60% 40% at 90% 80%,rgba(0,212,170,0.06),transparent);pointer-events:none;z-index:0}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(10,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
+.header-inner{max-width:1800px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#1e90ff,#00d4aa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:700;color:var(--text-primary);letter-spacing:0.5px}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+.nav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.nav-btn{background:none;border:none;color:var(--text-secondary);padding:6px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s;white-space:nowrap}
+.nav-btn:hover,.nav-btn.active{background:rgba(30,144,255,0.15);color:var(--accent)}
+.btn-export{background:linear-gradient(135deg,#1e90ff,#0066cc);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600;transition:.2s}
+.btn-export:hover{opacity:.85}
+
+/* LAYOUT */
+.container{max-width:1800px;margin:0 auto;padding:20px 24px;position:relative;z-index:1}
+.section{display:none}
+.section.active{display:block}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(12px);box-shadow:var(--shadow)}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-header h3{font-size:13px;font-weight:600;color:var(--text-primary);letter-spacing:.3px}
+.card-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.card-body{padding:20px}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+
+/* INPUTS */
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:11px;color:var(--text-secondary);margin-bottom:5px;letter-spacing:.3px}
+.input-row{display:flex;align-items:center;gap:8px}
+input[type=number],input[type=text],select,textarea{background:rgba(10,20,40,0.8);border:1px solid var(--border);color:var(--text-primary);padding:8px 12px;border-radius:8px;font-size:13px;width:100%;transition:.2s;outline:none}
+input[type=number]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(30,144,255,0.15)}
+select option{background:#0f1520}
+.unit{font-size:11px;color:var(--text-muted);white-space:nowrap;min-width:40px}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--bg-glass);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;transition:.2s}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--accent))}
+.kpi-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-value{font-size:20px;font-weight:700;color:var(--text-primary);line-height:1}
+.kpi-sub{font-size:10px;color:var(--text-secondary);margin-top:4px}
+.kpi-badge{position:absolute;top:10px;right:10px;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600}
+.badge-green{background:rgba(0,212,170,0.15);color:var(--green)}
+.badge-yellow{background:rgba(245,158,11,0.15);color:var(--yellow)}
+.badge-red{background:rgba(244,63,94,0.15);color:var(--red)}
+
+/* TOOLTIP */
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;gap:4px}
+.tooltip-icon{width:14px;height:14px;border-radius:50%;background:rgba(30,144,255,0.2);color:var(--accent);font-size:9px;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex-shrink:0;font-weight:700}
+.tooltip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(5,15,30,0.98);border:1px solid var(--border-bright);border-radius:8px;padding:10px 14px;font-size:11px;line-height:1.6;color:var(--text-secondary);width:220px;z-index:200;opacity:0;pointer-events:none;transition:.2s;white-space:pre-line}
+.tooltip-wrap:hover .tooltip-box{opacity:1}
+
+/* PA COMPARISON TABLE */
+.pa-table-wrap{overflow-x:auto}
+.pa-table{width:100%;border-collapse:collapse;font-size:12px}
+.pa-table th{background:rgba(10,25,50,0.9);padding:10px 14px;text-align:right;color:var(--text-secondary);font-weight:600;letter-spacing:.3px;border-bottom:2px solid var(--border);white-space:nowrap}
+.pa-table th:first-child{text-align:left}
+.pa-table td{padding:9px 14px;border-bottom:1px solid rgba(60,120,200,0.1);text-align:right;transition:.15s}
+.pa-table td:first-child{text-align:left;color:var(--text-secondary);font-weight:500}
+.pa-table tr:hover td{background:rgba(30,144,255,0.05)}
+.pa-table .highlight-row td{background:rgba(0,212,170,0.06)}
+.cell-green{color:var(--green);font-weight:600}
+.cell-yellow{color:var(--yellow);font-weight:600}
+.cell-red{color:var(--red);font-weight:600}
+.cell-best{background:rgba(0,212,170,0.1)!important;border-radius:4px}
+
+/* LOAN TABLE */
+.loan-table-wrap{max-height:400px;overflow-y:auto}
+.loan-table{width:100%;border-collapse:collapse;font-size:11px}
+.loan-table th{position:sticky;top:0;background:#0a1525;padding:8px 12px;text-align:right;color:var(--text-secondary);border-bottom:1px solid var(--border);z-index:10}
+.loan-table th:first-child{text-align:center}
+.loan-table td{padding:6px 12px;border-bottom:1px solid rgba(60,120,200,0.07);text-align:right}
+.loan-table td:first-child{text-align:center;color:var(--text-muted)}
+.loan-table tr:hover td{background:rgba(30,144,255,0.04)}
+
+/* AI CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:500px;background:rgba(5,12,25,0.8);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-bubble{max-width:85%;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6}
+.chat-user{background:rgba(30,144,255,0.2);border:1px solid rgba(30,144,255,0.3);align-self:flex-end;color:var(--text-primary)}
+.chat-ai{background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);align-self:flex-start;color:var(--text-secondary)}
+.chat-ai strong{color:var(--green)}
+.chat-input-wrap{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input{flex:1;background:rgba(10,20,40,0.8);border:1px solid var(--border);color:var(--text-primary);padding:10px 14px;border-radius:8px;font-size:13px;outline:none}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{background:linear-gradient(135deg,#1e90ff,#0066cc);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
+.chat-send:hover{opacity:.85}
+.chat-send:disabled{opacity:.5;cursor:not-allowed}
+
+/* SCORE GAUGE */
+.score-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.score-circle{position:relative;width:150px;height:150px}
+.score-circle svg{transform:rotate(-90deg)}
+.score-value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.score-num{font-size:36px;font-weight:800;line-height:1}
+.score-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.score-breakdown{width:100%;display:flex;flex-direction:column;gap:6px}
+.score-item{display:flex;align-items:center;gap:8px;font-size:11px}
+.score-bar-bg{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:3px;transition:.4s}
+
+/* PROGRESS */
+.progress-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:3px;transition:.4s}
+
+/* MONTE CARLO */
+.risk-meter{width:100%;height:20px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));border-radius:10px;position:relative;margin:12px 0}
+.risk-needle{position:absolute;top:-6px;width:4px;height:32px;background:#fff;border-radius:2px;transform:translateX(-50%);transition:.5s}
+
+/* SECTION TABS */
+.section-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{background:var(--bg-glass);border:1px solid var(--border);color:var(--text-secondary);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;transition:.2s}
+.tab-btn:hover,.tab-btn.active{background:rgba(30,144,255,0.15);border-color:var(--accent);color:var(--accent)}
+
+/* PA CARD */
+.pa-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:10px;padding:16px;transition:.2s;cursor:pointer}
+.pa-card:hover{border-color:var(--border-bright);transform:translateY(-2px)}
+.pa-card.selected{border-color:var(--accent);background:rgba(30,144,255,0.08)}
+.pa-card-title{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.pa-card-sub{font-size:11px;color:var(--text-muted)}
+.pa-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pa-metric{background:rgba(0,0,0,0.2);border-radius:6px;padding:8px 10px}
+.pa-metric-label{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
+.pa-metric-value{font-size:14px;font-weight:700;color:var(--text-primary);margin-top:2px}
+
+/* AI RATING */
+.ai-score{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px}
+.ai-score-green{background:rgba(0,212,170,0.15);color:var(--green)}
+.ai-score-yellow{background:rgba(245,158,11,0.15);color:var(--yellow)}
+.ai-score-red{background:rgba(244,63,94,0.15);color:var(--red)}
+
+/* CHARTS */
+.chart-container{position:relative;height:250px}
+.chart-container.tall{height:320px}
+
+/* RESPONSIVE */
+@media(max-width:900px){.grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.nav{display:none}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.container{padding:12px}.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.section.active{animation:fadeIn .25s ease}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.loading{animation:pulse 1s infinite}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(60,120,200,0.3);border-radius:3px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* TAG */
+.tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.tag-blue{background:rgba(30,144,255,0.15);color:var(--accent)}
+.tag-green{background:rgba(0,212,170,0.15);color:var(--green)}
+.tag-orange{background:rgba(245,158,11,0.15);color:var(--yellow)}
+
+/* ALERT */
+.alert{border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;border-left:3px solid}
+.alert-info{background:rgba(30,144,255,0.08);border-color:var(--accent);color:var(--text-secondary)}
+.alert-success{background:rgba(0,212,170,0.08);border-color:var(--green);color:var(--text-secondary)}
+.alert-warning{background:rgba(245,158,11,0.08);border-color:var(--yellow);color:var(--text-secondary)}
+.alert-danger{background:rgba(244,63,94,0.08);border-color:var(--red);color:var(--text-secondary)}
+
+/* SLIDER */
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent);border-radius:50%;cursor:pointer}
+
+/* BTN */
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;border:none}
+.btn-primary{background:linear-gradient(135deg,#1e90ff,#0066cc);color:#fff}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{background:var(--bg-glass);border:1px solid var(--border);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:var(--red)}
+.btn-success{background:rgba(0,212,170,0.15);border:1px solid rgba(0,212,170,0.3);color:var(--green)}
+
+/* Overflow for long tables */
+.overflow-auto{overflow:auto}
+
+/* row flex */
+.flex{display:flex;gap:12px;align-items:center}
+.flex-wrap{flex-wrap:wrap}
+.flex-1{flex:1}
+.mb12{margin-bottom:12px}
+.mb16{margin-bottom:16px}
+.mb20{margin-bottom:20px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.fw700{font-weight:700}
+.fs11{font-size:11px}
+.fs12{font-size:12px}
+.fs13{font-size:13px}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-yellow{color:var(--yellow)}
+.text-accent{color:var(--accent)}
+.text-muted{color:var(--text-muted)}
+.text-right{text-align:right}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">🏠</div>
+      <div>
+        <div class="logo-text">BDS RENTAL AI VIP</div>
+        <div class="logo-sub">Bất Động Sản Cho Thuê</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="showSection('s-taisan')">📊 Tài Sản</button>
+      <button class="nav-btn" onclick="showSection('s-xaydung')">🏗️ Xây Dựng</button>
+      <button class="nav-btn" onclick="showSection('s-phuongan')">📋 Phương Án</button>
+      <button class="nav-btn" onclick="showSection('s-vay')">🏦 Vay Ngân Hàng</button>
+      <button class="nav-btn" onclick="showSection('s-chothue')">🔑 Cho Thuê</button>
+      <button class="nav-btn" onclick="showSection('s-tietkiem')">💰 Tiết Kiệm</button>
+      <button class="nav-btn" onclick="showSection('s-giatri')">📈 Giá Trị</button>
+      <button class="nav-btn" onclick="showSection('s-montecarlo')">🎲 Monte Carlo</button>
+      <button class="nav-btn" onclick="showSection('s-diemantoai')">🛡️ An Toàn</button>
+      <button class="nav-btn" onclick="showSection('s-ai')">🤖 AI Advisor</button>
+    </nav>
+    <button class="btn-export" onclick="exportData()">⬇ Xuất</button>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ===================== MODULE 1: TÀI SẢN ===================== -->
+<section id="s-taisan" class="section active">
+  <div class="kpi-grid" id="kpi-taisan"></div>
+  <div class="grid-2" style="gap:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(30,144,255,0.15)">🏔</div><h3>Đất Sơn Trà</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Giá trị (tỷ)</label><input type="number" id="st-giatri" value="11" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Diện tích (m²)</label><input type="number" id="st-dientich" value="100" oninput="calc()"></div>
+          <div class="input-group"><label>Tăng giá/năm (%)</label><input type="number" id="st-tanggiacbase" value="7" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Đường (m)</label><input type="number" id="st-duong" value="7.5" step="0.5" oninput="calc()"></div>
+        </div>
+        <div class="grid-3">
+          <div class="input-group"><label>Kịch bản xấu (%)</label><input type="number" id="st-xau" value="3" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Kịch bản TB (%)</label><input type="number" id="st-tb" value="7" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Kịch bản tốt (%)</label><input type="number" id="st-tot" value="12" step="0.1" oninput="calc()"></div>
+        </div>
+        <div class="alert alert-info">📍 Kích thước: 5 x 20m | Đường: <span id="st-duong-display">7.5</span>m | Vị trí: Sơn Trà, Đà Nẵng</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(0,212,170,0.15)">🌊</div><h3>Đất Điện Ngọc</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Giá trị (tỷ)</label><input type="number" id="dn-giatri" value="5" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Diện tích (m²)</label><input type="number" id="dn-dientich" value="171" oninput="calc()"></div>
+          <div class="input-group"><label>Tăng giá/năm (%)</label><input type="number" id="dn-tanggiacbase" value="7" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Đường (m)</label><input type="number" id="dn-duong" value="15" step="0.5" oninput="calc()"></div>
+        </div>
+        <div class="grid-3">
+          <div class="input-group"><label>Kịch bản xấu (%)</label><input type="number" id="dn-xau" value="3" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Kịch bản TB (%)</label><input type="number" id="dn-tb" value="7" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Kịch bản tốt (%)</label><input type="number" id="dn-tot" value="12" step="0.1" oninput="calc()"></div>
+        </div>
+        <div class="alert alert-info">📍 Kích thước: 7x24.5m | Đường: <span id="dn-duong-display">15</span>m | Vị trí: Điện Ngọc, Quảng Nam</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(245,158,11,0.15)">💵</div><h3>Tiền Mặt & Thu Nhập</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Tiền mặt (triệu)</label><input type="number" id="tienmat" value="200" oninput="calc()"></div>
+          <div class="input-group"><label>Thu nhập/tháng (triệu)</label><input type="number" id="thunhap" value="45" oninput="calc()"></div>
+          <div class="input-group"><label>Chi tiêu/tháng (triệu)</label><input type="number" id="chitieu" value="20" oninput="calc()"></div>
+          <div class="input-group"><label>Tăng chi tiêu/năm (%)</label><input type="number" id="tangchitieu" value="5" step="0.1" oninput="calc()"></div>
+        </div>
+        <div class="alert alert-success">👨‍👩‍👧 Gia đình 3 người | Chưa có xe ô tô | Thu nhập ổn định</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(244,63,94,0.15)">📊</div><h3>Biểu Đồ Tài Sản Hiện Tại</h3></div>
+      <div class="card-body">
+        <div class="chart-container"><canvas id="chart-taisan"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 2: XÂY DỰNG ===================== -->
+<section id="s-xaydung" class="section">
+  <div class="kpi-grid" id="kpi-xd"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(30,144,255,0.15)">🏗</div><h3>Thông Số Xây Dựng</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Số tầng</label><input type="number" id="xd-sotang" value="4" min="1" max="10" oninput="calc()"></div>
+          <div class="input-group"><label>Diện tích mỗi tầng (m²)</label><input type="number" id="xd-dientich" value="90" oninput="calc()"></div>
+          <div class="input-group"><label>Số phòng mỗi tầng</label><input type="number" id="xd-sophong" value="2" min="1" oninput="calc()"></div>
+          <div class="input-group"><label>Giá xây/m² (triệu)</label><input type="number" id="xd-giaxay" value="6.5" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Nội thất/phòng (triệu)</label><input type="number" id="xd-noithat" value="30" oninput="calc()"></div>
+          <div class="input-group"><label>Chi phí khác (triệu)</label><input type="number" id="xd-khac" value="50" oninput="calc()"></div>
+        </div>
+        <div class="divider"></div>
+        <div id="xd-extra-fields"></div>
+        <div class="input-group"><label>Dự phòng (%)</label><input type="number" id="xd-duphong" value="10" step="0.5" oninput="calc()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(0,212,170,0.15)">📐</div><h3>Tổng Hợp Chi Phí</h3></div>
+      <div class="card-body">
+        <div id="xd-summary"></div>
+        <div class="divider"></div>
+        <div class="alert alert-warning" id="xd-rules-alert"></div>
+        <div class="chart-container mt12"><canvas id="chart-xd-cost"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 3: PHƯƠNG ÁN ===================== -->
+<section id="s-phuongan" class="section">
+  <div class="section-tabs" id="pa-tabs"></div>
+  <div id="pa-cards-grid" class="grid-3 mb16"></div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon" style="background:rgba(30,144,255,0.15)">📋</div><h3>So Sánh Các Phương Án</h3></div>
+    <div class="card-body">
+      <div class="pa-table-wrap"><table class="pa-table" id="pa-compare-table"></table></div>
+    </div>
+  </div>
+  <div class="grid-2 mt12">
+    <div class="card">
+      <div class="card-header"><h3>ROI So Sánh</h3></div>
+      <div class="card-body"><div class="chart-container"><canvas id="chart-pa-roi"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Dòng Tiền So Sánh</h3></div>
+      <div class="card-body"><div class="chart-container"><canvas id="chart-pa-cf"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 4: VAY ===================== -->
+<section id="s-vay" class="section">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(30,144,255,0.15)">🏦</div><h3>Thông Số Vay</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Số tiền vay (tỷ)</label><input type="number" id="vay-sotien" value="3.51" step="0.1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Số năm vay</label><input type="number" id="vay-sonam" value="20" min="1" max="30" oninput="calcVay()"></div>
+          <div class="input-group"><label>Lãi cố định (%/năm)</label><input type="number" id="vay-laico" value="8.5" step="0.1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Số năm cố định</label><input type="number" id="vay-namco" value="3" min="1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Lãi thả nổi (%/năm)</label><input type="number" id="vay-laithanoi" value="11" step="0.1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Biên độ (%)</label><input type="number" id="vay-biando" value="3.5" step="0.1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Phạt trả trước (%)</label><input type="number" id="vay-phat" value="2" step="0.1" oninput="calcVay()"></div>
+          <div class="input-group"><label>Doanh thu cho thuê/tháng (triệu)</label><input type="number" id="vay-doanhthu" value="32" oninput="calcVay()"></div>
+        </div>
+        <div class="alert alert-info">📌 5 năm đầu: 80% tiền dư trả gốc thêm<br>📌 5 năm tiếp: 50% tiền dư trả gốc thêm</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Tóm Tắt Vay</h3></div>
+      <div class="card-body">
+        <div class="kpi-grid" id="kpi-vay"></div>
+        <div class="chart-container"><canvas id="chart-vay-dunno"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt12">
+    <div class="card-header"><h3>Lịch Trả Nợ Chi Tiết (240 Tháng)</h3></div>
+    <div class="card-body">
+      <div class="loan-table-wrap"><table class="loan-table" id="loan-schedule-table"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 5: CHO THUÊ ===================== -->
+<section id="s-chothue" class="section">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(0,212,170,0.15)">🔑</div><h3>Thông Số Cho Thuê</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Giá thuê/phòng (triệu)</label><input type="number" id="ct-giaphong" value="4" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Số phòng</label><input type="number" id="ct-sophong" value="8" oninput="calc()"></div>
+          <div class="input-group"><label>Tăng giá thuê/năm (%)</label><input type="number" id="ct-tanggiathuenm" value="5" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Tỷ lệ lấp đầy (%)</label><input type="number" id="ct-lapday" value="85" min="0" max="100" oninput="calc()"></div>
+          <div class="input-group"><label>Chi phí vận hành (%DT)</label><input type="number" id="ct-vanhanh" value="15" min="0" max="50" oninput="calc()"></div>
+          <div class="input-group"><label>Chi phí sửa chữa/năm (triệu)</label><input type="number" id="ct-suachua" value="20" oninput="calc()"></div>
+          <div class="input-group"><label>Lạm phát (%/năm)</label><input type="number" id="ct-lamphat" value="4" step="0.1" oninput="calc()"></div>
+          <div class="input-group"><label>Mùa thấp điểm (tháng/năm)</label><input type="number" id="ct-muathapdiem" value="2" min="0" max="6" oninput="calc()"></div>
+        </div>
+        <div class="divider"></div>
+        <h4 class="fs12 text-muted mb12">Kịch Bản Rủi Ro</h4>
+        <div class="grid-2">
+          <div class="input-group"><label>Thiên tai (xác suất %)</label><input type="number" id="ct-thientai" value="5" min="0" max="30" oninput="calc()"></div>
+          <div class="input-group"><label>Dịch bệnh (xác suất %)</label><input type="number" id="ct-dichbenh" value="3" min="0" max="30" oninput="calc()"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Dự Báo Dòng Tiền</h3></div>
+      <div class="card-body">
+        <div class="kpi-grid" id="kpi-chothue"></div>
+        <div class="chart-container tall"><canvas id="chart-chothue-cf"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 6: TIẾT KIỆM ===================== -->
+<section id="s-tietkiem" class="section">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(245,158,11,0.15)">🏦</div><h3>Thông Số Tiết Kiệm</h3></div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="input-group"><label>Tỷ lệ gửi tiết kiệm (%)</label><input type="number" id="tk-tyle" value="35" min="0" max="100" oninput="calcTK()"></div>
+          <div class="input-group"><label>Lãi suất gửi (%/năm)</label><input type="number" id="tk-laisuat" value="6.5" step="0.1" oninput="calcTK()"></div>
+          <div class="input-group"><label>Tiền gửi thêm hàng tháng (triệu)</label><input type="number" id="tk-guthem" value="0" oninput="calcTK()"></div>
+          <div class="input-group"><label>Gốc ban đầu (triệu)</label><input type="number" id="tk-gocbandau" value="200" oninput="calcTK()"></div>
+        </div>
+        <div class="alert alert-info">35% tiền dư hàng tháng được gửi tiết kiệm tự động</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Tăng Trưởng Tiết Kiệm</h3></div>
+      <div class="card-body">
+        <div class="kpi-grid" id="kpi-tk"></div>
+        <div class="chart-container"><canvas id="chart-tk"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 7: GIÁ TRỊ TÀI SẢN ===================== -->
+<section id="s-giatri" class="section">
+  <div class="section-tabs">
+    <button class="tab-btn active" onclick="switchScenario(this,'xau')">📉 Kịch Bản Xấu</button>
+    <button class="tab-btn" onclick="switchScenario(this,'tb')">📊 Kịch Bản Trung Bình</button>
+    <button class="tab-btn" onclick="switchScenario(this,'tot')">📈 Kịch Bản Tốt</button>
+  </div>
+  <div class="kpi-grid" id="kpi-giatri"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>Giá Trị Tài Sản Theo Thời Gian</h3></div>
+      <div class="card-body"><div class="chart-container tall"><canvas id="chart-giatri"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Cơ Cấu Tài Sản</h3></div>
+      <div class="card-body"><div class="chart-container tall"><canvas id="chart-giatri-pie"></canvas></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 8: MONTE CARLO ===================== -->
+<section id="s-montecarlo" class="section">
+  <div class="card mb16">
+    <div class="card-header"><div class="card-icon" style="background:rgba(244,63,94,0.15)">🎲</div><h3>Monte Carlo Simulation</h3></div>
+    <div class="card-body">
+      <div class="grid-4 mb16">
+        <div class="input-group"><label>Số lần mô phỏng</label>
+          <select id="mc-runs" onchange="runMonteCarlo()"><option value="1000">1,000 lần</option><option value="5000" selected>5,000 lần</option><option value="10000">10,000 lần</option></select></div>
+        <div class="input-group"><label>Biến động giá thuê (%)</label><input type="number" id="mc-v-giathue" value="15" step="1" oninput="runMonteCarlo()"></div>
+        <div class="input-group"><label>Biến động lãi suất (%)</label><input type="number" id="mc-v-laisuat" value="3" step="0.1" oninput="runMonteCarlo()"></div>
+        <div class="input-group"><label>Biến động giá đất (%)</label><input type="number" id="mc-v-giadata" value="5" step="0.5" oninput="runMonteCarlo()"></div>
+      </div>
+      <div class="kpi-grid" id="kpi-mc"></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>Phân Phối NPV (Histogram)</h3></div>
+      <div class="card-body"><div class="chart-container tall"><canvas id="chart-mc-hist"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Risk Meter</h3></div>
+      <div class="card-body">
+        <div id="mc-risk-display"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 9: ĐIỂM AN TOÀN ===================== -->
+<section id="s-diemantoai" class="section">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(0,212,170,0.15)">🛡</div><h3>Điểm An Toàn Tài Chính</h3></div>
+      <div class="card-body">
+        <div class="score-wrap" id="safety-score-wrap"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Phân Tích Chi Tiết</h3></div>
+      <div class="card-body">
+        <div id="safety-detail"></div>
+        <div class="chart-container mt12"><canvas id="chart-safety-radar"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODULE 10: AI ADVISOR ===================== -->
+<section id="s-ai" class="section">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:linear-gradient(135deg,#1e90ff,#00d4aa)">🤖</div><h3>AI Investment Advisor</h3><span class="tag tag-blue" style="margin-left:auto">Powered by Claude</span></div>
+      <div class="card-body" style="padding:0">
+        <div class="chat-wrap">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-bubble chat-ai">👋 Xin chào! Tôi là AI Advisor của BDS Rental VIP.<br><br>Tôi đã phân tích toàn bộ dữ liệu của bạn gồm <strong>6 phương án xây dựng</strong>, <strong>kế hoạch vay ngân hàng</strong>, <strong>dòng tiền cho thuê</strong>, và <strong>giá trị tài sản tương lai</strong>.<br><br>Hãy hỏi tôi bất kỳ điều gì về đầu tư bất động sản của bạn!</div>
+          </div>
+          <div class="chat-input-wrap">
+            <input class="chat-input" id="chat-input" type="text" placeholder="VD: Có nên bán đất Điện Ngọc để xây 5 tầng?" onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="chat-send" id="chat-send-btn" onclick="sendChat()">Gửi ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Câu Hỏi Gợi Ý</h3></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Có nên bán đất Điện Ngọc để xây 5 tầng không?')">💡 Có nên bán đất Điện Ngọc để xây 5 tầng không?</button>
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Phương án nào tốt nhất cho gia đình tôi hiện tại?')">📊 Phương án nào tốt nhất cho gia đình tôi?</button>
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Với thu nhập hiện tại tôi có thể vay bao nhiêu an toàn?')">🏦 Tôi có thể vay bao nhiêu an toàn?</button>
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Khi nào dòng tiền đủ để mua lại đất Điện Ngọc?')">⏰ Khi nào dòng tiền đủ mua lại đất Điện Ngọc?</button>
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Rủi ro lớn nhất của kế hoạch đầu tư này là gì?')">⚠️ Rủi ro lớn nhất của kế hoạch này là gì?</button>
+          <button class="btn btn-secondary" style="text-align:left" onclick="setQ('Tổng tài sản của tôi sau 10 năm và 20 năm là bao nhiêu?')">📈 Tài sản của tôi sau 10-20 năm là bao nhiêu?</button>
+        </div>
+        <div class="divider"></div>
+        <div id="ai-quick-analysis" class="fs12"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<script>
+// =====================================================================
+// GLOBAL STATE
+// =====================================================================
+let G = {}; // calculated globals
+let charts = {}; // chart instances
+let mcResults = null;
+let currentScenario = 'tb';
+let selectedPA = 3;
+
+// =====================================================================
+// NAVIGATION
+// =====================================================================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = {
+    's-taisan':0,'s-xaydung':1,'s-phuongan':2,'s-vay':3,'s-chothue':4,
+    's-tietkiem':5,'s-giatri':6,'s-montecarlo':7,'s-diemantoai':8,'s-ai':9
+  };
+  document.querySelectorAll('.nav-btn')[map[id]]?.classList.add('active');
+  renderSection(id);
+}
+
+function renderSection(id) {
+  if (id==='s-vay') { calcVay(); return; }
+  if (id==='s-montecarlo') { runMonteCarlo(); return; }
+  if (id==='s-giatri') { renderGiaTri(); return; }
+  if (id==='s-diemantoai') { renderSafety(); return; }
+  if (id==='s-ai') { renderAIQuick(); return; }
+  calc();
+}
+
+// =====================================================================
+// HELPERS
+// =====================================================================
+const fmt = v => {
+  if(v===undefined||v===null||isNaN(v)) return '-';
+  const abs = Math.abs(v);
+  if(abs>=1e9) return (v/1e9).toFixed(2)+'&nbsp;tỷ';
+  if(abs>=1e6) return (v/1e6).toFixed(1)+'&nbsp;tr';
+  return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+};
+const fmtN = v => {
+  if(v===undefined||v===null||isNaN(v)) return '-';
+  const abs = Math.abs(v);
+  if(abs>=1e9) return (v/1e9).toFixed(2)+'tỷ';
+  if(abs>=1e6) return (v/1e6).toFixed(1)+'tr';
+  return v.toFixed(0);
+};
+const fmtPct = v => (v*100).toFixed(1)+'%';
+const n = id => parseFloat(document.getElementById(id)?.value)||0;
+const colorClass = (val, good, warn) => val>=good?'cell-green':val>=warn?'cell-yellow':'cell-red';
+const colorHtml = (val, good, warn) => `<span class="${colorClass(val,good,warn)}">${typeof val==='string'?val:val.toFixed(2)}</span>`;
+
+function tooltip(text, tip) {
+  return `<span class="tooltip-wrap">${text}<span class="tooltip-icon">?</span><span class="tooltip-box">${tip}</span></span>`;
+}
+
+function mkKpi(label, value, sub, color, badge, tip) {
+  return `<div class="kpi" style="--kpi-color:${color||'var(--accent)'}">
+    <div class="kpi-label">${tip?tooltip(label,tip):label}</div>
+    <div class="kpi-value">${value}</div>
+    ${sub?`<div class="kpi-sub">${sub}</div>`:''}
+    ${badge?`<div class="kpi-badge badge-${badge.cls}">${badge.text}</div>`:''}
+  </div>`;
+}
+
+function mkChart(id, config) {
+  if(charts[id]) { charts[id].destroy(); }
+  const ctx = document.getElementById(id);
+  if(!ctx) return;
+  charts[id] = new Chart(ctx.getContext('2d'), config);
+}
+
+const CHART_DEFAULTS = {
+  color:'rgba(255,255,255,0.7)',
+  plugins:{ legend:{ labels:{ color:'rgba(255,255,255,0.6)', font:{size:11} } } },
+  scales:{
+    x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'rgba(255,255,255,0.5)', font:{size:10} } },
+    y:{ grid:{ color:'rgba(255,255,255,0.06)' }, ticks:{ color:'rgba(255,255,255,0.5)', font:{size:10} } }
+  }
+};
+
+// =====================================================================
+// MAIN CALCULATION ENGINE
+// =====================================================================
+function calc() {
+  // -- Inputs --
+  const stGia = n('st-giatri')*1e9;
+  const dnGia = n('dn-giatri')*1e9;
+  const tienmAt = n('tienmat')*1e6;
+  const thunhap = n('thunhap')*1e6;
+  const chitieu = n('chitieu')*1e6;
+
+  const stTG = n('st-tanggiacbase')/100;
+  const dnTG = n('dn-tanggiacbase')/100;
+
+  const xdTang = n('xd-sotang');
+  const xdDT = n('xd-dientich');
+  const xdPhong = n('xd-sophong');
+  const xdGia = n('xd-giaxay')*1e6;
+  const xdNT = n('xd-noithat')*1e6;
+  const xdKhac = n('xd-khac')*1e6;
+  const xdDP = n('xd-duphong')/100;
+
+  const ctGia = n('ct-giaphong')*1e6;
+  const ctPhong = n('ct-sophong')||xdTang*xdPhong;
+  const ctLD = n('ct-lapday')/100;
+  const ctVH = n('ct-vanhanh')/100;
+  const ctSC = n('ct-suachua')*1e6;
+  const ctTG = n('ct-tanggiathuenm')/100;
+  const ctLP = n('ct-lamphat')/100;
+  const ctMTP = n('ct-muathapdiem');
+
+  // -- Xây dựng --
+  const hasThangMay = xdTang > 3;
+  const hasPCCC = xdTang > 4;
+  const tmCost = hasThangMay ? 400e6 : 0;
+  const pcccCost = hasPCCC ? 150e6 : 0;
+
+  const tongDT = xdTang * xdDT;
+  const tongPhong = xdTang * xdPhong;
+  const cpXay = tongDT * xdGia;
+  const cpNT = tongPhong * xdNT;
+  const cpBase = cpXay + cpNT + tmCost + pcccCost + xdKhac*1e6/1e6*1e6;
+  const duphongAmt = cpBase * xdDP;
+  const tongVon = cpBase + duphongAmt;
+
+  // -- Cho thuê --
+  const dtThang = ctGia * ctPhong * ctLD * (1 - ctMTP/12);
+  const cpThang = dtThang * ctVH + ctSC/12;
+  const dongTienThang = dtThang - cpThang;
+
+  // store globals
+  G = {
+    stGia, dnGia, tienmAt, thunhap, chitieu,
+    stTG, dnTG, xdTang, xdDT, xdPhong, xdGia, xdNT, xdKhac, xdDP,
+    hasThangMay, hasPCCC, tmCost, pcccCost,
+    tongDT, tongPhong, cpXay, cpNT, cpBase, duphongAmt, tongVon,
+    ctGia, ctPhong: ctPhong, ctLD, ctVH, ctSC, ctTG, ctLP, ctMTP,
+    dtThang, cpThang, dongTienThang,
+    tongTaiSanHienTai: stGia+dnGia+tienmAt,
+  };
+
+  // Update displays
+  document.getElementById('st-duong-display').textContent = n('st-duong');
+  document.getElementById('dn-duong-display').textContent = n('dn-duong');
+  document.getElementById('ct-sophong').value = tongPhong;
+
+  renderTaiSan();
+  renderXayDung();
+  renderPhuongAn();
+  renderChoThue();
+  calcTK();
+  saveState();
+}
+
+// =====================================================================
+// MODULE 1: TÀI SẢN
+// =====================================================================
+function renderTaiSan() {
+  const tong = G.stGia + G.dnGia + G.tienmAt;
+  const tieuDung = G.thunhap - G.chitieu;
+  document.getElementById('kpi-taisan').innerHTML =
+    mkKpi('Tổng Tài Sản',fmt(tong),'Hiện tại','#1e90ff',null,'Tổng giá trị tất cả tài sản bao gồm đất và tiền mặt') +
+    mkKpi('Đất Sơn Trà',fmt(G.stGia),'Sơn Trà, Đà Nẵng','#00d4aa') +
+    mkKpi('Đất Điện Ngọc',fmt(G.dnGia),'Điện Ngọc, QN','#f59e0b') +
+    mkKpi('Tiền Mặt',fmt(G.tienmAt),'Thanh khoản','#7c3aed') +
+    mkKpi('Thu Nhập',fmt(G.thunhap)+'/th','Hàng tháng','#10b981') +
+    mkKpi('Tiết Kiệm Được',fmt(tieuDung)+'/th','Thu - Chi','#06b6d4');
+
+  // Chart
+  mkChart('chart-taisan', {
+    type:'doughnut',
+    data:{
+      labels:['Đất Sơn Trà','Đất Điện Ngọc','Tiền Mặt'],
+      datasets:[{data:[G.stGia/1e9,G.dnGia/1e9,G.tienmAt/1e6/1000],backgroundColor:['#1e90ff','#00d4aa','#f59e0b'],borderWidth:0}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{color:'rgba(255,255,255,0.6)',font:{size:11}}},
+        tooltip:{ callbacks:{ label: ctx => ctx.label+': '+ctx.parsed.toFixed(2)+'tỷ' } } }
+    }
+  });
+}
+
+// =====================================================================
+// MODULE 2: XÂY DỰNG
+// =====================================================================
+function renderXayDung() {
+  const extraHtml = `
+    ${G.hasThangMay?`<div class="alert alert-warning mb12">🛗 ${G.xdTang} tầng > 3 → Bắt buộc có <strong>thang máy</strong> (~400 triệu)</div>`:''}
+    ${G.hasPCCC?`<div class="alert alert-warning mb12">🔥 ${G.xdTang} tầng > 4 → Bắt buộc có <strong>PCCC</strong> (~150 triệu)</div>`:''}
+  `;
+  const ef = document.getElementById('xd-extra-fields');
+  if(ef) ef.innerHTML = extraHtml;
+
+  const sumHtml = `
+    <div class="grid-2" style="gap:8px">
+      ${mkKpi('Tổng Diện Tích',G.tongDT+'m²','Sàn xây dựng','#1e90ff')}
+      ${mkKpi('Tổng Phòng',G.tongPhong+' phòng','Cho thuê','#00d4aa')}
+      ${mkKpi('Chi Phí Xây',fmt(G.cpXay),'Phần thô','#f59e0b')}
+      ${mkKpi('Nội Thất',fmt(G.cpNT),'Toàn bộ phòng','#7c3aed')}
+      ${G.hasThangMay?mkKpi('Thang Máy',fmt(G.tmCost),'Bắt buộc','#f43f5e'):''}
+      ${G.hasPCCC?mkKpi('PCCC',fmt(G.pcccCost),'Bắt buộc','#f43f5e'):''}
+      ${mkKpi('Dự Phòng',fmt(G.duphongAmt),(G.xdDP*100)+'% tổng chi phí','#ef4444')}
+      ${mkKpi('TỔNG VỐN',fmt(G.tongVon),'Toàn bộ','#00d4aa')}
+    </div>
+  `;
+  const sb = document.getElementById('xd-summary');
+  if(sb) sb.innerHTML = sumHtml;
+
+  const ra = document.getElementById('xd-rules-alert');
+  if(ra) ra.innerHTML = `💡 Giá xây ${(G.xdGia/1e6).toFixed(1)}tr/m² × ${G.tongDT}m² + ${G.tongPhong} phòng × ${(G.xdNT/1e6).toFixed(0)}tr/phòng + chi phí khác = <strong>${fmt(G.tongVon)}</strong>`;
+
+  mkChart('chart-xd-cost', {
+    type:'bar',
+    data:{
+      labels:['Xây thô','Nội thất','Thang máy','PCCC','Khác','Dự phòng'],
+      datasets:[{
+        label:'Chi Phí (triệu)',
+        data:[G.cpXay/1e6,G.cpNT/1e6,G.tmCost/1e6,G.pcccCost/1e6,(n('xd-khac')),G.duphongAmt/1e6],
+        backgroundColor:['#1e90ff','#00d4aa','#f59e0b','#f43f5e','#7c3aed','rgba(255,255,255,0.15)'],
+        borderRadius:4,borderWidth:0
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales, y:{...CHART_DEFAULTS.scales.y, ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'tr'}}}}
+  });
+}
+
+// =====================================================================
+// MODULE 3: PHƯƠNG ÁN
+// =====================================================================
+function calcPA(tang) {
+  const xdDT = n('xd-dientich');
+  const xdPhong = n('xd-sophong');
+  const xdGia = n('xd-giaxay')*1e6;
+  const xdNT = n('xd-noithat')*1e6;
+  const xdKhac = n('xd-khac')*1e6;
+  const xdDP = n('xd-duphong')/100;
+
+  const tm = tang>3?400e6:0;
+  const pccc = tang>4?150e6:0;
+  const dientich = tang*xdDT;
+  const sophong = tang*xdPhong;
+  const cpXay = dientich*xdGia;
+  const cpNT = sophong*xdNT;
+  const cpBase = cpXay+cpNT+tm+pccc+xdKhac;
+  const tongVon = cpBase*(1+xdDP);
+
+  // Financing: sell Dien Ngoc + loan
+  const dnGia = n('dn-giatri')*1e9;
+  let vay = 0, selfFund = dnGia + n('tienmat')*1e6;
+  if(selfFund < tongVon) vay = tongVon - selfFund;
+  if(tang<=3) { selfFund = tongVon; vay=0; } // PA1-PA2 only need loan from income
+
+  // Rental
+  const ctGia = n('ct-giaphong')*1e6;
+  const ctLD = n('ct-lapday')/100;
+  const ctVH = n('ct-vanhanh')/100;
+  const ctSC = n('ct-suachua')*1e6;
+  const ctMTP = n('ct-muathapdiem');
+  const dtThang = ctGia*sophong*ctLD*(1-ctMTP/12);
+  const cpThang = dtThang*ctVH+ctSC/12;
+  const dongTienThang = dtThang-cpThang;
+
+  // Loan payments
+  const laiSuat = n('vay-laico')/100/12;
+  const soThang = n('vay-sonam')*12||240;
+  const payThang = vay>0 ? vay*laiSuat/(1-Math.pow(1+laiSuat,-soThang)) : 0;
+  const dongTienSauVay = dongTienThang - payThang;
+  const thunhap = n('thunhap')*1e6;
+  const chitieu = n('chitieu')*1e6;
+  const tieuDungHanhThang = thunhap - chitieu;
+  const dongTienRong = dongTienSauVay + tieuDungHanhThang;
+
+  // ROI (annual)
+  const roiAnnual = tongVon>0 ? (dongTienThang*12/tongVon) : 0;
+
+  // IRR approx (20 year)
+  const irr = approxIRR(tongVon, dongTienThang, 240);
+
+  // NPV (discount 10%)
+  const npv = calcNPV(tongVon, dongTienThang, 240, 0.10/12);
+
+  // DSCR
+  const dscr = payThang>0 ? dongTienThang/payThang : 99;
+
+  // LTV
+  const ltv = tongVon>0 ? vay/tongVon : 0;
+
+  // Payback (months)
+  const payback = dongTienSauVay>0 ? Math.ceil(tongVon/dongTienSauVay) : 999;
+
+  // AI Score
+  const aiScore = calcAIScore({roiAnnual,irr,npv,dscr,ltv,dongTienRong,payback});
+
+  return {tang,dientich,sophong,tongVon,vay,selfFund,dtThang,cpThang,dongTienThang,payThang,dongTienSauVay,dongTienRong,roiAnnual,irr,npv,dscr,ltv,payback,aiScore};
+}
+
+function approxIRR(investment, monthlyFlow, months) {
+  // Binary search IRR
+  let lo=0, hi=0.05, eps=1e-6;
+  for(let i=0;i<100;i++){
+    const mid=(lo+hi)/2;
+    let pv=0;
+    for(let t=1;t<=months;t++) pv+=monthlyFlow/Math.pow(1+mid,t);
+    if(pv>investment) lo=mid; else hi=mid;
+    if(hi-lo<eps) break;
+  }
+  return (lo+hi)/2*12; // annualized
+}
+
+function calcNPV(investment, monthlyFlow, months, r) {
+  let pv=0;
+  for(let t=1;t<=months;t++) pv+=monthlyFlow/Math.pow(1+r,t);
+  return pv-investment;
+}
+
+function calcAIScore(m) {
+  let score=50;
+  if(m.roiAnnual>0.15) score+=15; else if(m.roiAnnual>0.08) score+=8; else if(m.roiAnnual>0) score+=3; else score-=10;
+  if(m.irr>0.18) score+=12; else if(m.irr>0.12) score+=6; else if(m.irr>0.06) score+=2; else score-=8;
+  if(m.npv>0) score+=8; else score-=12;
+  if(m.dscr>2) score+=8; else if(m.dscr>1.5) score+=4; else if(m.dscr>1.2) score+=1; else score-=10;
+  if(m.ltv<0.3) score+=5; else if(m.ltv<0.5) score+=2; else if(m.ltv>0.7) score-=8;
+  if(m.dongTienRong>0) score+=5; else score-=10;
+  if(m.payback<120) score+=5; else if(m.payback>240) score-=5;
+  return Math.max(0,Math.min(100,score));
+}
+
+function renderPhuongAn() {
+  const pas = [2,3,4,5,6,7].map((t,i)=>({...calcPA(t), label:`PA${i+1}`}));
+
+  // Tabs
+  const tabsEl = document.getElementById('pa-tabs');
+  if(tabsEl) tabsEl.innerHTML = pas.map((p,i)=>`<button class="tab-btn ${i===selectedPA-1?'active':''}" onclick="selectPA(${i+1},this)">${p.label}: ${p.tang} tầng</button>`).join('');
+
+  // Cards
+  const cardsEl = document.getElementById('pa-cards-grid');
+  if(cardsEl) cardsEl.innerHTML = pas.map((p,i)=>{
+    const sc = p.aiScore>=70?'ai-score-green':p.aiScore>=50?'ai-score-yellow':'ai-score-red';
+    const em = p.aiScore>=70?'🟢':p.aiScore>=50?'🟡':'🔴';
+    return `<div class="pa-card ${i+1===selectedPA?'selected':''}" onclick="selectPA(${i+1},null)">
+      <div class="flex"><div class="pa-card-title">${p.label}</div><div class="ai-score ${sc}">${em} ${p.aiScore}</div></div>
+      <div class="pa-card-sub">${p.tang} tầng · ${p.dientich}m² · ${p.sophong} phòng</div>
+      <div class="pa-metrics">
+        <div class="pa-metric"><div class="pa-metric-label">Tổng Vốn</div><div class="pa-metric-value" style="font-size:12px">${fmtN(p.tongVon)}</div></div>
+        <div class="pa-metric"><div class="pa-metric-label">DT/Tháng</div><div class="pa-metric-value" style="font-size:12px">${fmtN(p.dtThang)}</div></div>
+        <div class="pa-metric"><div class="pa-metric-label">ROI/Năm</div><div class="pa-metric-value ${p.roiAnnual>=0.12?'text-green':p.roiAnnual>=0.07?'text-yellow':'text-red'}">${(p.roiAnnual*100).toFixed(1)}%</div></div>
+        <div class="pa-metric"><div class="pa-metric-label">Hoàn Vốn</div><div class="pa-metric-value" style="font-size:12px">${p.payback>=999?'N/A':Math.round(p.payback/12)+'năm'}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Compare Table
+  const metrics = [
+    {key:'tongVon', label:'Tổng Vốn Đầu Tư', fmt:v=>fmt(v)},
+    {key:'vay', label:'Tiền Vay', fmt:v=>fmt(v)},
+    {key:'dtThang', label:'Doanh Thu/Tháng', fmt:v=>fmt(v)},
+    {key:'cpThang', label:'Chi Phí/Tháng', fmt:v=>fmt(v)},
+    {key:'dongTienThang', label:tooltip('Dòng Tiền/Tháng','Tiền thu về sau khi trừ chi phí vận hành, chưa trừ nợ vay'), fmt:v=>fmt(v), color:(v)=>v>0?'cell-green':'cell-red'},
+    {key:'dongTienSauVay', label:'Dòng Tiền Sau Vay', fmt:v=>fmt(v), color:(v)=>v>0?'cell-green':'cell-red'},
+    {key:'roiAnnual', label:tooltip('ROI/Năm','Tỷ suất lợi nhuận hàng năm = Lợi nhuận / Tổng vốn đầu tư'), fmt:v=>(v*100).toFixed(1)+'%', color:(v)=>v>=0.12?'cell-green':v>=0.07?'cell-yellow':'cell-red'},
+    {key:'irr', label:tooltip('IRR','Tỷ suất hoàn vốn nội bộ. IRR > 15% rất tốt, IRR > 12% tốt'), fmt:v=>(v*100).toFixed(1)+'%', color:(v)=>v>=0.15?'cell-green':v>=0.10?'cell-yellow':'cell-red'},
+    {key:'npv', label:tooltip('NPV','Giá trị hiện tại ròng. NPV > 0 là dự án hiệu quả'), fmt:v=>fmt(v), color:(v)=>v>0?'cell-green':'cell-red'},
+    {key:'dscr', label:tooltip('DSCR','Khả năng trả nợ = Dòng tiền / Tiền trả nợ. DSCR > 1.5 an toàn'), fmt:v=>v>=99?'∞':v.toFixed(2)+'x', color:(v)=>v>=1.5?'cell-green':v>=1.2?'cell-yellow':'cell-red'},
+    {key:'ltv', label:tooltip('LTV','Tỷ lệ vay / Giá trị tài sản. LTV < 50% an toàn'), fmt:v=>(v*100).toFixed(0)+'%', color:(v)=>v<=0.5?'cell-green':v<=0.7?'cell-yellow':'cell-red'},
+    {key:'payback', label:'Thời Gian Hoàn Vốn', fmt:v=>v>=999?'Không hoàn':`${Math.round(v/12)} năm`, color:(v)=>v<=120?'cell-green':v<=180?'cell-yellow':'cell-red'},
+    {key:'aiScore', label:'🤖 Điểm AI', fmt:v=>v+'/100', color:(v)=>v>=70?'cell-green':v>=50?'cell-yellow':'cell-red'},
+  ];
+
+  const best = {};
+  metrics.forEach(m => {
+    if(m.key==='payback'||m.key==='tongVon'||m.key==='vay'||m.key==='ltv') {
+      best[m.key] = Math.min(...pas.map(p=>p[m.key]));
+    } else {
+      best[m.key] = Math.max(...pas.map(p=>p[m.key]));
+    }
+  });
+
+  const tableEl = document.getElementById('pa-compare-table');
+  if(tableEl) tableEl.innerHTML = `
+    <thead><tr><th>Chỉ Tiêu</th>${pas.map(p=>`<th>${p.label}<br><span style="font-size:9px;font-weight:400;color:var(--text-muted)">${p.tang}T·${p.sophong}P</span></th>`).join('')}</tr></thead>
+    <tbody>${metrics.map(m=>`<tr>
+      <td>${m.label}</td>
+      ${pas.map(p=>{
+        const v = p[m.key];
+        const cls = (m.color?m.color(v):'')+' '+(v===best[m.key]?'cell-best':'');
+        return `<td class="${cls}">${m.fmt(v)}</td>`;
+      }).join('')}
+    </tr>`).join('')}</tbody>
+  `;
+
+  // Charts
+  mkChart('chart-pa-roi',{
+    type:'bar',
+    data:{
+      labels:pas.map(p=>p.label),
+      datasets:[
+        {label:'ROI (%)',data:pas.map(p=>+(p.roiAnnual*100).toFixed(1)),backgroundColor:pas.map(p=>p.roiAnnual>=0.12?'#00d4aa':p.roiAnnual>=0.07?'#f59e0b':'#f43f5e'),borderRadius:4,borderWidth:0},
+        {label:'IRR (%)',data:pas.map(p=>+(p.irr*100).toFixed(1)),backgroundColor:'rgba(30,144,255,0.5)',borderRadius:4,borderWidth:0}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'%'}}}}
+  });
+
+  mkChart('chart-pa-cf',{
+    type:'bar',
+    data:{
+      labels:pas.map(p=>p.label),
+      datasets:[
+        {label:'Dòng Tiền/Tháng',data:pas.map(p=>p.dongTienThang/1e6),backgroundColor:pas.map(p=>p.dongTienThang>0?'#00d4aa':'#f43f5e'),borderRadius:4,borderWidth:0},
+        {label:'Sau Vay/Tháng',data:pas.map(p=>p.dongTienSauVay/1e6),backgroundColor:'rgba(255,193,7,0.6)',borderRadius:4,borderWidth:0}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'tr'}}}}
+  });
+}
+
+function selectPA(idx, btnEl) {
+  selectedPA = idx;
+  document.querySelectorAll('#pa-tabs .tab-btn').forEach((b,i)=>b.classList.toggle('active',i+1===idx));
+  document.querySelectorAll('#pa-cards-grid .pa-card').forEach((c,i)=>c.classList.toggle('selected',i+1===idx));
+}
+
+// =====================================================================
+// MODULE 4: VAY
+// =====================================================================
+function calcVay() {
+  const sotien = n('vay-sotien')*1e9;
+  const sonam = n('vay-sonam')||20;
+  const laico = n('vay-laico')/100/12;
+  const namco = n('vay-namco');
+  const laithanoi = n('vay-laithanoi')/100/12;
+  const soThang = sonam*12;
+  const doanhthu = n('vay-doanhthu')*1e6;
+  const chitieu = n('chitieu')*1e6;
+  const thunhap = n('thunhap')*1e6;
+
+  if(sotien<=0) return;
+
+  const tieuDung = thunhap - chitieu; // monthly surplus from income
+
+  const rows = [];
+  let dunno = sotien;
+  let tongLai = 0, tongGoc = 0, tongTra = 0;
+
+  for(let t=1;t<=soThang;t++){
+    const laiRate = t<=namco*12 ? laico : laithanoi;
+    const lai = dunno*laiRate;
+    const gocMin = sotien/soThang;
+    const tieuDungThang = tieuDung + doanhthu;
+    const tienDu = tieuDungThang - lai - gocMin;
+    let traThem = 0;
+    if(tienDu>0) {
+      if(t<=60) traThem = tienDu*0.80;
+      else if(t<=120) traThem = tienDu*0.50;
+    }
+    const gocPay = Math.min(gocMin+traThem, dunno);
+    const total = gocPay+lai;
+    tongLai+=lai; tongGoc+=gocPay; tongTra+=total;
+    dunno = Math.max(0, dunno-gocPay);
+    rows.push({t,gocPay,lai,traThem,dunno,total});
+    if(dunno<=0) break;
+  }
+
+  const payoffMonth = rows[rows.length-1].t;
+  const payoffYear = (payoffMonth/12).toFixed(1);
+
+  document.getElementById('kpi-vay').innerHTML =
+    mkKpi('Số Tiền Vay',fmt(sotien),'','#f43f5e') +
+    mkKpi('Lãi Tổng',fmt(tongLai),'20 năm','#f59e0b') +
+    mkKpi('Hoàn Nợ',payoffYear+' năm','Trả sớm','#00d4aa') +
+    mkKpi('Tiết Kiệm Lãi',fmt(tongLai*(1-payoffMonth/soThang)),'So min','#1e90ff');
+
+  // Table
+  const thead = `<thead><tr><th>Tháng</th><th>Gốc</th><th>Lãi</th><th>Trả Thêm</th><th>Dư Nợ</th></tr></thead>`;
+  const tbody = rows.map(r=>`<tr><td>${r.t}</td><td>${fmt(r.gocPay)}</td><td>${fmt(r.lai)}</td><td class="${r.traThem>0?'text-green':''}">${r.traThem>0?'+'+fmt(r.traThem):'-'}</td><td>${r.dunno<=0?'<span class="text-green fw700">ĐÃ TẤT TOÁN</span>':fmt(r.dunno)}</td></tr>`).join('');
+  const tbl = document.getElementById('loan-schedule-table');
+  if(tbl) tbl.innerHTML = thead+`<tbody>${tbody}</tbody>`;
+
+  // Chart
+  const labels = rows.filter((_,i)=>i%6===0).map(r=>r.t+'th');
+  const dunnoData = rows.filter((_,i)=>i%6===0).map(r=>r.dunno/1e9);
+  const laiData = rows.filter((_,i)=>i%6===0).map(r=>r.lai/1e6);
+  mkChart('chart-vay-dunno',{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Dư Nợ (tỷ)',data:dunnoData,borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.08)',tension:.3,yAxisID:'y1',pointRadius:0},
+        {label:'Lãi (triệu)',data:laiData,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',tension:.3,yAxisID:'y2',pointRadius:0}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{
+        x:{...CHART_DEFAULTS.scales.x},
+        y1:{...CHART_DEFAULTS.scales.y,position:'left',ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'tỷ'}},
+        y2:{...CHART_DEFAULTS.scales.y,position:'right',ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'tr'},grid:{display:false}}
+      }}
+  });
+
+  saveState();
+}
+
+// =====================================================================
+// MODULE 5: CHO THUÊ
+// =====================================================================
+function renderChoThue() {
+  const years = 20;
+  const ctGia = n('ct-giaphong')*1e6;
+  const ctPhong = parseInt(document.getElementById('ct-sophong')?.value||8);
+  const ctLD = n('ct-lapday')/100;
+  const ctVH = n('ct-vanhanh')/100;
+  const ctSC = n('ct-suachua')*1e6;
+  const ctTG = n('ct-tanggiathuenm')/100;
+  const ctMTP = n('ct-muathapdiem');
+  const thientai = n('ct-thientai')/100;
+  const dichbenh = n('ct-dichbenh')/100;
+
+  const yearlyDT = [], yearlyCF = [], yearlyCP = [];
+  let cumCF = 0;
+  for(let y=1;y<=years;y++){
+    const priceGrowth = Math.pow(1+ctTG,y-1);
+    const riskFactor = 1 - thientai*0.3 - dichbenh*0.2;
+    const dt = ctGia*ctPhong*ctLD*(1-ctMTP/12)*12*priceGrowth*riskFactor;
+    const cp = dt*ctVH+ctSC;
+    const cf = dt-cp;
+    yearlyDT.push(dt/1e6);
+    yearlyCF.push(cf/1e6);
+    yearlyCP.push(cp/1e6);
+    cumCF += cf;
+  }
+
+  const dtNam1 = G.dtThang*12;
+  const cfNam1 = G.dongTienThang*12;
+
+  document.getElementById('kpi-chothue').innerHTML =
+    mkKpi('Doanh Thu/Tháng',fmt(G.dtThang),'Năm 1','#00d4aa') +
+    mkKpi('Chi Phí/Tháng',fmt(G.cpThang),'Vận hành','#f59e0b') +
+    mkKpi('Dòng Tiền/Tháng',fmt(G.dongTienThang),G.dongTienThang>0?'Dương ✓':'Âm ✗',G.dongTienThang>0?'#00d4aa':'#f43f5e') +
+    mkKpi('DT 20 Năm',fmt(yearlyDT.reduce((a,b)=>a+b,0)*1e6),'Tổng cộng','#1e90ff') +
+    mkKpi('CF 20 Năm',fmt(yearlyCF.reduce((a,b)=>a+b,0)*1e6),'Tích lũy','#7c3aed') +
+    mkKpi('CF Năm 20',fmt(yearlyCF[19]*1e6),'Sau tăng giá','#06b6d4');
+
+  const labels = Array.from({length:years},(_,i)=>'Năm '+(i+1));
+  mkChart('chart-chothue-cf',{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Doanh Thu (tr)',data:yearlyDT,backgroundColor:'rgba(0,212,170,0.5)',borderRadius:3,borderWidth:0},
+        {label:'Chi Phí (tr)',data:yearlyCP,backgroundColor:'rgba(244,63,94,0.4)',borderRadius:3,borderWidth:0},
+        {label:'Dòng Tiền (tr)',data:yearlyCF,backgroundColor:'rgba(30,144,255,0.6)',borderRadius:3,borderWidth:0,type:'line',tension:.4,borderColor:'#1e90ff',pointRadius:0}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v+'tr'}}}}
+  });
+}
+
+// =====================================================================
+// MODULE 6: TIẾT KIỆM
+// =====================================================================
+function calcTK() {
+  const tyle = n('tk-tyle')/100;
+  const ls = n('tk-laisuat')/100/12;
+  const guthem = n('tk-guthem')*1e6;
+  const gocbd = n('tk-gocbandau')*1e6;
+  const cfThang = G.dongTienThang||0;
+
+  const data5=[],data10=[],data20=[];
+  let balance=gocbd;
+  for(let m=1;m<=240;m++){
+    const deposit = cfThang*tyle + guthem;
+    balance = balance*(1+ls)+deposit;
+    if(m===60) data5.push(balance);
+    if(m===120) data10.push(balance);
+    if(m===240) data20.push(balance);
+  }
+
+  document.getElementById('kpi-tk').innerHTML =
+    mkKpi('5 Năm',fmt(data5[0]),'Lãi kép','#1e90ff') +
+    mkKpi('10 Năm',fmt(data10[0]),'Lãi kép','#00d4aa') +
+    mkKpi('20 Năm',fmt(data20[0]),'Lãi kép','#f59e0b');
+
+  // Build full curve
+  balance=gocbd;
+  const labels=[], vals=[];
+  for(let m=1;m<=240;m++){
+    const deposit=cfThang*tyle+guthem;
+    balance=balance*(1+ls)+deposit;
+    if(m%6===0){labels.push('T'+m);vals.push(balance/1e9);}
+  }
+  mkChart('chart-tk',{
+    type:'line',
+    data:{labels,datasets:[{label:'Tiết Kiệm (tỷ)',data:vals,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.1)',tension:.4,pointRadius:0,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v.toFixed(2)+'tỷ'}}}}
+  });
+}
+
+// =====================================================================
+// MODULE 7: GIÁ TRỊ TÀI SẢN
+// =====================================================================
+function switchScenario(btn, sc) {
+  currentScenario = sc;
+  document.querySelectorAll('#s-giatri .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGiaTri();
+}
+
+function renderGiaTri() {
+  const sc = currentScenario;
+  const stTG = n('st-'+sc)/100;
+  const dnTG = n('dn-'+sc)/100;
+  const tongVon = G.tongVon||0;
+  const rentGrowth = n('ct-tanggiathuenm')/100;
+  const tkLs = n('tk-laisuat')/100/12;
+  const tyle = n('tk-tyle')/100;
+  const cfThang = G.dongTienThang||0;
+  const gocbd = n('tk-gocbandau')*1e6;
+
+  const years = [5,10,20];
+  const labels = Array.from({length:21},(_,i)=>'Năm '+i);
+  const stVals=[G.stGia],dnVals=[G.dnGia],nhaCTs=[tongVon],tkVals=[gocbd],total=[G.stGia+G.dnGia+tongVon+gocbd];
+
+  let tkBalance=gocbd;
+  for(let y=1;y<=20;y++){
+    stVals.push(G.stGia*Math.pow(1+stTG,y));
+    dnVals.push(G.dnGia*Math.pow(1+dnTG,y));
+    const rentalVal = tongVon*Math.pow(1+rentGrowth,y);
+    nhaCTs.push(rentalVal);
+    for(let m=0;m<12;m++) tkBalance=tkBalance*(1+tkLs)+(cfThang*tyle);
+    tkVals.push(tkBalance);
+    total.push(stVals[y]+dnVals[y]+rentalVal+tkBalance);
+  }
+
+  const t20 = total[20];
+  document.getElementById('kpi-giatri').innerHTML =
+    mkKpi('Sơn Trà (20 năm)',fmt(stVals[20]),'Tăng '+((stTG*100).toFixed(0))+'%/năm','#1e90ff') +
+    mkKpi('Điện Ngọc (20 năm)',fmt(dnVals[20]),'Tăng '+((dnTG*100).toFixed(0))+'%/năm','#00d4aa') +
+    mkKpi('Nhà Cho Thuê (20 năm)',fmt(nhaCTs[20]),'Giá trị tài sản','#f59e0b') +
+    mkKpi('Tiết Kiệm (20 năm)',fmt(tkBalance),'Tích lũy','#7c3aed') +
+    mkKpi('TỔNG TÀI SẢN 20 NĂM',fmt(t20),'Tất cả','#00d4aa');
+
+  mkChart('chart-giatri',{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Sơn Trà',data:stVals.map(v=>v/1e9),borderColor:'#1e90ff',tension:.4,pointRadius:0,fill:false},
+        {label:'Điện Ngọc',data:dnVals.map(v=>v/1e9),borderColor:'#00d4aa',tension:.4,pointRadius:0,fill:false},
+        {label:'Nhà Cho Thuê',data:nhaCTs.map(v=>v/1e9),borderColor:'#f59e0b',tension:.4,pointRadius:0,fill:false},
+        {label:'Tiết Kiệm',data:tkVals.map(v=>v/1e9),borderColor:'#7c3aed',tension:.4,pointRadius:0,fill:false},
+        {label:'TỔNG',data:total.map(v=>v/1e9),borderColor:'#fff',borderWidth:2,tension:.4,pointRadius:0,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,
+      scales:{...CHART_DEFAULTS.scales,y:{...CHART_DEFAULTS.scales.y,ticks:{...CHART_DEFAULTS.scales.y.ticks,callback:v=>v.toFixed(1)+'tỷ'}}}}
+  });
+
+  mkChart('chart-giatri-pie',{
+    type:'doughnut',
+    data:{
+      labels:['Đất Sơn Trà','Đất Điện Ngọc','Nhà Cho Thuê','Tiết Kiệm'],
+      datasets:[{data:[stVals[20]/1e9,dnVals[20]/1e9,nhaCTs[20]/1e9,tkBalance/1e9],backgroundColor:['#1e90ff','#00d4aa','#f59e0b','#7c3aed'],borderWidth:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'rgba(255,255,255,0.6)',font:{size:11}}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed.toFixed(2)+'tỷ'}}}}
+  });
+}
+
+// =====================================================================
+// MODULE 8: MONTE CARLO
+// =====================================================================
+function runMonteCarlo() {
+  const runs = parseInt(document.getElementById('mc-runs')?.value||5000);
+  const vGiathue = n('mc-v-giathue')/100;
+  const vLaisuat = n('mc-v-laisuat')/100;
+  const vGiadata = n('mc-v-giadata')/100;
+
+  const baseNPV = G.tongVon>0 ? calcNPV(G.tongVon, G.dongTienThang, 240, 0.10/12) : 0;
+  const npvResults = [];
+
+  for(let i=0;i<runs;i++){
+    const gtFactor = 1+gaussRand()*vGiathue;
+    const lsFactor = 1+gaussRand()*vLaisuat;
+    const monthlyFlow = G.dongTienThang * gtFactor;
+    const r = (0.10+gaussRand()*0.03) / 12 * lsFactor;
+    const npv = calcNPV(G.tongVon||1e9, monthlyFlow, 240, r);
+    npvResults.push(npv);
+  }
+
+  npvResults.sort((a,b)=>a-b);
+  const positive = npvResults.filter(v=>v>0).length;
+  const probSuccess = positive/runs;
+  const probNegCF = npvResults.filter(v=>v<0).length/runs;
+  const minVal = npvResults[0];
+  const maxVal = npvResults[runs-1];
+  const meanVal = npvResults.reduce((a,b)=>a+b,0)/runs;
+  const p10 = npvResults[Math.floor(runs*0.1)];
+  const p90 = npvResults[Math.floor(runs*0.9)];
+
+  mcResults = {npvResults,probSuccess,probNegCF,minVal,maxVal,meanVal,p10,p90};
+
+  document.getElementById('kpi-mc').innerHTML =
+    mkKpi('Xác Suất Thành Công',(probSuccess*100).toFixed(1)+'%','NPV > 0',probSuccess>0.7?'#00d4aa':probSuccess>0.5?'#f59e0b':'#f43f5e') +
+    mkKpi('NPV Trung Bình',fmt(meanVal),'',meanVal>0?'#00d4aa':'#f43f5e') +
+    mkKpi('NPV P10 (xấu)',fmt(p10),'10th Percentile','#f43f5e') +
+    mkKpi('NPV P90 (tốt)',fmt(p90),'90th Percentile','#00d4aa') +
+    mkKpi('NPV Min',fmt(minVal),'Tệ nhất','#f43f5e') +
+    mkKpi('NPV Max',fmt(maxVal),'Tốt nhất','#00d4aa');
+
+  // Histogram
+  const bins = 30;
+  const step = (maxVal-minVal)/bins;
+  const hist = new Array(bins).fill(0);
+  npvResults.forEach(v=>{ const b=Math.min(Math.floor((v-minVal)/step),bins-1); hist[b]++; });
+  const histLabels = Array.from({length:bins},(_,i)=>fmtN(minVal+i*step));
+  const histColors = hist.map((_,i)=>{
+    const v = minVal+i*step;
+    return v<0?'rgba(244,63,94,0.7)':'rgba(0,212,170,0.7)';
+  });
+  mkChart('chart-mc-hist',{
+    type:'bar',
+    data:{labels:histLabels,datasets:[{label:'Tần Suất',data:hist,backgroundColor:histColors,borderWidth:0,borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,plugins:{...CHART_DEFAULTS.plugins,legend:{display:false}},
+      scales:{...CHART_DEFAULTS.scales}}
+  });
+
+  // Risk display
+  const riskPct = (1-probSuccess)*100;
+  const riskLevel = riskPct<20?'THẤP':riskPct<40?'TRUNG BÌNH':riskPct<60?'CAO':'RẤT CAO';
+  const riskColor = riskPct<20?'var(--green)':riskPct<40?'var(--yellow)':'var(--red)';
+  const rmd = document.getElementById('mc-risk-display');
+  if(rmd) rmd.innerHTML = `
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">Mức Độ Rủi Ro Tổng Thể</div>
+      <div style="font-size:42px;font-weight:900;color:${riskColor}">${riskLevel}</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:4px">Xác suất thất bại: ${riskPct.toFixed(1)}%</div>
+    </div>
+    <div class="risk-meter"><div class="risk-needle" style="left:${riskPct}%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:20px">
+      <span>An Toàn</span><span>Rủi Ro</span>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:var(--text-secondary)">
+      📊 ${runs.toLocaleString()} lần mô phỏng Monte Carlo<br>
+      ✅ Thành công: ${(probSuccess*100).toFixed(1)}%<br>
+      ❌ NPV âm: ${(probNegCF*100).toFixed(1)}%<br>
+      📉 P10: ${fmtN(p10)}<br>
+      📈 P90: ${fmtN(p90)}
+    </div>
+  `;
+}
+
+function gaussRand() {
+  let u=0,v=0;
+  while(u===0) u=Math.random();
+  while(v===0) v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+
+// =====================================================================
+// MODULE 9: AN TOÀN TÀI CHÍNH
+// =====================================================================
+function renderSafety() {
+  const cfScore = G.dongTienThang>0 ? Math.min(20, G.dongTienThang/1e6*2) : 0;
+  const debtRatio = G.tongVon>0 ? n('vay-sotien')/(G.stGia/1e9+G.dnGia/1e9+G.tongVon/1e9) : 0;
+  const debtScore = debtRatio<0.3?20:debtRatio<0.5?15:debtRatio<0.7?8:3;
+  const tkBalance = n('tk-gocbandau')*1e6;
+  const liqScore = Math.min(15, tkBalance/1e9*5);
+  const tkScore = Math.min(15, tkBalance/(G.thunhap*12||1)*3);
+  const assetScore = Math.min(20, (G.stGia+G.dnGia+G.tongVon)/1e10*5);
+  const riskScore = (1-(n('ct-thientai')+n('ct-dichbenh'))/100)*10;
+  const total = cfScore+debtScore+liqScore+tkScore+assetScore+riskScore;
+  const score = Math.min(100,Math.max(0,Math.round(total)));
+
+  const levelColor = score>=90?'#00d4aa':score>=70?'#1e90ff':score>=50?'#f59e0b':'#f43f5e';
+  const levelText = score>=90?'Rất An Toàn':score>=70?'Tốt':score>=50?'Trung Bình':'Nguy Hiểm';
+
+  const circumference = 2*Math.PI*60;
+  const dash = circumference*(score/100);
+
+  document.getElementById('safety-score-wrap').innerHTML = `
+    <div class="score-circle">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+        <circle cx="75" cy="75" r="60" fill="none" stroke="${levelColor}" stroke-width="10"
+          stroke-dasharray="${dash} ${circumference}" stroke-linecap="round" style="transition:.6s"/>
+      </svg>
+      <div class="score-value">
+        <div class="score-num" style="color:${levelColor}">${score}</div>
+        <div class="score-label">${levelText}</div>
+      </div>
+    </div>
+    <div class="score-breakdown">
+      ${[
+        {label:'Dòng Tiền',val:cfScore,max:20,color:'#00d4aa'},
+        {label:'Nợ Vay',val:debtScore,max:20,color:'#1e90ff'},
+        {label:'Thanh Khoản',val:liqScore,max:15,color:'#f59e0b'},
+        {label:'Tiết Kiệm',val:tkScore,max:15,color:'#7c3aed'},
+        {label:'Tài Sản',val:assetScore,max:20,color:'#06b6d4'},
+        {label:'Rủi Ro',val:riskScore,max:10,color:'#10b981'},
+      ].map(s=>`
+        <div class="score-item">
+          <div style="width:80px;font-size:11px;color:var(--text-muted)">${s.label}</div>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${(s.val/s.max*100).toFixed(0)}%;background:${s.color}"></div></div>
+          <div style="width:35px;text-align:right;font-size:11px;color:${s.color};font-weight:700">${s.val.toFixed(1)}/${s.max}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  const sd = document.getElementById('safety-detail');
+  if(sd) sd.innerHTML = `
+    <div class="alert ${score>=70?'alert-success':score>=50?'alert-warning':'alert-danger'}">
+      <strong>${levelText}</strong> — Điểm an toàn tài chính: ${score}/100<br>
+      ${score>=90?'✅ Tài chính rất lành mạnh, tiếp tục mở rộng đầu tư':
+        score>=70?'✅ Tài chính tốt, có thể thực hiện kế hoạch':
+        score>=50?'⚠️ Cần cải thiện dòng tiền trước khi đầu tư thêm':
+        '🚨 Rủi ro cao, cần giảm nợ và tăng thanh khoản'}
+    </div>
+  `;
+
+  mkChart('chart-safety-radar',{
+    type:'radar',
+    data:{
+      labels:['Dòng Tiền','Nợ Vay','Thanh Khoản','Tiết Kiệm','Tài Sản','Rủi Ro'],
+      datasets:[{
+        label:'Điểm Hiện Tại',
+        data:[cfScore/20*100,debtScore/20*100,liqScore/15*100,tkScore/15*100,assetScore/20*100,riskScore/10*100],
+        backgroundColor:'rgba(30,144,255,0.15)',borderColor:'#1e90ff',pointBackgroundColor:'#1e90ff',borderWidth:2
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{r:{grid:{color:'rgba(255,255,255,0.07)'},angleLines:{color:'rgba(255,255,255,0.05)'},ticks:{display:false},pointLabels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}},
+      plugins:{legend:{labels:{color:'rgba(255,255,255,0.5)',font:{size:11}}}}}
+  });
+}
+
+// =====================================================================
+// MODULE 10: AI ADVISOR
+// =====================================================================
+function renderAIQuick() {
+  const pas = [2,3,4,5,6,7].map((t,i)=>({...calcPA(t),label:`PA${i+1}`}));
+  const best = pas.reduce((a,b)=>a.aiScore>b.aiScore?a:b);
+  const aq = document.getElementById('ai-quick-analysis');
+  if(aq) aq.innerHTML = `
+    <div class="alert alert-success">
+      <strong>🤖 Phân Tích Nhanh:</strong><br>
+      📊 Phương án tốt nhất: <strong>${best.label} (${best.tang} tầng)</strong> với AI Score ${best.aiScore}/100<br>
+      💰 Tổng vốn: ${fmtN(best.tongVon)} | ROI: ${(best.roiAnnual*100).toFixed(1)}% | IRR: ${(best.irr*100).toFixed(1)}%<br>
+      🏠 Dòng tiền/tháng: ${fmtN(best.dongTienThang)} | DSCR: ${best.dscr>=99?'∞':best.dscr.toFixed(2)}x<br>
+      ⏰ Hoàn vốn ước tính: ${best.payback>=999?'N/A':Math.round(best.payback/12)+' năm'}
+    </div>
+  `;
+}
+
+function setQ(q) {
+  const inp = document.getElementById('chat-input');
+  if(inp) { inp.value=q; inp.focus(); }
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-send-btn');
+  const msgs = document.getElementById('chat-messages');
+  const question = inp.value.trim();
+  if(!question) return;
+
+  // Add user bubble
+  msgs.innerHTML += `<div class="chat-bubble chat-user">${question}</div>`;
+  inp.value = '';
+  btn.disabled = true;
+  btn.textContent = '⏳...';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Prepare context
+  const pas = [2,3,4,5,6,7].map((t,i)=>({...calcPA(t),label:`PA${i+1}`}));
+  const bestPA = pas.reduce((a,b)=>a.aiScore>b.aiScore?a:b);
+
+  const context = `
+Dữ liệu đầu tư bất động sản của khách hàng:
+- Đất Sơn Trà: ${n('st-giatri')} tỷ, ${n('st-dientich')}m², tăng ${n('st-tanggiacbase')}%/năm
+- Đất Điện Ngọc: ${n('dn-giatri')} tỷ, ${n('dn-dientich')}m², tăng ${n('dn-tanggiacbase')}%/năm
+- Tiền mặt: ${n('tienmat')} triệu
+- Thu nhập: ${n('thunhap')} triệu/tháng, chi tiêu: ${n('chitieu')} triệu/tháng
+- Gia đình: 2 vợ chồng + con nhỏ, chưa có xe ô tô
+
+Kế hoạch xây dựng (mảnh Sơn Trà 5x20m, đường 7.5m):
+${pas.map(p=>`- ${p.label} (${p.tang} tầng, ${p.sophong} phòng): Vốn ${(p.tongVon/1e9).toFixed(2)}tỷ, ROI ${(p.roiAnnual*100).toFixed(1)}%, IRR ${(p.irr*100).toFixed(1)}%, NPV ${(p.npv/1e9).toFixed(2)}tỷ, DSCR ${p.dscr>=99?'∞':p.dscr.toFixed(1)}, LTV ${(p.ltv*100).toFixed(0)}%, Dòng tiền ${(p.dongTienThang/1e6).toFixed(1)}tr/tháng, AI Score ${p.aiScore}/100`).join('\n')}
+
+Phương án tốt nhất hiện tại: ${bestPA.label} với AI Score ${bestPA.aiScore}/100
+Lưu ý: >3 tầng cần thang máy 400tr, >4 tầng cần PCCC 150tr
+Cho thuê: ${n('ct-giaphong')} triệu/phòng, lấp đầy ${n('ct-lapday')}%, tăng ${n('ct-tanggiathuenm')}%/năm
+Vay ngân hàng: ${n('vay-sotien')} tỷ, lãi cố định ${n('vay-laico')}%, ${n('vay-namco')} năm đầu, sau đó thả nổi ${n('vay-laithanoi')}%
+Tổng tài sản hiện tại: ${((n('st-giatri')+n('dn-giatri')+n('tienmat')/1000)).toFixed(2)} tỷ
+`;
+
+  const systemPrompt = `Bạn là AI Advisor chuyên về bất động sản và đầu tư tài chính tại Việt Nam. Trả lời bằng tiếng Việt, chuyên nghiệp, ngắn gọn nhưng đầy đủ thông tin. Format câu trả lời theo các phần: 1.Ưu điểm 2.Nhược điểm 3.Rủi ro 4.Phương án thay thế 5.Khuyến nghị cuối cùng. Sử dụng số liệu cụ thể từ dữ liệu được cung cấp. Dùng emoji phù hợp.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system:systemPrompt,
+        messages:[{role:'user',content:`${context}\n\nCâu hỏi: ${question}`}]
+      })
+    });
+    const data = await response.json();
+    const reply = data.content?.map(c=>c.text||'').join('')||'Không có phản hồi';
+    msgs.innerHTML += `<div class="chat-bubble chat-ai">${reply.replace(/\n/g,'<br>')}</div>`;
+  } catch(e) {
+    // Fallback smart local analysis
+    const reply = generateLocalAdvice(question, pas, bestPA);
+    msgs.innerHTML += `<div class="chat-bubble chat-ai">${reply}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Gửi ▶';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function generateLocalAdvice(question, pas, bestPA) {
+  const q = question.toLowerCase();
+  const dnGia = n('dn-giatri');
+  const stGia = n('st-giatri');
+
+  if(q.includes('điện ngọc')||q.includes('bán đất')) {
+    const pa4 = pas[3]; // PA4 = 5 tầng
+    return `<strong>📊 Phân Tích: Bán Đất Điện Ngọc Để Xây</strong><br><br>
+<strong>1. ✅ Ưu điểm:</strong><br>
+• Có vốn ${dnGia}tỷ để xây dựng ngay<br>
+• PA4 (5 tầng) tối ưu: ROI ${(pa4.roiAnnual*100).toFixed(1)}%, IRR ${(pa4.irr*100).toFixed(1)}%<br>
+• Dòng tiền ${(pa4.dongTienThang/1e6).toFixed(1)}tr/tháng sau khi vận hành<br><br>
+<strong>2. ⚠️ Nhược điểm:</strong><br>
+• Mất tài sản Điện Ngọc (tiềm năng tăng ${n('dn-tanggiacbase')}%/năm)<br>
+• Chi phí xây ${(pa4.tongVon/1e9).toFixed(2)}tỷ, vẫn cần vay thêm<br>
+• Thời gian xây 12-18 tháng chưa có thu nhập<br><br>
+<strong>3. 🔴 Rủi ro:</strong><br>
+• Lãi suất thả nổi sau ${n('vay-namco')} năm có thể tăng<br>
+• DSCR ${pa4.dscr>=99?'∞':pa4.dscr.toFixed(2)}x - ${pa4.dscr>=1.5?'AN TOÀN':'CẦN CHÚ Ý'}<br><br>
+<strong>4. 💡 Phương Án Thay Thế:</strong><br>
+• Giữ đất Điện Ngọc, vay thêm xây PA3 (4 tầng)<br>
+• Cho thuê đất Điện Ngọc, tích lũy thêm vốn<br><br>
+<strong>5. 🎯 Khuyến Nghị:</strong><br>
+Nên bán Điện Ngọc nếu: cần vốn gấp, lãi suất thấp < 9%. ${bestPA.label} (${bestPA.tang} tầng) là lựa chọn tối ưu nhất với AI Score ${bestPA.aiScore}/100.`;
+  }
+
+  return `<strong>🤖 Phân Tích Dựa Trên Dữ Liệu Của Bạn</strong><br><br>
+Phương án tối ưu: <strong>${bestPA.label} (${bestPA.tang} tầng)</strong><br>
+• ROI: ${(bestPA.roiAnnual*100).toFixed(1)}%/năm<br>
+• IRR: ${(bestPA.irr*100).toFixed(1)}%<br>
+• Dòng tiền: ${(bestPA.dongTienThang/1e6).toFixed(1)}tr/tháng<br>
+• Hoàn vốn: ${bestPA.payback>=999?'Chưa rõ':Math.round(bestPA.payback/12)+' năm'}<br><br>
+Tổng tài sản hiện tại: <strong>${(stGia+dnGia+n('tienmat')/1000).toFixed(2)} tỷ</strong><br>
+AI Score cao nhất: <strong>${bestPA.aiScore}/100</strong><br><br>
+💡 Hãy đặt câu hỏi cụ thể hơn để tôi phân tích chi tiết!`;
+}
+
+// =====================================================================
+// EXPORT
+// =====================================================================
+function exportData() {
+  const data = {
+    timestamp: new Date().toISOString(),
+    taisan: {
+      sontra: {giatri:n('st-giatri'),dientich:n('st-dientich'),tanggiac:n('st-tanggiacbase')},
+      dienngoc: {giatri:n('dn-giatri'),dientich:n('dn-dientich'),tanggiac:n('dn-tanggiacbase')},
+      tienmat: n('tienmat'), thunhap: n('thunhap'), chitieu: n('chitieu')
+    },
+    xaydung: {sotang:n('xd-sotang'),dientich:n('xd-dientich'),sophong:n('xd-sophong'),giaxay:n('xd-giaxay')},
+    vay: {sotien:n('vay-sotien'),sonam:n('vay-sonam'),laico:n('vay-laico')},
+    chothue: {giaphong:n('ct-giaphong'),lapday:n('ct-lapday'),tanggiac:n('ct-tanggiathuenm')},
+    phuongan: [2,3,4,5,6,7].map((t,i)=>({label:`PA${i+1}`,...calcPA(t)}))
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'BDS_AI_VIP_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+
+// =====================================================================
+// LOCAL STORAGE
+// =====================================================================
+const FIELDS = ['st-giatri','st-dientich','st-tanggiacbase','st-duong','st-xau','st-tb','st-tot',
+  'dn-giatri','dn-dientich','dn-tanggiacbase','dn-duong','dn-xau','dn-tb','dn-tot',
+  'tienmat','thunhap','chitieu','tangchitieu',
+  'xd-sotang','xd-dientich','xd-sophong','xd-giaxay','xd-noithat','xd-khac','xd-duphong',
+  'ct-giaphong','ct-sophong','ct-lapday','ct-vanhanh','ct-suachua','ct-tanggiathuenm','ct-lamphat','ct-muathapdiem','ct-thientai','ct-dichbenh',
+  'vay-sotien','vay-sonam','vay-laico','vay-namco','vay-laithanoi','vay-biando','vay-phat','vay-doanhthu',
+  'tk-tyle','tk-laisuat','tk-guthem','tk-gocbandau',
+  'mc-v-giathue','mc-v-laisuat','mc-v-giadata'];
+
+function saveState() {
+  const state = {};
+  FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el) state[id]=el.value; });
+  try { localStorage.setItem('bdsai_state',JSON.stringify(state)); } catch(e){}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('bdsai_state');
+    if(!raw) return;
+    const state = JSON.parse(raw);
+    FIELDS.forEach(id=>{ if(state[id]!==undefined){ const el=document.getElementById(id); if(el) el.value=state[id]; } });
+  } catch(e){}
+}
+
+// =====================================================================
+// INIT
+// =====================================================================
+window.addEventListener('load', () => {
+  loadState();
+  calc();
+  calcVay();
+  setTimeout(()=>{ runMonteCarlo(); renderSafety(); renderAIQuick(); }, 300);
+});
+</script>
+</body>
+</html>

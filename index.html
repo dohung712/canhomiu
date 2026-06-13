@@ -1,0 +1,989 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════
+ *  GOOGLE APPS SCRIPT — KPI Management System v4
+ *  Nâng cấp: Auth từ Sheet NHANVIEN, Audit LOG, Role-based security
+ *  Backward compatible với v3 — không xóa sheet cũ
+ * ═══════════════════════════════════════════════════════════════════════
+ *
+ *  BƯỚC SETUP:
+ *  1. Mở script.google.com → project hiện tại
+ *  2. Xoá code cũ, dán toàn bộ file này vào
+ *  3. Deploy > Manage deployments > Edit (✏️) > Version: "New version" > Deploy
+ *  ⚠️ PHẢI tạo version mới — chỉ Save thôi thì URL cũ vẫn chạy code cũ!
+ *
+ *  SHEET MỚI CẦN TẠO (nếu chưa có):
+ *  ✅ NHANVIEN: EmployeeID | EmployeeName | Store | Username | Password | Role | TargetRatio
+ *  ✅ LOG: Timestamp | User | Action | Target | BeforeData | AfterData | IP
+ *  ✅ BaoCao, KetQua_ChiTiet, SaoTichLuy, Config — giữ nguyên từ v3
+ * ═══════════════════════════════════════════════════════════════════════
+ */
+
+const SPREADSHEET_ID = '1FRm9XYF3bgzoYMkurr8YA5s4k1SaJcQ33oxDPtUUckA';
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function getSheet(name, headers) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    if (headers && headers.length) sheet.appendRow(headers);
+  }
+  return sheet;
+}
+
+function getSheetData(name) {
+  try {
+    const sheet = getSheet(name, []);
+    const data = sheet.getDataRange().getValues();
+    if (data.length < 2) return { headers: data[0] || [], rows: [] };
+    const headers = data[0].map(h => String(h).trim());
+    const rows = data.slice(1);
+    return { headers, rows };
+  } catch (e) {
+    return { headers: [], rows: [] };
+  }
+}
+
+function jsonOk(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function jsonErr(msg) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: false, error: msg }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ══════════════════════════════════════════════
+//  AUTH — Đọc từ sheet NHANVIEN
+// ══════════════════════════════════════════════
+
+/**
+ * Sheet NHANVIEN columns:
+ * EmployeeID | EmployeeName | Store | Username | Password | Role | TargetRatio
+ * 
+ * Role: 'nv' hoặc 'ql'
+ * Password: plain text (sẽ match với input người dùng gửi lên)
+ */
+function doLogin(username, password, role) {
+  if (!username || !password) return { ok: false, error: 'Thiếu thông tin đăng nhập' };
+
+  // QL: check từ sheet NHANVIEN với role='ql'
+  const { headers, rows } = getSheetData('NHANVIEN');
+  if (!headers.length) {
+    // Fallback: nếu chưa có sheet NHANVIEN, dùng password cứng tạm thời
+    return _legacyLogin(username, password, role);
+  }
+
+  const iID   = headers.indexOf('EmployeeID');
+  const iName = headers.indexOf('EmployeeName');
+  const iSt   = headers.indexOf('Store');
+  const iUn   = headers.indexOf('Username');
+  const iPw   = headers.indexOf('Password');
+  const iRole = headers.indexOf('Role');
+  const iRatio= headers.indexOf('TargetRatio');
+
+  // Tìm user trong sheet
+  for (const row of rows) {
+    const rowRole = iRole >= 0 ? String(row[iRole]).trim().toLowerCase() : 'nv';
+    const rowPw   = iPw >= 0 ? String(row[iPw]).trim() : '';
+    const rowUn   = iUn >= 0 ? String(row[iUn]).trim() : '';
+    const rowId   = iID >= 0 ? String(row[iID]).trim() : '';
+
+    // Match: username = EmployeeID hoặc Username field, password match
+    const usernameMatch = (rowUn && rowUn === username) || (rowId && rowId === username);
+    if (!usernameMatch) continue;
+    if (rowPw !== password) return { ok: false, error: 'Mật khẩu không đúng' };
+    if (role && rowRole !== role) return { ok: false, error: 'Vai trò không phù hợp' };
+
+    // Tạo session token đơn giản (hash từ ID + timestamp + secret)
+    const token = _genToken(rowId);
+
+    // Log đăng nhập
+    _writeLog({
+      user: rowId,
+      action: 'LOGIN',
+      target: rowRole,
+      before: '',
+      after: `Đăng nhập lúc ${new Date().toLocaleString('vi-VN')}`,
+    });
+
+    return {
+      ok: true,
+      token,
+      user: {
+        id:    rowId,
+        name:  iName >= 0 ? String(row[iName]).trim() : '',
+        store: iSt   >= 0 ? String(row[iSt]).trim()   : '',
+        role:  rowRole,
+        ratio: iRatio >= 0 ? (parseFloat(row[iRatio]) || 0) : 0,
+      }
+    };
+  }
+
+  return { ok: false, error: 'Tài khoản không tồn tại' };
+}
+
+// Fallback: nếu chưa có sheet NHANVIEN (backward compat với v3)
+function _legacyLogin(username, password, role) {
+  // QL hardcoded (chỉ dùng khi chưa setup sheet NHANVIEN)
+  if (role === 'ql' && password === '2026') {
+    const token = _genToken('QL_ADMIN');
+    return {
+      ok: true, token,
+      user: { id: 'QL_ADMIN', name: 'Quản lý', store: 'ALL', role: 'ql', ratio: 0 }
+    };
+  }
+  return { ok: false, error: 'Chưa setup sheet NHANVIEN. Liên hệ quản trị.' };
+}
+
+function _genToken(userId) {
+  const secret = 'kpi_mwg_933_' + userId;
+  const ts = Math.floor(Date.now() / (1000 * 60 * 60)); // đổi mỗi giờ
+  return Utilities.base64Encode(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,
+      secret + ts + SPREADSHEET_ID)
+  ).slice(0, 32);
+}
+
+// Validate token — check giờ hiện tại ±72h nhưng early-exit để giảm tải
+function _validateToken(userId, token) {
+  if (!userId || !token) return false;
+  // Local token (login không qua Sheets API) — bỏ qua validation, allow all
+  if (!token || token === '') return true;
+  const secret = 'kpi_mwg_933_' + userId;
+  const now = Math.floor(Date.now() / (1000 * 60 * 60));
+  // Check giờ hiện tại trước (most common case), sau đó mới check lùi
+  for (let offset = 0; offset <= 72; offset++) {
+    const expected = Utilities.base64Encode(
+      Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,
+        secret + (now - offset) + SPREADSHEET_ID)
+    ).slice(0, 32);
+    if (expected === token) return true;
+  }
+  return false;
+}
+
+// Lấy role của user từ sheet NHANVIEN
+function _getUserRole(userId) {
+  if (userId === 'QL_ADMIN') return 'ql';
+  const { headers, rows } = getSheetData('NHANVIEN');
+  if (!headers.length) return null;
+  const iID   = headers.indexOf('EmployeeID');
+  const iRole = headers.indexOf('Role');
+  for (const row of rows) {
+    if (iID >= 0 && String(row[iID]).trim() === userId) {
+      return iRole >= 0 ? String(row[iRole]).trim().toLowerCase() : 'nv';
+    }
+  }
+  return null;
+}
+
+function _getUserStore(userId) {
+  if (userId === 'QL_ADMIN') return 'ALL';
+  const { headers, rows } = getSheetData('NHANVIEN');
+  if (!headers.length) return null;
+  const iID = headers.indexOf('EmployeeID');
+  const iSt = headers.indexOf('Store');
+  for (const row of rows) {
+    if (iID >= 0 && String(row[iID]).trim() === userId) {
+      return iSt >= 0 ? String(row[iSt]).trim() : null;
+    }
+  }
+  return null;
+}
+
+// ══════════════════════════════════════════════
+//  AUDIT LOG
+// ══════════════════════════════════════════════
+function _writeLog({ user, action, target, before, after }) {
+  try {
+    const sheet = getSheet('LOG', [
+      'Timestamp', 'User', 'Action', 'Target', 'BeforeData', 'AfterData'
+    ]);
+    sheet.appendRow([
+      new Date(),
+      user || '',
+      action || '',
+      target || '',
+      typeof before === 'string' ? before : JSON.stringify(before || ''),
+      typeof after  === 'string' ? after  : JSON.stringify(after  || ''),
+    ]);
+  } catch (e) {
+    // Không để lỗi log chặn operation chính
+    console.error('Log error:', e.message);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  MAIN HANDLER
+// ══════════════════════════════════════════════
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const action = body.action;
+
+    // Actions không cần auth
+    if (action === 'ping') return jsonOk({ ok: true, ts: Date.now() });
+    if (action === 'login') return jsonOk(doLogin(body.username, body.password, body.role));
+    if (action === 'getConfig') return getConfig();
+
+    // Tất cả actions còn lại cần token
+    const userId = body.userId;
+    const token  = body.token;
+
+    if (!_validateToken(userId, token)) {
+      return jsonErr('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');
+    }
+
+    const userRole  = _getUserRole(userId);
+    const userStore = _getUserStore(userId);
+
+    if (action === 'saveBaoCao')     return saveBaoCao(body.record, userId, userRole, userStore);
+    if (action === 'deleteBaoCao')   return deleteBaoCao(body.st, body.mnv, body.ngay, userId, userRole);
+    if (action === 'getRecords')     return getRecords(body.st, body.from, body.to, userId, userRole, userStore);
+    if (action === 'getSaoTichLuy')  return getSaoTichLuy(body.st, body.mnv, userId, userRole, userStore);
+    if (action === 'getSaoLuyKe')    return getSaoLuyKe(body.st, body.mnv, userId, userRole, userStore);
+    if (action === 'saveSaoTichLuy') return saveSaoTichLuy(body.st, body.data, userId, userRole);
+    if (action === 'saveConfig')     return saveConfig(body.config, userId, userRole);
+    if (action === 'getEmployees')   return getEmployees(userId, userRole);
+    if (action === 'saveEmployee')   return saveEmployee(body.employee, userId, userRole);
+    if (action === 'deleteEmployee') return deleteEmployee(body.employeeId, userId, userRole);
+    if (action === 'getLogs')        return getLogs(body.limit, userId, userRole);
+    if (action === 'getNhanVienList')return getNhanVienList(body.st, userId, userRole);
+
+    return jsonErr('Unknown action: ' + action);
+  } catch (err) {
+    console.error('doPost error:', err.message, err.stack);
+    return jsonErr(err.message);
+  }
+}
+
+function doGet(e) {
+  const action = e.parameter.action || '';
+  if (action === 'ping')      return jsonOk({ ok: true, ts: Date.now() });
+  if (action === 'getConfig') return getConfig();
+  return jsonOk({ ok: true, message: 'KPI API v4 is running' });
+}
+
+// ══════════════════════════════════════════════
+//  SAVE BÁO CÁO
+// ══════════════════════════════════════════════
+function saveBaoCao(record, userId, userRole, userStore) {
+  if (!record) return jsonErr('No record');
+
+  // Security: NV chỉ được lưu báo cáo của chính mình
+  if (userRole === 'nv' && String(record.mnv) !== String(userId)) {
+    return jsonErr('Không có quyền lưu báo cáo của nhân viên khác');
+  }
+  // NV chỉ được lưu báo cáo cho store của mình
+  if (userRole === 'nv' && userStore !== 'ALL' && record.st !== userStore) {
+    return jsonErr('Không có quyền lưu báo cáo cho siêu thị này');
+  }
+
+  const bcSheet = getSheet('BaoCao', [
+    'Timestamp','Ngày','Siêu Thị','MNV','Tên NV',
+    'Sao Thưởng','Sao Trừ','Sao Net','Ghi Chú','Sao Override','QL Edited'
+  ]);
+
+  const data = bcSheet.getDataRange().getValues();
+  let existingRow = -1;
+  let beforeData = null;
+
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][1]) === String(record.ngay) &&
+        data[i][2] === record.st &&
+        String(data[i][3]) === String(record.mnv)) {
+      existingRow = i + 1;
+      beforeData = data[i];
+      break;
+    }
+  }
+
+  const isQlEdit = userRole === 'ql';
+  const row = [
+    new Date(record.ts || Date.now()),
+    record.ngay,
+    record.st,
+    record.mnv,
+    record.ten,
+    record.sao_duong  || 0,
+    record.sao_am     || 0,
+    record.sao_net    || 0,
+    record.note       || '',
+    record.sao_override !== undefined ? record.sao_override : '',
+    isQlEdit ? 'QL' : ''
+  ];
+
+  if (existingRow > 0) {
+    bcSheet.getRange(existingRow, 1, 1, row.length).setValues([row]);
+  } else {
+    bcSheet.appendRow(row);
+  }
+
+  // Chi tiết từng môn
+  const detailSheet = getSheet('KetQua_ChiTiet', [
+    'Ngày','Siêu Thị','MNV','Tên NV','Ngành Hàng','Kết Quả','Chỉ Tiêu NV','% Đạt'
+  ]);
+
+  if (record.results) {
+    const config   = getConfigData();
+    const stConfig = config ? config[record.st] : null;
+    const nhs      = stConfig ? stConfig.nh : [];
+    const nvCount  = stConfig ? Math.max(stConfig.nv.length, 1) : 1;
+
+    const detailData = detailSheet.getDataRange().getValues();
+    const toDelete = [];
+    for (let i = detailData.length - 1; i >= 1; i--) {
+      if (String(detailData[i][0]) === String(record.ngay) &&
+          String(detailData[i][2]) === String(record.mnv) &&
+          detailData[i][1] === record.st) {
+        toDelete.push(i + 1);
+      }
+    }
+    toDelete.forEach(r => detailSheet.deleteRow(r));
+
+    nhs.forEach(item => {
+      const actual = record.results[item.nh] || 0;
+      const nvObj  = stConfig ? stConfig.nv.find(n => String(n.mnv) === String(record.mnv)) : null;
+      const ct_nv  = (nvObj && nvObj.ratio > 0)
+        ? item.ct * nvObj.ratio / 100
+        : item.ct / nvCount;
+      const pct = ct_nv > 0 ? parseFloat((actual / ct_nv * 100).toFixed(1)) : 0;
+      detailSheet.appendRow([
+        record.ngay, record.st, record.mnv, record.ten,
+        item.nh, actual, parseFloat(ct_nv.toFixed(2)), pct
+      ]);
+    });
+  }
+
+  // Audit Log
+  _writeLog({
+    user: userId,
+    action: existingRow > 0 ? 'UPDATE_BAOCAO' : 'CREATE_BAOCAO',
+    target: `${record.st}:${record.mnv}:${record.ngay}`,
+    before: beforeData ? JSON.stringify(beforeData) : '',
+    after:  JSON.stringify(row),
+  });
+
+  return jsonOk({ ok: true, message: 'Saved' });
+}
+
+// ══════════════════════════════════════════════
+//  DELETE BÁO CÁO
+// ══════════════════════════════════════════════
+function deleteBaoCao(st, mnv, ngay, userId, userRole) {
+  if (!st || !mnv || !ngay) return jsonErr('Missing params');
+
+  // Security: chỉ QL mới được xoá báo cáo người khác
+  if (userRole === 'nv' && String(mnv) !== String(userId)) {
+    return jsonErr('Không có quyền xoá báo cáo của nhân viên khác');
+  }
+
+  const bcSheet = getSheet('BaoCao', []);
+  const bcData  = bcSheet.getDataRange().getValues();
+  let deletedRow = null;
+  for (let i = bcData.length - 1; i >= 1; i--) {
+    if (String(bcData[i][1]) === String(ngay) &&
+        bcData[i][2] === st &&
+        String(bcData[i][3]) === String(mnv)) {
+      deletedRow = bcData[i];
+      bcSheet.deleteRow(i + 1);
+      break;
+    }
+  }
+
+  const detSheet = getSheet('KetQua_ChiTiet', []);
+  const detData  = detSheet.getDataRange().getValues();
+  const toDelete = [];
+  for (let i = detData.length - 1; i >= 1; i--) {
+    if (String(detData[i][0]) === String(ngay) &&
+        detData[i][1] === st &&
+        String(detData[i][2]) === String(mnv)) {
+      toDelete.push(i + 1);
+    }
+  }
+  toDelete.forEach(r => detSheet.deleteRow(r));
+
+  _writeLog({
+    user: userId,
+    action: 'DELETE_BAOCAO',
+    target: `${st}:${mnv}:${ngay}`,
+    before: deletedRow ? JSON.stringify(deletedRow) : '',
+    after: 'DELETED',
+  });
+
+  return jsonOk({ ok: true, message: 'Deleted' });
+}
+
+// ══════════════════════════════════════════════
+//  GET RECORDS
+// ══════════════════════════════════════════════
+function getRecords(st, from, to, userId, userRole, userStore) {
+  // Security: NV chỉ được xem báo cáo của chính mình
+  const filterMnv = userRole === 'nv' ? userId : null;
+  // NV chỉ xem store của mình
+  const filterSt  = userRole === 'nv' && userStore !== 'ALL' ? userStore : st;
+
+  const bcSheet  = getSheet('BaoCao', []);
+  const bcData   = bcSheet.getDataRange().getValues();
+  const detSheet = getSheet('KetQua_ChiTiet', []);
+  const detData  = detSheet.getDataRange().getValues();
+
+  const resultsMap = {};
+  for (let i = 1; i < detData.length; i++) {
+    const [ngay, stVal, mnv, , nh, actual] = detData[i];
+    const key = `${ngay}|${stVal}|${mnv}`;
+    if (!resultsMap[key]) resultsMap[key] = {};
+    resultsMap[key][nh] = actual;
+  }
+
+  const records = [];
+  for (let i = 1; i < bcData.length; i++) {
+    const row = bcData[i];
+    const ngay = row[1], stVal = row[2], mnv = row[3];
+    if (filterSt  && stVal !== filterSt)            continue;
+    if (filterMnv && String(mnv) !== String(filterMnv)) continue;
+    if (from && String(ngay) < String(from))        continue;
+    if (to   && String(ngay) > String(to))          continue;
+
+    const key = `${ngay}|${stVal}|${mnv}`;
+    records.push({
+      ngay:         String(row[1]),
+      st:           row[2],
+      mnv:          String(row[3]),
+      ten:          row[4],
+      sao_duong:    row[5] || 0,
+      sao_am:       row[6] || 0,
+      sao_net:      row[7] || 0,
+      note:         row[8] || '',
+      sao_override: row[9] !== '' ? row[9] : undefined,
+      ql_edited:    row[10] === 'QL',
+      ts:           row[0] ? new Date(row[0]).getTime() : Date.now(),
+      results:      resultsMap[key] || {}
+    });
+  }
+
+  return jsonOk({ ok: true, records });
+}
+
+// ══════════════════════════════════════════════
+//  SAO TÍCH LŨY
+// ══════════════════════════════════════════════
+function saveSaoTichLuy(st, nvData, userId, userRole) {
+  if (!st || !nvData) return jsonErr('Missing params');
+  // Chỉ QL mới được chỉnh sao tích lũy
+  if (userRole !== 'ql') return jsonErr('Không có quyền chỉnh sao tích lũy');
+
+  const sheet = getSheet('SaoTichLuy', [
+    'Siêu Thị', 'MNV', 'Sao Tích Lũy', 'Cập nhật lúc', 'Người cập nhật'
+  ]);
+  const data = sheet.getDataRange().getValues();
+  const now  = new Date();
+
+  const changes = [];
+  Object.entries(nvData).forEach(([mnv, rec]) => {
+    const sao       = rec.sao || 0;
+    const updatedAt = rec.updatedAt || now.toLocaleString('vi-VN');
+    const updatedBy = rec.updatedBy || userId;
+    let oldSao = null;
+
+    let found = false;
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === st && String(data[i][1]) === String(mnv)) {
+        oldSao = data[i][2];
+        sheet.getRange(i + 1, 3, 1, 3).setValues([[sao, updatedAt, updatedBy]]);
+        data[i][2] = sao; data[i][3] = updatedAt; data[i][4] = updatedBy;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      sheet.appendRow([st, mnv, sao, updatedAt, updatedBy]);
+    }
+    changes.push({ mnv, oldSao, newSao: sao });
+  });
+
+  _writeLog({
+    user: userId,
+    action: 'UPDATE_SAO_TICH_LUY',
+    target: st,
+    before: JSON.stringify(changes.map(c => ({ mnv: c.mnv, sao: c.oldSao }))),
+    after:  JSON.stringify(changes.map(c => ({ mnv: c.mnv, sao: c.newSao }))),
+  });
+
+  return jsonOk({ ok: true });
+}
+
+function getSaoTichLuy(st, mnv, userId, userRole, userStore) {
+  if (!st || !mnv) return jsonErr('Missing st or mnv');
+
+  // Security: NV chỉ xem sao của mình
+  if (userRole === 'nv' && String(mnv) !== String(userId)) {
+    return jsonErr('Không có quyền xem sao của nhân viên khác');
+  }
+
+  try {
+    const sheet = getSheet('SaoTichLuy', [
+      'Siêu Thị', 'MNV', 'Sao Tích Lũy', 'Cập nhật lúc', 'Người cập nhật'
+    ]);
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === st && String(data[i][1]) === String(mnv)) {
+        return jsonOk({
+          ok: true,
+          sao: parseFloat(data[i][2]) || 0,
+          updatedAt: data[i][3] || '',
+          updatedBy: data[i][4] || '',
+        });
+      }
+    }
+  } catch (e) {}
+
+  // Fallback: tính từ BaoCao
+  const bcSheet = getSheet('BaoCao', []);
+  const bcData  = bcSheet.getDataRange().getValues();
+  const today   = Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'yyyy-MM-dd');
+  let total = 0;
+  for (let i = 1; i < bcData.length; i++) {
+    if (bcData[i][2] !== st) continue;
+    if (String(bcData[i][3]) !== String(mnv)) continue;
+    if (String(bcData[i][1]) >= today) continue;
+    total += (parseFloat(bcData[i][7]) || 0);
+  }
+  return jsonOk({ ok: true, sao: total });
+}
+
+// ══════════════════════════════════════════════
+//  SAO LŨY KẾ HIỆN TẠI = STL đầu tháng + sao_net BaoCao tháng này
+// ══════════════════════════════════════════════
+/**
+ * Trả về:
+ *   saoTL   — Sao tích lũy đầu tháng (QL set)
+ *   saoBC   — Tổng sao_net từ BaoCao trong tháng hiện tại
+ *   luyKe   — saoTL + saoBC
+ *   thang   — 'yyyy-MM' tháng đang tính
+ */
+function getSaoLuyKe(st, mnv, userId, userRole, userStore) {
+  if (!st || !mnv) return jsonErr('Missing st or mnv');
+
+  // Security: NV chỉ xem sao của mình
+  if (userRole === 'nv' && String(mnv) !== String(userId)) {
+    return jsonErr('Không có quyền xem sao của nhân viên khác');
+  }
+
+  // 1. Lấy STL đầu tháng từ sheet SaoTichLuy
+  let saoTL = 0;
+  try {
+    const stlSheet = getSheet('SaoTichLuy', []);
+    const stlData  = stlSheet.getDataRange().getValues();
+    for (let i = 1; i < stlData.length; i++) {
+      if (stlData[i][0] === st && String(stlData[i][1]).trim() === String(mnv).trim()) {
+        saoTL = parseFloat(stlData[i][2]) || 0;
+        break;
+      }
+    }
+  } catch(e) {}
+
+  // 2. Tính tổng sao_net từ BaoCao tháng hiện tại (Asia/Ho_Chi_Minh)
+  const thangHienTai = Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'yyyy-MM');
+  let saoBC = 0;
+  try {
+    const bcSheet = getSheet('BaoCao', []);
+    const bcData  = bcSheet.getDataRange().getValues();
+    for (let i = 1; i < bcData.length; i++) {
+      const ngay  = String(bcData[i][1] || '').slice(0, 7); // 'yyyy-MM'
+      if (bcData[i][2] !== st)                               continue;
+      if (String(bcData[i][3]).trim() !== String(mnv).trim()) continue;
+      if (ngay !== thangHienTai)                             continue;
+      // Luôn cộng sao_net — sao_override là sao đầu vào (không phải sao kiếm được ngày đó)
+      saoBC += parseFloat(bcData[i][7]) || 0;
+    }
+  } catch(e) {}
+
+  return jsonOk({
+    ok: true,
+    saoTL,
+    saoBC: Math.round(saoBC * 100) / 100,
+    luyKe: Math.round((saoTL + saoBC) * 100) / 100,
+    thang: thangHienTai,
+  });
+}
+// ══════════════════════════════════════════════
+function saveConfig(config, userId, userRole) {
+  if (!config) return jsonErr('No config');
+  if (userRole !== 'ql') return jsonErr('Không có quyền thay đổi cấu hình');
+
+  const cfgSheet = getSheet('Config', ['Key','Value','UpdatedAt']);
+  const data = cfgSheet.getDataRange().getValues();
+  const oldConfig = getConfigData();
+  let found = false;
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === 'main') {
+      cfgSheet.getRange(i + 1, 2).setValue(JSON.stringify(config));
+      cfgSheet.getRange(i + 1, 3).setValue(new Date());
+      found = true; break;
+    }
+  }
+  if (!found) cfgSheet.appendRow(['main', JSON.stringify(config), new Date()]);
+
+  _writeLog({
+    user: userId,
+    action: 'UPDATE_CONFIG',
+    target: 'Config',
+    before: JSON.stringify(oldConfig || {}),
+    after:  JSON.stringify(config),
+  });
+
+  updateTargetSheet(config);
+  return jsonOk({ ok: true });
+}
+
+function getConfig() {
+  const { config, updatedAt } = getConfigDataFull();
+  return jsonOk({ ok: true, config: config || null, updatedAt: updatedAt || '' });
+}
+
+function getConfigData() {
+  return getConfigDataFull().config;
+}
+
+function getConfigDataFull() {
+  try {
+    const cfgSheet = getSheet('Config', ['Key','Value','UpdatedAt']);
+    const data = cfgSheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === 'main' && data[i][1]) {
+        const updatedAt = data[i][2] ? String(data[i][2]) : '';
+        return { config: JSON.parse(data[i][1]), updatedAt };
+      }
+    }
+  } catch (e) {}
+  return { config: null, updatedAt: '' };
+}
+
+// ══════════════════════════════════════════════
+//  EMPLOYEE MANAGEMENT (QL only)
+// ══════════════════════════════════════════════
+function getEmployees(userId, userRole) {
+  if (userRole !== 'ql') return jsonErr('Không có quyền');
+  const { headers, rows } = getSheetData('NHANVIEN');
+  if (!headers.length) return jsonOk({ ok: true, employees: [] });
+
+  const employees = rows.map(row => {
+    const obj = {};
+    headers.forEach((h, i) => {
+      // Không trả về Password cho bất kỳ ai trừ khi cần thiết
+      if (h === 'Password') { obj[h] = '***'; return; }
+      obj[h] = row[i];
+    });
+    return obj;
+  });
+
+  return jsonOk({ ok: true, employees });
+}
+
+function saveEmployee(employee, userId, userRole) {
+  if (userRole !== 'ql') return jsonErr('Không có quyền');
+  if (!employee || !employee.EmployeeID) return jsonErr('Thiếu thông tin nhân viên');
+
+  const sheet = getSheet('NHANVIEN', [
+    'EmployeeID', 'EmployeeName', 'Store', 'Username', 'Password', 'Role', 'TargetRatio'
+  ]);
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0] ? data[0].map(h => String(h).trim()) : [];
+  const iID = headers.indexOf('EmployeeID');
+
+  let foundRow = -1;
+  let oldData = null;
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][iID]) === String(employee.EmployeeID)) {
+      foundRow = i + 1;
+      oldData = [...data[i]];
+      break;
+    }
+  }
+
+  const newRow = headers.map(h => {
+    // Nếu không gửi Password hoặc gửi '***', giữ nguyên password cũ
+    if (h === 'Password' && (employee[h] === '***' || !employee[h])) {
+      if (oldData && headers.indexOf('Password') >= 0) {
+        return oldData[headers.indexOf('Password')];
+      }
+      return '';
+    }
+    return employee[h] !== undefined ? employee[h] : '';
+  });
+
+  if (foundRow > 0) {
+    sheet.getRange(foundRow, 1, 1, newRow.length).setValues([newRow]);
+  } else {
+    sheet.appendRow(newRow);
+  }
+
+  _writeLog({
+    user: userId,
+    action: foundRow > 0 ? 'UPDATE_EMPLOYEE' : 'CREATE_EMPLOYEE',
+    target: String(employee.EmployeeID),
+    before: oldData ? JSON.stringify(oldData) : '',
+    after:  JSON.stringify(newRow),
+  });
+
+  return jsonOk({ ok: true });
+}
+
+function deleteEmployee(employeeId, userId, userRole) {
+  if (userRole !== 'ql') return jsonErr('Không có quyền');
+  if (!employeeId) return jsonErr('Thiếu mã nhân viên');
+
+  const sheet = getSheet('NHANVIEN', []);
+  const data  = sheet.getDataRange().getValues();
+  const headers = data[0] ? data[0].map(h => String(h).trim()) : [];
+  const iID = headers.indexOf('EmployeeID');
+  let deletedRow = null;
+
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][iID]) === String(employeeId)) {
+      deletedRow = data[i];
+      sheet.deleteRow(i + 1);
+      break;
+    }
+  }
+
+  _writeLog({
+    user: userId,
+    action: 'DELETE_EMPLOYEE',
+    target: String(employeeId),
+    before: deletedRow ? JSON.stringify(deletedRow) : '',
+    after: 'DELETED',
+  });
+
+  return jsonOk({ ok: true });
+}
+
+// ══════════════════════════════════════════════
+//  GET LOGS (QL only)
+// ══════════════════════════════════════════════
+function getLogs(limit, userId, userRole) {
+  if (userRole !== 'ql') return jsonErr('Không có quyền');
+
+  const sheet = getSheet('LOG', ['Timestamp','User','Action','Target','BeforeData','AfterData']);
+  const data  = sheet.getDataRange().getValues();
+  const maxRows = parseInt(limit) || 100;
+
+  const logs = [];
+  for (let i = Math.max(1, data.length - maxRows); i < data.length; i++) {
+    logs.push({
+      ts:     data[i][0] ? new Date(data[i][0]).toLocaleString('vi-VN') : '',
+      user:   data[i][1],
+      action: data[i][2],
+      target: data[i][3],
+      before: data[i][4],
+      after:  data[i][5],
+    });
+  }
+
+  return jsonOk({ ok: true, logs: logs.reverse() });
+}
+
+// ══════════════════════════════════════════════
+//  GET NHANVIEN LIST (cho dropdown)
+// ══════════════════════════════════════════════
+function getNhanVienList(st, userId, userRole) {
+  // NV chỉ xem danh sách store của mình
+  const { headers, rows } = getSheetData('NHANVIEN');
+  if (!headers.length) {
+    // Fallback: lấy từ Config
+    const config = getConfigData();
+    if (!config) return jsonOk({ ok: true, employees: [] });
+    const nv = st && config[st] ? config[st].nv : [
+      ...(config['TGDĐ']?.nv || []),
+      ...(config['Topzone']?.nv || []),
+    ];
+    return jsonOk({ ok: true, employees: nv.map(n => ({
+      EmployeeID: n.mnv,
+      EmployeeName: n.ten,
+      Store: st || '',
+      Role: 'nv',
+      TargetRatio: n.ratio || 0,
+    })) });
+  }
+
+  const iID   = headers.indexOf('EmployeeID');
+  const iName = headers.indexOf('EmployeeName');
+  const iSt   = headers.indexOf('Store');
+  const iRole = headers.indexOf('Role');
+  const iRatio= headers.indexOf('TargetRatio');
+
+  const employees = rows
+    .filter(row => {
+      if (!st || st === 'ALL') return true;
+      return iSt >= 0 && String(row[iSt]).trim() === st;
+    })
+    .map(row => ({
+      EmployeeID:   iID   >= 0 ? String(row[iID]).trim()   : '',
+      EmployeeName: iName >= 0 ? String(row[iName]).trim() : '',
+      Store:        iSt   >= 0 ? String(row[iSt]).trim()   : '',
+      Role:         iRole >= 0 ? String(row[iRole]).trim() : 'nv',
+      TargetRatio:  iRatio>= 0 ? (parseFloat(row[iRatio]) || 0) : 0,
+    }));
+
+  return jsonOk({ ok: true, employees });
+}
+
+// ══════════════════════════════════════════════
+//  UPDATE TARGET SHEET (cho dễ đọc)
+// ══════════════════════════════════════════════
+function updateTargetSheet(config) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  ['TGDĐ','Topzone'].forEach(st => {
+    if (!config[st]) return;
+    const sheetName = 'Target_' + (st === 'TGDĐ' ? 'TGDD' : st);
+    let sheet = ss.getSheetByName(sheetName);
+    if (sheet) ss.deleteSheet(sheet);
+    sheet = ss.insertSheet(sheetName);
+
+    // ── VÙNG NHÂN VIÊN ──
+    sheet.appendRow(['NHÂN VIÊN']);
+    sheet.appendRow(['MNV', 'Tên nhân viên', 'Tỉ lệ (%)']);
+    config[st].nv.forEach(n => sheet.appendRow([
+      String(n.mnv), n.ten, n.ratio || 0
+    ]));
+    sheet.appendRow(['']); // hàng trống phân cách
+
+    // ── VÙNG NGÀNH HÀNG & CHỈ TIÊU ──
+    sheet.appendRow(['NGÀNH HÀNG & CHỈ TIÊU']);
+    sheet.appendRow(['STT', 'Ngành hàng', 'Chỉ tiêu cả ST', 'Trừ sao', 'Sao KD', '+5⭐%', '+10⭐%', '+20⭐%']);
+    config[st].nh.forEach((n, i) => sheet.appendRow([
+      i + 1, n.nh, n.ct, n.tru || 50, n.sao_kd || 0,
+      n.pct5 || 100, n.pct10 || 120, n.pct20 || 200
+    ]));
+
+    // Format cột
+    sheet.setColumnWidth(1, 60);   // STT
+    sheet.setColumnWidth(2, 220);  // Ngành hàng
+    sheet.setColumnWidth(3, 140);  // Chỉ tiêu<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Xuân Hùng AI Dashboard</title>
+
+<style>
+
+body{
+
+font-family:Arial;
+
+background:#111827;
+
+color:white;
+
+padding:40px;
+
+}
+
+h1{
+
+margin-bottom:30px;
+
+}
+
+a{
+
+display:block;
+
+width:350px;
+
+padding:18px;
+
+margin-bottom:15px;
+
+background:#1f2937;
+
+color:white;
+
+text-decoration:none;
+
+border-radius:15px;
+
+font-size:20px;
+
+}
+
+a:hover{
+
+background:#374151;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏠 Xuân Hùng AI Dashboard</h1>
+
+<a href="BDS_Rental_AI_VIP.html">
+
+💰 BDS Rental AI VIP
+
+</a>
+
+<a href="Can ho doxuanhung712.html">
+
+🏢 Căn hộ Đỗ Xuân Hùng
+
+</a>
+
+<a href="Can ho Tamtrang.html">
+
+🏢 Căn hộ Tam Trạng
+
+</a>
+
+<a href="Căn hộ Jessica.html">
+
+🏢 Căn hộ Jessica
+
+</a>
+
+<a href="PA_6Tang_3Ty_ChuKy5Nam.html">
+
+🏗 PA 6 tầng - 3 tỷ
+
+</a>
+
+<a href="bao_cao_phan_tich_dau_tu_danang_v2.html">
+
+📈 Báo cáo đầu tư Đà Nẵng
+
+</a>
+
+<a href="Căn Hộ Nguyễn le.html">
+
+🏢 Căn hộ Nguyễn Lê
+
+</a>
+
+</body>
+
+</html>
+    sheet.setColumnWidth(4, 90);   // Trừ sao
+    sheet.setColumnWidth(5, 90);   // Sao KD
+
+    // In đậm header NV và NH
+    const nvHeaderRow = 2;
+    const nhHeaderRow = nvHeaderRow + config[st].nv.length + 3;
+    sheet.getRange(nvHeaderRow, 1, 1, 3).setFontWeight('bold').setBackground('#e8f0fe');
+    sheet.getRange(nhHeaderRow, 1, 1, 8).setFontWeight('bold').setBackground('#fce8b2');
+  });
+}
